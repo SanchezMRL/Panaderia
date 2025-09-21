@@ -19,7 +19,7 @@ public class PedidoGetServlet extends HttpServlet {
         resp.setContentType("application/json;charset=UTF-8");
         PrintWriter out = resp.getWriter();
 
-        String path = req.getPathInfo(); // e.g. "/cliente/123"
+        String path = req.getPathInfo(); // ejemplo.g. "/cliente/123"
         if (path == null || path.split("/").length < 3) {
             out.print("{\"error\":\"Ruta inválida. Use /api/pedido/{cliente|proveedor}/{id}\"}");
             return;
@@ -143,3 +143,6 @@ public class PedidoGetServlet extends HttpServlet {
         }
     }
 }
+
+
+
