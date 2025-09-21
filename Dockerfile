@@ -1,5 +1,5 @@
-# Etapa 1: build con Maven
-FROM maven:3.8.8-openjdk-11 AS build
+# Etapa 1: build con Maven y JDK 11
+FROM maven:3.9.3-eclipse-temurin-11 AS build
 COPY pom.xml /app/
 COPY src /app/src/
 WORKDIR /app
