@@ -1,0 +1,83 @@
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Panadería - Sistema de Gestión</title>
+  <style>
+    :root {
+      --color-amarillo: #F9D923;
+      --color-azul: #0A2F66;
+      --color-azul-claro: #E8F1FA;
+      --color-hover: #FFD43B;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, var(--color-azul-claro), #fff);
+      margin: 0;
+      padding: 0;
+      color: var(--color-azul);
+    }
+
+    header {
+      background-color: var(--color-azul);
+      padding: 30px 20px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+      font-size: 42px;
+      margin: 0;
+    }
+
+    .opciones {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 30px;
+      padding: 60px 40px;
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    .opcion {
+      background-color: white;
+      padding: 30px 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      text-align: center;
+      font-size: 20px;
+      font-weight: bold;
+      color: var(--color-azul);
+      border: 3px solid var(--color-amarillo);
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .opcion:hover {
+      background-color: var(--color-hover);
+      transform: translateY(-5px) scale(1.03);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      color: var(--color-azul);
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🍞 Bienvenido al Sistema de Gestión de la Panadería</h1>
+  </header>
+
+  <div class="opciones">
+    <div class="opcion" onclick="location.href='registrar.html'">Registrar Pedido</div>
+    <div class="opcion" onclick="location.href='consultar.html'">Consultar Pedido</div>
+    <div class="opcion" onclick="location.href='opiniones.html'">Opiniones</div>
+    <div class="opcion" onclick="location.href='inventario.html'">Inventario</div>
+    <div class="opcion" onclick="location.href='reportes.html'">Reportes</div>
+    <div class="opcion" onclick="location.href='entregas.html'">Entregas</div>
+    <div class="opcion" onclick="location.href='agregar.html'">Agregar</div>
+    <div class="opcion" onclick="location.href='observar.html'">Registros</div>
+  </div>
+</body>
+</html>
