@@ -21,7 +21,7 @@ o importar a NetBeans y ejecutar con un Tomcat 9 configurado.
 ## Base de datos
 Se incluyó `src/main/resources/db/create_tables.sql` con las tablas necesarias.
 
-## Credenciales usadas (como solicitaste)
+## Credenciales usadas 
 - Host: dpg-d2ob2u6r433s738kc4k0-a.oregon-postgres.render.com:5432
 - Database: panaderia_db_q3ri
 - User: panaderia_db_q3ri_user
