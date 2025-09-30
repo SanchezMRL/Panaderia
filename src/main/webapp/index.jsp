@@ -66,8 +66,12 @@
 </head>
 <body>
   <header>
-    <h1>🍞 Bienvenido al Sistema de Gestión de la Panadería</h1>
-  </header>
+  <h1>🍞 Bienvenido al Sistema de Gestión de la Panadería</h1>
+  <nav>
+    <button onclick="location.href='index2.jsp'">Versión 2</button>
+    <button onclick="location.href='index3.jsp'">Versión 3</button>
+  </nav>
+</header>
 
   <div class="opciones">
     <div class="opcion" onclick="location.href='registrar.html'">Registrar Pedido</div>
