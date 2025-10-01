@@ -98,7 +98,7 @@
       const id_producto = parseInt(document.getElementById('id_producto').value);
       const cantidad = parseInt(document.getElementById('cantidad').value);
       const precio_unitario = parseFloat(document.getElementById('precio_unitario').value);
-      if (!id_producto || !cantidad || cantidad <= 0 || isNaN(pricio_unitario)) { alert("Debe completar todos los campos del producto con valores válidos"); return; }
+      if (!id_producto || !cantidad || cantidad <= 0 || isNaN(precio_unitario)) { alert("Debe completar todos los campos del producto con valores válidos"); return; }
       const detalle = { id_producto, cantidad };
       if (tipo === 'cliente') { detalle.precio_unitario = precio_unitario; totalPedido += cantidad * precio_unitario; }
       else { detalle.coste_unitario = precio_unitario; }
