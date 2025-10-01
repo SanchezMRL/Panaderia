@@ -1,6 +1,5 @@
 # Panaderia Web (Maven WAR) - FIXED
 
-He corregido los servlets y añadido utilidades para parsear fechas. Este ZIP debe compilar en Java 11 con Maven.
 
 ## Ejecutar localmente
 
