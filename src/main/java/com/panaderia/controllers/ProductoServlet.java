@@ -32,7 +32,7 @@ public class ProductoServlet extends HttpServlet {
             }
 
             try (Connection conn = Database.getConnection()) {
-                PreparedStatement ps = conn.prepareStatement("SELECT id, nombre, precio_base FROM productos WHERE id = ?");
+                PreparedStatement ps = conn.prepareStatement("SELECT id, nombre, precio_base FROM producto WHERE id = ?");
                 ps.setInt(1, id);
                 ResultSet rs = ps.executeQuery();
                 if (rs.next()) {
