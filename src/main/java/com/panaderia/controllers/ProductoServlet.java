@@ -16,6 +16,7 @@ public class ProductoServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String pathInfo = req.getPathInfo();
         resp.setContentType("application/json;charset=UTF-8");
+
         try (PrintWriter out = resp.getWriter()) {
             if (pathInfo == null || pathInfo.equals("/")) {
                 out.print("{\"error\": \"Producto no especificado\"}");
@@ -32,12 +33,16 @@ public class ProductoServlet extends HttpServlet {
             }
 
             try (Connection conn = Database.getConnection()) {
-                PreparedStatement ps = conn.prepareStatement("SELECT id, nombre, precio_base FROM producto WHERE id = ?");
+                // ✅ Consulta usando tabla en minúsculas (producto)
+                PreparedStatement ps = conn.prepareStatement(
+                        "SELECT id_producto, nombre, precio_base FROM producto WHERE id_producto = ?"
+                );
                 ps.setInt(1, id);
                 ResultSet rs = ps.executeQuery();
+
                 if (rs.next()) {
                     JSONObject obj = new JSONObject();
-                    obj.put("id", rs.getInt("id"));
+                    obj.put("id_producto", rs.getInt("id_producto"));
                     obj.put("nombre", rs.getString("nombre"));
                     obj.put("precio_base", rs.getDouble("precio_base"));
                     out.print(obj.toJSONString());
