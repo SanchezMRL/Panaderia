@@ -6,9 +6,10 @@ import java.time.LocalDate;
 @Entity
 @Table(name = "opinion_pedido")
 public class OpinionPedido {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_opinion;
+    private Integer idOpinion;
 
     @ManyToOne
     @JoinColumn(name = "id_pedido_cliente")
@@ -23,22 +24,25 @@ public class OpinionPedido {
     private Integer satisfaccion;
     private LocalDate fecha;
 
-    // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    // Getters y setters
+    public Integer getIdOpinion() { return idOpinion; }
+    public void setIdOpinion(Integer idOpinion) { this.idOpinion = idOpinion; }
 
-    public int getIdPedidoCliente() { return idPedidoCliente; }
-    public void setIdPedidoCliente(int idPedidoCliente) { this.idPedidoCliente = idPedidoCliente; }
+    public PedidoCliente getPedidoCliente() { return pedidoCliente; }
+    public void setPedidoCliente(PedidoCliente pedidoCliente) { this.pedidoCliente = pedidoCliente; }
+
+    public Cliente getCliente() { return cliente; }
+    public void setCliente(Cliente cliente) { this.cliente = cliente; }
 
     public String getComentario() { return comentario; }
     public void setComentario(String comentario) { this.comentario = comentario; }
 
-    public int getCalificacion() { return calificacion; }
-    public void setCalificacion(int calificacion) { this.calificacion = calificacion; }
+    public Integer getCalificacion() { return calificacion; }
+    public void setCalificacion(Integer calificacion) { this.calificacion = calificacion; }
 
-    public int getSatisfaccion() { return satisfaccion; }
-    public void setSatisfaccion(int satisfaccion) { this.satisfaccion = satisfaccion; }
+    public Integer getSatisfaccion() { return satisfaccion; }
+    public void setSatisfaccion(Integer satisfaccion) { this.satisfaccion = satisfaccion; }
 
-    public Timestamp getFecha() { return fecha; }
-    public void setFecha(Timestamp fecha) { this.fecha = fecha; }
+    public LocalDate getFecha() { return fecha; }
+    public void setFecha(LocalDate fecha) { this.fecha = fecha; }
 }
