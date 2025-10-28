@@ -1,10 +1,10 @@
 package com.panaderia.repository;
 
-import com.panaderia.entity.Empleado;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
+import com.panaderia.entity.Empleado;
 
 @Repository
-public interface EmpleadoRepository extends JpaRepository<Empleado, Integer> {
-    Empleado findByNombreAndPassword(String nombre, String password);
+public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
+    Empleado findByEmail(String email);
 }
