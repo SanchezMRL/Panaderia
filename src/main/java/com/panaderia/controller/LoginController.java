@@ -77,9 +77,4 @@ public class LoginController {
         return "login";
     }
 
-    // 🔹 Muestra el formulario de registro de clientes
-    @GetMapping("/registroCliente")
-    public String mostrarRegistroCliente() {
-        return "registroCliente"; // ← nombre del archivo registroCliente.html
-    }
 }
