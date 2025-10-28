@@ -21,40 +21,40 @@ public class LoginController {
     @Autowired
     private EmpleadoRepository empleadoRepository;
 
-    // 🔹 Redirigir raíz "/" hacia "/login"
+    // 🔹 Redirige raíz "/" a "/login"
     @GetMapping("/")
     public String inicio() {
         return "redirect:/login";
     }
 
-    // 🔹 Mostrar la página de login
+    // 🔹 Muestra el formulario de login
     @GetMapping("/login")
     public String mostrarLogin() {
         return "login"; // templates/login.html
     }
 
-    // 🔹 Procesar el formulario de login
+    // 🔹 Procesa el formulario de login
     @PostMapping("/login")
     public String procesarLogin(
-            @RequestParam String email,
+            @RequestParam String usuario,  // puede ser email o nombre
             @RequestParam String password,
             @RequestParam String tipoUsuario,
             Model model) {
 
         if ("cliente".equalsIgnoreCase(tipoUsuario)) {
-            Cliente cliente = clienteRepository.findByEmail(email);
-            if (cliente != null && password.equals("123")) { // puedes cambiar la lógica luego
+            Cliente cliente = clienteRepository.findByEmailAndPassword(usuario, password);
+            if (cliente != null) {
                 model.addAttribute("nombre", cliente.getNombre());
-                return "clienteMenu"; // templates/clienteMenu.html
+                return "clienteMenu"; // clientes van aquí
             } else {
                 model.addAttribute("error", "Credenciales de cliente incorrectas");
                 return "login";
             }
         } else if ("admin".equalsIgnoreCase(tipoUsuario)) {
-            Empleado admin = empleadoRepository.findByEmail(email);
-            if (admin != null && password.equals("admin")) { // puedes mejorar luego
+            Empleado admin = empleadoRepository.findByNombreAndPassword(usuario, password);
+            if (admin != null) {
                 model.addAttribute("nombre", admin.getNombre());
-                return "index"; // templates/index.html
+                return "index"; // administradores van a index.html
             } else {
                 model.addAttribute("error", "Credenciales de administrador incorrectas");
                 return "login";
@@ -65,3 +65,4 @@ public class LoginController {
         return "login";
     }
 }
+
