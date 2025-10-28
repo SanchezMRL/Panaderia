@@ -4,7 +4,7 @@ import com.panaderia.entity.*;
 import com.panaderia.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 @RestController
@@ -17,18 +17,18 @@ public class OpinionController {
 
     @PostMapping
     public Map<String, Object> registrarOpinion(@RequestBody Map<String, Object> datos) {
-        Integer idPedido = (Integer) datos.get("id_pedido_cliente");
-        Integer idCliente = (Integer) datos.get("id_cliente");
+        Long idPedido = Long.valueOf(datos.get("idPedidoCliente").toString());
+        Long idCliente = Long.valueOf(datos.get("idCliente").toString());
 
-        OpinionPedido op = new OpinionPedido();
-        op.setPedidoCliente(pedidoRepo.findById(idPedido).orElse(null));
-        op.setCliente(clienteRepo.findById(idCliente).orElse(null));
-        op.setComentario((String) datos.get("comentario"));
-        op.setCalificacion((Integer) datos.get("calificacion"));
-        op.setSatisfaccion((Integer) datos.get("satisfaccion"));
-        op.setFecha(LocalDate.now());
+        OpinionPedido opinion = new OpinionPedido();
+        opinion.setPedidoCliente(pedidoRepo.findById(idPedido).orElse(null));
+        opinion.setCliente(clienteRepo.findById(idCliente).orElse(null));
+        opinion.setComentario((String) datos.get("comentario"));
+        opinion.setCalificacion(Integer.valueOf(datos.get("calificacion").toString()));
+        opinion.setSatisfaccion(Integer.valueOf(datos.get("satisfaccion").toString()));
+        opinion.setFecha(LocalDateTime.now());
 
-        opinionRepo.save(op);
-        return Map.of("id_opinion", op.getId_opinion());
+        opinionRepo.save(opinion);
+        return Map.of("idOpinion", opinion.getIdOpinion());
     }
 }
