@@ -3,7 +3,7 @@ package com.panaderia.service;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import com.panaderia.repository.ProductoRepository;
-import com.panaderia.model.Producto;
+import com.panaderia.models.Producto;
 import java.util.List;
 
 @Service
