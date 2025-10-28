@@ -6,7 +6,5 @@ import com.panaderia.entity.Cliente;
 
 @Repository
 public interface ClienteRepository extends JpaRepository<Cliente, Long> {
-
-    // Buscar cliente por email y contraseña
     Cliente findByEmailAndPassword(String email, String password);
 }
