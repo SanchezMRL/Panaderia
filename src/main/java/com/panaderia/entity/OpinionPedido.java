@@ -1,7 +1,7 @@
 package com.panaderia.entity;
 
 import jakarta.persistence.*;
-import java.time.LocalDate;
+import java.sql.Timestamp;
 
 @Entity
 @Table(name = "opinion_pedido")
@@ -9,6 +9,7 @@ public class OpinionPedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id_opinion")
     private Integer idOpinion;
 
     @ManyToOne
@@ -20,29 +21,57 @@ public class OpinionPedido {
     private Cliente cliente;
 
     private String comentario;
-    private Integer calificacion;
-    private Integer satisfaccion;
-    private LocalDate fecha;
+    private Integer puntuacion;
 
-    // Getters y setters
-    public Integer getIdOpinion() { return idOpinion; }
-    public void setIdOpinion(Integer idOpinion) { this.idOpinion = idOpinion; }
+    @Column(name = "fecha")
+    private Timestamp fecha;
 
-    public PedidoCliente getPedidoCliente() { return pedidoCliente; }
-    public void setPedidoCliente(PedidoCliente pedidoCliente) { this.pedidoCliente = pedidoCliente; }
+    // ✅ Getters y Setters
+    public Integer getIdOpinion() {
+        return idOpinion;
+    }
 
-    public Cliente getCliente() { return cliente; }
-    public void setCliente(Cliente cliente) { this.cliente = cliente; }
+    public void setIdOpinion(Integer idOpinion) {
+        this.idOpinion = idOpinion;
+    }
 
-    public String getComentario() { return comentario; }
-    public void setComentario(String comentario) { this.comentario = comentario; }
+    public PedidoCliente getPedidoCliente() {
+        return pedidoCliente;
+    }
 
-    public Integer getCalificacion() { return calificacion; }
-    public void setCalificacion(Integer calificacion) { this.calificacion = calificacion; }
+    public void setPedidoCliente(PedidoCliente pedidoCliente) {
+        this.pedidoCliente = pedidoCliente;
+    }
 
-    public Integer getSatisfaccion() { return satisfaccion; }
-    public void setSatisfaccion(Integer satisfaccion) { this.satisfaccion = satisfaccion; }
+    public Cliente getCliente() {
+        return cliente;
+    }
 
-    public LocalDate getFecha() { return fecha; }
-    public void setFecha(LocalDate fecha) { this.fecha = fecha; }
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public String getComentario() {
+        return comentario;
+    }
+
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
+    public Integer getPuntuacion() {
+        return puntuacion;
+    }
+
+    public void setPuntuacion(Integer puntuacion) {
+        this.puntuacion = puntuacion;
+    }
+
+    public Timestamp getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(Timestamp fecha) {
+        this.fecha = fecha;
+    }
 }
