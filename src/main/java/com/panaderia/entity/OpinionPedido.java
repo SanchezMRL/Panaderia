@@ -1,23 +1,27 @@
 package com.panaderia.entity;
 
 import jakarta.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "opiniones")
-public class Opinion {
-
+@Table(name = "opinion_pedido")
+public class OpinionPedido {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id_opinion;
 
-    @Column(name = "id_pedido_cliente")
-    private int idPedidoCliente;
+    @ManyToOne
+    @JoinColumn(name = "id_pedido_cliente")
+    private PedidoCliente pedidoCliente;
+
+    @ManyToOne
+    @JoinColumn(name = "id_cliente")
+    private Cliente cliente;
 
     private String comentario;
-    private int calificacion;
-    private int satisfaccion;
-    private Timestamp fecha;
+    private Integer calificacion;
+    private Integer satisfaccion;
+    private LocalDate fecha;
 
     // Getters y Setters
     public Long getId() { return id; }
