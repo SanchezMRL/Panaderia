@@ -112,6 +112,22 @@
       font-size: 32px;
       margin: 0;
     }
+
+    .register-link {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .register-link a {
+      color: var(--color-azul);
+      text-decoration: none;
+      font-weight: bold;
+      transition: color 0.3s ease;
+    }
+
+    .register-link a:hover {
+      color: var(--color-amarillo);
+    }
   </style>
 </head>
 <body>
@@ -123,13 +139,11 @@
   <div class="login-container">
     <h2>Iniciar Sesión</h2>
 
-    <!-- Mensaje de error -->
     <div th:if="${error}" class="error" th:text="${error}"></div>
 
     <form action="/login" method="post">
-      <label for="email">Email:</label>
-      <!-- ✅ Nombre del campo actualizado -->
-      <input type="email" id="email" name="email" placeholder="Ingrese su email" required>
+      <label for="usuario">Email:</label>
+      <input type="text" id="email" name="usuario" placeholder="Ingrese su email" required>
 
       <label for="password">Contraseña:</label>
       <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
@@ -143,6 +157,10 @@
 
       <button type="submit">Ingresar</button>
     </form>
+
+    <div class="register-link">
+      <p>¿No tienes cuenta? <a th:href="@{/registroCliente}">Regístrate aquí</a></p>
+    </div>
   </div>
 
 </body>
