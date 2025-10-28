@@ -31,3 +31,5 @@ public Map<String, Object> registrarOpinion(@RequestBody Map<String, Object> dat
     opinionRepo.save(op);
     return Map.of("id_opinion", op.getId_opinion());
 }
+
+}
