@@ -1,31 +1,28 @@
 package com.panaderia.entity;
 
-import jakarta.persistence.*;
+import jakarta.persistence.*; // Para Entity, Table, Id, etc.
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Entity
 @Table(name = "pago")
 public class Pago {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idPago;
+    private Long id_pago;
 
     @ManyToOne
-    @JoinColumn(name = "id_pedido_cliente") // FK hacia PedidoCliente
+    @JoinColumn(name = "id_pedido_cliente")
     private PedidoCliente pedidoCliente;
 
-    @ManyToOne
-    @JoinColumn(name = "id_metodopago") // nombre igual al de tu BD
-    private MetodoPago metodoPago;
+    @Enumerated(EnumType.STRING)
+    private MetodoPago metodopago;
 
-    @ManyToOne
-    @JoinColumn(name = "id_estadopago") // nombre igual al de tu BD
-    private EstadoPago estadoPago;
+    @Enumerated(EnumType.STRING)
+    private EstadoPago estadopago;
 
     private BigDecimal monto;
-    private LocalDate fecha;
+    private LocalDate fecha_pago;
 
     // Getters y Setters
     public Integer getIdPago() { return idPago; }
