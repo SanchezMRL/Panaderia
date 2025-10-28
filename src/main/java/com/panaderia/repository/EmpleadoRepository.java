@@ -6,5 +6,7 @@ import com.panaderia.entity.Empleado;
 
 @Repository
 public interface EmpleadoRepository extends JpaRepository<Empleado, Long> {
-    Empleado findByNombreAndPassword(String nombre, String password);
+
+    // método: busca por email y password
+    Empleado findByEmailAndPassword(String email, String password);
 }
