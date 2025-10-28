@@ -75,5 +75,11 @@ public class LoginController {
         // 🔸 Si no seleccionó tipo de usuario válido
         model.addAttribute("error", "Debe seleccionar un tipo de usuario válido.");
         return "login";
+
+        @GetMapping("/registroCliente")
+public String mostrarRegistroCliente() {
+    return "registroCliente"; // <- nombre del archivo registroCliente.html
+}
+
     }
 }
