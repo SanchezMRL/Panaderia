@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Cliente - Panadería</title>
+  <link rel="stylesheet" th:href="@{/css/estilos.css}">
+  <style>
+    :root {
+      --color-amarillo: #F9D923;
+      --color-azul: #0A2F66;
+      --color-azul-claro: #E8F1FA;
+      --color-hover: #FFD43B;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, var(--color-azul-claro), #fff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: var(--color-azul);
+    }
+
+    .registro-container {
+      background-color: white;
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 420px;
+      border: 3px solid var(--color-amarillo);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 28px;
+      color: var(--color-azul);
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.4rem;
+      color: var(--color-azul);
+    }
+
+    input {
+      width: 100%;
+      padding: 0.7rem;
+      margin-bottom: 1.2rem;
+      border: 2px solid var(--color-azul-claro);
+      border-radius: 8px;
+      font-size: 16px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: var(--color-amarillo);
+      box-shadow: 0 0 6px var(--color-amarillo);
+    }
+
+    button {
+      width: 100%;
+      padding: 0.9rem;
+      background-color: var(--color-amarillo);
+      border: none;
+      color: var(--color-azul);
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: var(--color-hover);
+      transform: translateY(-3px);
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .register-link a {
+      color: var(--color-azul);
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .register-link a:hover {
+      color: var(--color-amarillo);
+    }
+
+    .success {
+      color: green;
+      text-align: center;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="registro-container">
+    <h2>Registro de Cliente</h2>
+
+    <div th:if="${mensaje}" class="success" th:text="${mensaje}"></div>
+    <div th:if="${error}" class="error" th:text="${error}"></div>
+
+    <form action="/registroCliente" method="post">
+      <label for="nombre">Nombre completo:</label>
+      <input type="text" id="nombre" name="nombre" placeholder="Ej. Juan Pérez" required>
+
+      <label for="email">Email:</label>
+      <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+
+      <label for="password">Contraseña:</label>
+      <input type="password" id="password" name="password" placeholder="Cree una contraseña" required>
+
+      <button type="submit">Registrarse</button>
+    </form>
+
+    <div class="register-link">
+      <p>¿Ya tienes cuenta? <a th:href="@{/login}">Inicia sesión</a></p>
+    </div>
+  </div>
+
+</body>
+</html>
