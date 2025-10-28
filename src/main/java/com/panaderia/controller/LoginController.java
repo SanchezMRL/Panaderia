@@ -36,20 +36,21 @@ public class LoginController {
     // 🔹 Procesa el formulario de login
     @PostMapping("/login")
     public String procesarLogin(
-            @RequestParam(required = false) String usuario,  // puede ser email o nombre
+            @RequestParam(required = false) String email,     // ✅ ahora usamos email
             @RequestParam(required = false) String password,
             @RequestParam(required = false) String tipoUsuario,
             Model model) {
 
         // 🔸 Validar campos vacíos o faltantes
-        if (usuario == null || password == null || tipoUsuario == null || usuario.isBlank() || password.isBlank() || tipoUsuario.isBlank()) {
+        if (email == null || password == null || tipoUsuario == null ||
+            email.isBlank() || password.isBlank() || tipoUsuario.isBlank()) {
             model.addAttribute("error", "Debe completar todos los campos antes de continuar.");
             return "login";
         }
 
         // 🔸 Si es cliente
         if ("cliente".equalsIgnoreCase(tipoUsuario)) {
-            Cliente cliente = clienteRepository.findByEmailAndPassword(usuario, password);
+            Cliente cliente = clienteRepository.findByEmailAndPassword(email, password);
             if (cliente != null) {
                 model.addAttribute("nombre", cliente.getNombre());
                 return "clienteMenu"; // Página para clientes
@@ -59,9 +60,9 @@ public class LoginController {
             }
         }
 
-        // 🔸 Si es administrador
+        // 🔸 Si es administrador / empleado
         if ("admin".equalsIgnoreCase(tipoUsuario)) {
-            Empleado admin = empleadoRepository.findByNombreAndPassword(usuario, password);
+            Empleado admin = empleadoRepository.findByEmailAndPassword(email, password); // ✅ cambio aquí
             if (admin != null) {
                 model.addAttribute("nombre", admin.getNombre());
                 return "index"; // Página principal del administrador
