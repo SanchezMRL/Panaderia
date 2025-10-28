@@ -5,32 +5,47 @@ import com.panaderia.utils.DateUtils;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.*;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 
+@WebServlet("/pago")
 public class PagoServlet extends HttpServlet {
+
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+
         resp.setContentType("application/json;charset=UTF-8");
+
         try (PrintWriter out = resp.getWriter()) {
             StringBuilder sb = new StringBuilder();
             try (BufferedReader reader = req.getReader()) {
                 String line;
-                while ((line = reader.readLine()) != null) sb.append(line);
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
             }
+
             JSONObject body = (JSONObject) new JSONParser().parse(sb.toString());
-            int id_pedido_cliente = ((Long)body.get("id_pedido_cliente")).intValue();
+            int id_pedido_cliente = ((Long) body.get("id_pedido_cliente")).intValue();
             String metodo = (String) body.get("metodo");
-            double monto = ((Number)body.get("monto")).doubleValue();
+            double monto = ((Number) body.get("monto")).doubleValue();
             String fecha = (String) body.get("fecha");
             String estado = (String) body.get("estado");
 
             try (Connection conn = Database.getConnection()) {
-                PreparedStatement ps = conn.prepareStatement("INSERT INTO pagos (id_pedido_cliente, metodo, monto, fecha, estado) VALUES (?, ?, ?, ?, ?)");
+                PreparedStatement ps = conn.prepareStatement(
+                        "INSERT INTO pagos (id_pedido_cliente, metodo, monto, fecha, estado) VALUES (?, ?, ?, ?, ?)"
+                );
                 ps.setInt(1, id_pedido_cliente);
                 ps.setString(2, metodo);
                 ps.setDouble(3, monto);
@@ -39,9 +54,14 @@ public class PagoServlet extends HttpServlet {
                 ps.executeUpdate();
                 out.print("{\"ok\": true}");
             }
+
         } catch (Exception e) {
             e.printStackTrace();
-            try { if (resp.getWriter() != null) resp.getWriter().print("{\"ok\": false}"); } catch (Exception ex) {}
+            try {
+                resp.getWriter().print("{\"ok\": false}");
+            } catch (Exception ex) {
+                // Ignorar errores secundarios
+            }
         }
     }
 }
