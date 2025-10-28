@@ -1,32 +1,35 @@
 package com.panaderia.entity;
 
-import jakarta.persistence.*; // Para Entity, Table, Id, etc.
+import jakarta.persistence.*;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "pago")
 public class Pago {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_pago;
+    private Long idPago;
 
     @ManyToOne
     @JoinColumn(name = "id_pedido_cliente")
     private PedidoCliente pedidoCliente;
 
-    @Enumerated(EnumType.STRING)
-    private MetodoPago metodopago;
+    @ManyToOne
+    @JoinColumn(name = "id_metodo_pago")
+    private MetodoPago metodoPago;
 
-    @Enumerated(EnumType.STRING)
-    private EstadoPago estadopago;
+    @ManyToOne
+    @JoinColumn(name = "id_estado_pago")
+    private EstadoPago estadoPago;
 
     private BigDecimal monto;
-    private LocalDate fecha_pago;
+    private LocalDateTime fecha;
 
-    // Getters y Setters
-    public Integer getIdPago() { return idPago; }
-    public void setIdPago(Integer idPago) { this.idPago = idPago; }
+    // Getters y setters
+    public Long getIdPago() { return idPago; }
+    public void setIdPago(Long idPago) { this.idPago = idPago; }
 
     public PedidoCliente getPedidoCliente() { return pedidoCliente; }
     public void setPedidoCliente(PedidoCliente pedidoCliente) { this.pedidoCliente = pedidoCliente; }
@@ -40,6 +43,6 @@ public class Pago {
     public BigDecimal getMonto() { return monto; }
     public void setMonto(BigDecimal monto) { this.monto = monto; }
 
-    public LocalDate getFecha() { return fecha; }
-    public void setFecha(LocalDate fecha) { this.fecha = fecha; }
+    public LocalDateTime getFecha() { return fecha; }
+    public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
 }
