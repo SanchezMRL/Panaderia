@@ -21,8 +21,9 @@
     </parent>
 
     <properties>
-        <java.version>17</java.version> <!-- Puedes dejar 11 si tu JDK es 11 -->
-    </properties>
+    <java.version>11</java.version>
+</properties>
+
 
     <dependencies>
 
