@@ -1,87 +1,148 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio de Sesión - Panadería</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f6f6f6;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
-        .login-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            width: 100%;
-            max-width: 400px;
-        }
-        h2 {
-            text-align: center;
-            margin-bottom: 1.5rem;
-            color: #333;
-        }
-        label {
-            font-weight: bold;
-            display: block;
-            margin-bottom: 0.3rem;
-        }
-        input, select {
-            width: 100%;
-            padding: 0.5rem;
-            margin-bottom: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        button {
-            width: 100%;
-            padding: 0.7rem;
-            background-color: #4CAF50;
-            border: none;
-            color: white;
-            font-size: 1rem;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .error {
-            color: red;
-            text-align: center;
-            margin-bottom: 1rem;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Inicio de Sesión - Panadería</title>
+  <style>
+    :root {
+      --color-amarillo: #F9D923;
+      --color-azul: #0A2F66;
+      --color-azul-claro: #E8F1FA;
+      --color-hover: #FFD43B;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to right, var(--color-azul-claro), #fff);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      color: var(--color-azul);
+    }
+
+    .login-container {
+      background-color: white;
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 420px;
+      border: 3px solid var(--color-amarillo);
+      transition: all 0.3s ease;
+    }
+
+    .login-container:hover {
+      transform: translateY(-5px) scale(1.02);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.2);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 28px;
+      color: var(--color-azul);
+    }
+
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.4rem;
+      color: var(--color-azul);
+    }
+
+    input, select {
+      width: 100%;
+      padding: 0.7rem;
+      margin-bottom: 1.2rem;
+      border: 2px solid var(--color-azul-claro);
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    input:focus, select:focus {
+      outline: none;
+      border-color: var(--color-amarillo);
+      box-shadow: 0 0 6px var(--color-amarillo);
+    }
+
+    button {
+      width: 100%;
+      padding: 0.9rem;
+      background-color: var(--color-amarillo);
+      border: none;
+      color: var(--color-azul);
+      font-size: 18px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    button:hover {
+      background-color: var(--color-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    .error {
+      color: red;
+      text-align: center;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+
+    header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--color-azul);
+      padding: 20px;
+      text-align: center;
+      color: white;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+
+    header h1 {
+      font-size: 32px;
+      margin: 0;
+    }
+  </style>
 </head>
 <body>
-    <div class="login-container">
-        <h2>Iniciar Sesión</h2>
 
-        <!-- Mostrar mensajes de error si existen -->
-        <div th:if="${error}" class="error" th:text="${error}"></div>
+  <header>
+    <h1>🍞 Sistema de Gestión de la Panadería</h1>
+  </header>
 
-        <form action="/login" method="post">
-            <label for="usuario">Usuario o Email:</label>
-            <input type="text" id="usuario" name="usuario" placeholder="Ingrese su usuario" required>
+  <div class="login-container">
+    <h2>Iniciar Sesión</h2>
 
-            <label for="password">Contraseña:</label>
-            <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
+    <!-- Mensaje de error -->
+    <div th:if="${error}" class="error" th:text="${error}"></div>
 
-            <label for="tipoUsuario">Tipo de usuario:</label>
-            <select id="tipoUsuario" name="tipoUsuario" required>
-                <option value="">Seleccione...</option>
-                <option value="cliente">Cliente</option>
-                <option value="admin">Administrador</option>
-            </select>
+    <form action="/login" method="post">
+      <label for="usuario">Usuario o Email:</label>
+      <input type="text" id="usuario" name="usuario" placeholder="Ingrese su usuario" required>
 
-            <button type="submit">Ingresar</button>
-        </form>
-    </div>
+      <label for="password">Contraseña:</label>
+      <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
+
+      <label for="tipoUsuario">Tipo de usuario:</label>
+      <select id="tipoUsuario" name="tipoUsuario" required>
+        <option value="">Seleccione...</option>
+        <option value="cliente">Cliente</option>
+        <option value="admin">Administrador</option>
+      </select>
+
+      <button type="submit">Ingresar</button>
+    </form>
+  </div>
+
 </body>
 </html>
