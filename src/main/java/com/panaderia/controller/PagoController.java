@@ -1,9 +1,7 @@
 package com.panaderia.controller;
 
-import com.panaderia.entity.Pago;
-import com.panaderia.entity.PedidoCliente;
-import com.panaderia.repository.PagoRepository;
-import com.panaderia.repository.PedidoClienteRepository;
+import com.panaderia.entity.*;
+import com.panaderia.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDate;
@@ -15,19 +13,29 @@ public class PagoController {
 
     @Autowired private PagoRepository pagoRepo;
     @Autowired private PedidoClienteRepository pedidoRepo;
+    @Autowired private MetodoPagoRepository metodoPagoRepo;
+    @Autowired private EstadoPagoRepository estadoPagoRepo;
 
     @PostMapping
     public Map<String, Object> registrarPago(@RequestBody Map<String, Object> datos) {
+
         Integer idPedido = (Integer) datos.get("id_pedido_cliente");
+        Integer idMetodo = (Integer) datos.get("id_metodo_pago");
+        Integer idEstado = (Integer) datos.get("id_estado_pago");
+
         PedidoCliente pedido = pedidoRepo.findById(idPedido).orElse(null);
+        MetodoPago metodo = metodoPagoRepo.findById(idMetodo).orElse(null);
+        EstadoPago estado = estadoPagoRepo.findById(idEstado).orElse(null);
 
         Pago pago = new Pago();
         pago.setPedidoCliente(pedido);
+        pago.setMetodoPago(metodo);
+        pago.setEstadoPago(estado);
         pago.setMonto(new java.math.BigDecimal(datos.get("monto").toString()));
-        pago.setMetodo((String) datos.get("metodo"));
         pago.setFecha(LocalDate.now());
-        pago.setEstado("pendiente");
+
         pagoRepo.save(pago);
-        return Map.of("id_pago", pago.getId_pago());
+
+        return Map.of("id_pago", pago.getIdPago());
     }
 }
