@@ -1,3 +1,9 @@
+package com.panaderia.entity;
+
+import jakarta.persistence.*;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "pago")
 public class Pago {
@@ -7,20 +13,21 @@ public class Pago {
     private Integer idPago;
 
     @ManyToOne
-    @JoinColumn(name = "id_pedido_cliente")
+    @JoinColumn(name = "id_pedido_cliente") // FK hacia PedidoCliente
     private PedidoCliente pedidoCliente;
 
-    // 🔹 En lugar de @ManyToOne, usa @Enumerated(EnumType.STRING)
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "id_metodopago") // nombre igual al de tu BD
     private MetodoPago metodoPago;
 
-    @Enumerated(EnumType.STRING)
+    @ManyToOne
+    @JoinColumn(name = "id_estadopago") // nombre igual al de tu BD
     private EstadoPago estadoPago;
 
     private BigDecimal monto;
     private LocalDate fecha;
 
-    // Getters y setters
+    // Getters y Setters
     public Integer getIdPago() { return idPago; }
     public void setIdPago(Integer idPago) { this.idPago = idPago; }
 
