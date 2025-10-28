@@ -19,14 +19,15 @@ public class PedidoController {
     @Autowired private ProductoRepository productoRepo;
 
     @PostMapping
-@Transactional
-public Map<String, Object> registrarPedido(@RequestBody PedidoCliente pedido) {
-    pedido.setFecha(LocalDate.now());
-    pedido.getDetalles().forEach(det -> {
-        det.setPedidoCliente(pedido);
-        det.setProducto(productoRepo.findById(det.getProducto().getId_producto()).orElse(null));
-    });
-    PedidoCliente guardado = pedidoRepo.save(pedido);
-    return Map.of("id_pedido_cliente", guardado.getId_pedido_cliente());
+    @Transactional
+    public Map<String, Object> registrarPedido(@RequestBody PedidoCliente pedido) {
+        pedido.setFecha(LocalDate.now());
+        pedido.getDetalles().forEach(det -> {
+            det.setPedidoCliente(pedido);
+            det.setProducto(productoRepo.findById(det.getProducto().getId_producto()).orElse(null));
+        });
+        PedidoCliente guardado = pedidoRepo.save(pedido);
+        return Map.of("id_pedido_cliente", guardado.getId_pedido_cliente());
+    }
 }
-}
+
