@@ -20,11 +20,16 @@ public class LoginService {
      * Autenticación general de usuarios.
      */
     public Object autenticar(String usuario, String password, String tipo) {
+
         if ("cliente".equalsIgnoreCase(tipo)) {
+            // Los clientes ya se autentican con su email
             return clienteRepository.findByEmailAndPassword(usuario, password);
+
         } else if ("admin".equalsIgnoreCase(tipo)) {
-            return empleadoRepository.findByNombreAndPassword(usuario, password);
+            // Cambiado a login con email
+            return empleadoRepository.findByEmailAndPassword(usuario, password);
         }
+
         return null;
     }
 }
