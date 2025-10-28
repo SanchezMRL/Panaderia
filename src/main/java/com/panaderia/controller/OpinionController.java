@@ -16,19 +16,18 @@ public class OpinionController {
     @Autowired private PedidoClienteRepository pedidoRepo;
 
     @PostMapping
-    public Map<String, Object> registrarOpinion(@RequestBody Map<String, Object> datos) {
-        Long idPedido = Long.valueOf(datos.get("idPedidoCliente").toString());
-        Long idCliente = Long.valueOf(datos.get("idCliente").toString());
+public Map<String, Object> registrarOpinion(@RequestBody Map<String, Object> datos) {
+    Long idPedido = Long.valueOf(datos.get("id_pedido_cliente").toString());
+    Long idCliente = Long.valueOf(datos.get("id_cliente").toString());
 
-        OpinionPedido opinion = new OpinionPedido();
-        opinion.setPedidoCliente(pedidoRepo.findById(idPedido).orElse(null));
-        opinion.setCliente(clienteRepo.findById(idCliente).orElse(null));
-        opinion.setComentario((String) datos.get("comentario"));
-        opinion.setCalificacion(Integer.valueOf(datos.get("calificacion").toString()));
-        opinion.setSatisfaccion(Integer.valueOf(datos.get("satisfaccion").toString()));
-        opinion.setFecha(LocalDateTime.now());
+    OpinionPedido op = new OpinionPedido();
+    op.setPedidoCliente(pedidoRepo.findById(idPedido).orElse(null));
+    op.setCliente(clienteRepo.findById(idCliente).orElse(null));
+    op.setComentario((String) datos.get("comentario"));
+    op.setCalificacion(Integer.valueOf(datos.get("calificacion").toString()));
+    op.setSatisfaccion(Integer.valueOf(datos.get("satisfaccion").toString()));
+    op.setFecha(Timestamp.valueOf(LocalDateTime.now()));
 
-        opinionRepo.save(opinion);
-        return Map.of("idOpinion", opinion.getIdOpinion());
-    }
+    opinionRepo.save(op);
+    return Map.of("id_opinion", op.getId_opinion());
 }
