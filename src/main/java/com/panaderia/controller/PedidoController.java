@@ -29,3 +29,4 @@ public Map<String, Object> registrarPedido(@RequestBody PedidoCliente pedido) {
     PedidoCliente guardado = pedidoRepo.save(pedido);
     return Map.of("id_pedido_cliente", guardado.getId_pedido_cliente());
 }
+}
