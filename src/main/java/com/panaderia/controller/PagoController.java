@@ -17,25 +17,21 @@ public class PagoController {
     @Autowired private EstadoPagoRepository estadoPagoRepo;
 
     @PostMapping
-    public Map<String, Object> registrarPago(@RequestBody Map<String, Object> datos) {
+public Map<String, Object> registrarPago(@RequestBody Map<String, Object> datos) {
+    Long idPedido = Long.valueOf(datos.get("id_pedido_cliente").toString());
+    Long idMetodo = Long.valueOf(datos.get("id_metodo_pago").toString());
+    Long idEstado = Long.valueOf(datos.get("id_estado_pago").toString());
 
-        Integer idPedido = (Integer) datos.get("id_pedido_cliente");
-        Integer idMetodo = (Integer) datos.get("id_metodo_pago");
-        Integer idEstado = (Integer) datos.get("id_estado_pago");
+    PedidoCliente pedido = pedidoRepo.findById(idPedido).orElse(null);
 
-        PedidoCliente pedido = pedidoRepo.findById(idPedido).orElse(null);
-        MetodoPago metodo = metodoPagoRepo.findById(idMetodo).orElse(null);
-        EstadoPago estado = estadoPagoRepo.findById(idEstado).orElse(null);
+    Pago pago = new Pago();
+    pago.setPedidoCliente(pedido);
+    pago.setMonto(new BigDecimal(datos.get("monto").toString()));
+    pago.setMetodoPago(metodoRepo.findById(idMetodo).orElse(null));
+    pago.setEstadoPago(estadoRepo.findById(idEstado).orElse(null));
+    pago.setFecha(LocalDateTime.now());
 
-        Pago pago = new Pago();
-        pago.setPedidoCliente(pedido);
-        pago.setMetodoPago(metodo);
-        pago.setEstadoPago(estado);
-        pago.setMonto(new java.math.BigDecimal(datos.get("monto").toString()));
-        pago.setFecha(LocalDate.now());
-
-        pagoRepo.save(pago);
-
-        return Map.of("id_pago", pago.getIdPago());
-    }
+    pagoRepo.save(pago);
+    return Map.of("id_pago", pago.getId_pago());
 }
+
