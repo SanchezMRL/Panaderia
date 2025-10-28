@@ -1,9 +1,3 @@
-package com.panaderia.entity;
-
-import jakarta.persistence.*;
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
 @Entity
 @Table(name = "pago")
 public class Pago {
@@ -16,12 +10,11 @@ public class Pago {
     @JoinColumn(name = "id_pedido_cliente")
     private PedidoCliente pedidoCliente;
 
-    @ManyToOne
-    @JoinColumn(name = "id_metodo_pago")
+    // 🔹 En lugar de @ManyToOne, usa @Enumerated(EnumType.STRING)
+    @Enumerated(EnumType.STRING)
     private MetodoPago metodoPago;
 
-    @ManyToOne
-    @JoinColumn(name = "id_estado_pago")
+    @Enumerated(EnumType.STRING)
     private EstadoPago estadoPago;
 
     private BigDecimal monto;
