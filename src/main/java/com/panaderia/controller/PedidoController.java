@@ -5,9 +5,9 @@ import com.panaderia.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
-import java.util.*;
-import java.math.BigDecimal;
+
 import java.time.LocalDate;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/pedido")
@@ -22,11 +22,15 @@ public class PedidoController {
     @Transactional
     public Map<String, Object> registrarPedido(@RequestBody PedidoCliente pedido) {
         pedido.setFecha(LocalDate.now());
+
+        // Asignar productos y vínculo entre pedido y detalles
         pedido.getDetalles().forEach(det -> {
-            det.setPedidoCliente(pedido);
-            det.setProducto(productoRepo.findById(det.getProducto().getId_producto()).orElse(null));
+            det.setPedidoCliente(pedido); // vínculo bidireccional
+            Long idProducto = det.getProducto().getIdProducto(); // corregido nombre
+            det.setProducto(productoRepo.findById(idProducto).orElse(null));
         });
+
         PedidoCliente guardado = pedidoRepo.save(pedido);
-        return Map.of("id_pedido_cliente", guardado.getId_pedido_cliente());
+        return Map.of("idPedidoCliente", guardado.getIdPedidoCliente()); // corregido nombre
     }
 }
