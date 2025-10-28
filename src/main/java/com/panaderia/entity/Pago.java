@@ -1,40 +1,48 @@
 package com.panaderia.entity;
 
 import jakarta.persistence.*;
-import java.sql.Timestamp;
+import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Entity
-@Table(name = "pagos")
+@Table(name = "pago")
 public class Pago {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer idPago;
 
-    @Column(name = "id_pedido_cliente")
-    private int idPedidoCliente;
+    @ManyToOne
+    @JoinColumn(name = "id_pedido_cliente")
+    private PedidoCliente pedidoCliente;
 
-    private String metodo;
-    private double monto;
-    private Timestamp fecha;
-    private String estado;
+    @ManyToOne
+    @JoinColumn(name = "id_metodo_pago")
+    private MetodoPago metodoPago;
 
-    // Getters y Setters
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    @ManyToOne
+    @JoinColumn(name = "id_estado_pago")
+    private EstadoPago estadoPago;
 
-    public int getIdPedidoCliente() { return idPedidoCliente; }
-    public void setIdPedidoCliente(int idPedidoCliente) { this.idPedidoCliente = idPedidoCliente; }
+    private BigDecimal monto;
+    private LocalDate fecha;
 
-    public String getMetodo() { return metodo; }
-    public void setMetodo(String metodo) { this.metodo = metodo; }
+    // Getters y setters
+    public Integer getIdPago() { return idPago; }
+    public void setIdPago(Integer idPago) { this.idPago = idPago; }
 
-    public double getMonto() { return monto; }
-    public void setMonto(double monto) { this.monto = monto; }
+    public PedidoCliente getPedidoCliente() { return pedidoCliente; }
+    public void setPedidoCliente(PedidoCliente pedidoCliente) { this.pedidoCliente = pedidoCliente; }
 
-    public Timestamp getFecha() { return fecha; }
-    public void setFecha(Timestamp fecha) { this.fecha = fecha; }
+    public MetodoPago getMetodoPago() { return metodoPago; }
+    public void setMetodoPago(MetodoPago metodoPago) { this.metodoPago = metodoPago; }
 
-    public String getEstado() { return estado; }
-    public void setEstado(String estado) { this.estado = estado; }
+    public EstadoPago getEstadoPago() { return estadoPago; }
+    public void setEstadoPago(EstadoPago estadoPago) { this.estadoPago = estadoPago; }
+
+    public BigDecimal getMonto() { return monto; }
+    public void setMonto(BigDecimal monto) { this.monto = monto; }
+
+    public LocalDate getFecha() { return fecha; }
+    public void setFecha(LocalDate fecha) { this.fecha = fecha; }
 }
