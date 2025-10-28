@@ -16,6 +16,9 @@ public class LoginService {
     @Autowired
     private EmpleadoRepository empleadoRepository;
 
+    /**
+     * Autenticación general de usuarios.
+     */
     public Object autenticar(String usuario, String password, String tipo) {
         if ("cliente".equalsIgnoreCase(tipo)) {
             return clienteRepository.findByEmailAndPassword(usuario, password);
@@ -25,3 +28,4 @@ public class LoginService {
         return null;
     }
 }
+
