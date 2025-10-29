@@ -1,13 +1,7 @@
 package com.panaderia.controller;
 
-import com.panaderia.entity.Pago;
-import com.panaderia.entity.PedidoCliente;
-import com.panaderia.entity.MetodoPago;
-import com.panaderia.entity.EstadoPago;
-import com.panaderia.repository.PagoRepository;
-import com.panaderia.repository.PedidoClienteRepository;
-import com.panaderia.repository.MetodoPagoRepository;
-import com.panaderia.repository.EstadoPagoRepository;
+import com.panaderia.entity.*;
+import com.panaderia.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,14 +20,17 @@ public class PagoController {
 
     @PostMapping
     public Map<String, Object> registrarPago(@RequestBody Map<String, Object> datos) {
-        Long idPedido = Long.valueOf(datos.get("id_pedido_cliente").toString());
-        Long idMetodo = Long.valueOf(datos.get("id_metodo_pago").toString());
-        Long idEstado = Long.valueOf(datos.get("id_estado_pago").toString());
+        // ✅ Conversiones seguras
+        Integer idPedido = Integer.valueOf(datos.get("id_pedido_cliente").toString());
+        Integer idMetodo = Integer.valueOf(datos.get("id_metodo_pago").toString());
+        Integer idEstado = Integer.valueOf(datos.get("id_estado_pago").toString());
 
+        // ✅ Búsqueda de entidades
         PedidoCliente pedido = pedidoRepo.findById(idPedido).orElse(null);
         MetodoPago metodo = metodoRepo.findById(idMetodo).orElse(null);
         EstadoPago estado = estadoRepo.findById(idEstado).orElse(null);
 
+        // ✅ Crear y guardar el pago
         Pago pago = new Pago();
         pago.setPedidoCliente(pedido);
         pago.setMetodoPago(metodo);
@@ -43,6 +40,8 @@ public class PagoController {
 
         pagoRepo.save(pago);
 
-        return Map.of("id_pago", pago.getId_pago());
+        // ✅ Retornar el ID correcto según tu entidad
+        return Map.of("id_pago", pago.getIdPago());
     }
 }
+
