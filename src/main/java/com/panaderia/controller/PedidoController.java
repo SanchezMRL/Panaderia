@@ -35,27 +35,49 @@ public class PedidoController {
         pedido.getDetalles().forEach(det -> {
             det.setPedidoCliente(pedido);
 
+            Long idProducto = null;
+
+            // ✅ Intentar obtener el ID del producto desde el objeto recibido
             if (det.getProducto() != null && det.getProducto().getIdProducto() != null) {
-                Long idProducto = det.getProducto().getIdProducto();
-
-                Producto producto = productoRepo.findById(idProducto).orElse(null);
-                det.setProducto(producto);
-
-                if (producto != null && producto.getPrecioUnitario() != null) {
-                    // ✅ Asignar el precio unitario desde el producto
-                    det.setPrecioUnitario(producto.getPrecioUnitario());
-
-                    // ✅ Calcular el subtotal = cantidad * precio
-                    if (det.getCantidad() != null) {
-                        BigDecimal subtotal = producto.getPrecioUnitario()
-                                .multiply(BigDecimal.valueOf(det.getCantidad()));
-                        det.setSubtotal(subtotal);
+                idProducto = det.getProducto().getIdProducto();
+            } else {
+                try {
+                    // ✅ Si vino como "id_producto" (sin objeto anidado)
+                    var field = det.getClass().getDeclaredField("id_producto");
+                    field.setAccessible(true);
+                    Object valor = field.get(det);
+                    if (valor != null) {
+                        idProducto = Long.valueOf(valor.toString());
                     }
-                }
+                } catch (Exception ignored) {}
+            }
+
+            if (idProducto == null) {
+                throw new RuntimeException("⚠️ No se envió un id_producto válido en el detalle.");
+            }
+
+            // 🔹 Buscar el producto en la BD
+            Producto producto = productoRepo.findById(idProducto)
+                    .orElseThrow(() -> new RuntimeException("❌ Producto con ID " + idProducto + " no encontrado."));
+
+            det.setProducto(producto);
+
+            // 🔹 Asignar precio y subtotal
+            BigDecimal precio = producto.getPrecioUnitario();
+            if (precio == null) {
+                throw new RuntimeException("⚠️ El producto con ID " + idProducto + " no tiene precio_unitario definido.");
+            }
+
+            det.setPrecioUnitario(precio);
+
+            if (det.getCantidad() != null && det.getCantidad() > 0) {
+                det.setSubtotal(precio.multiply(BigDecimal.valueOf(det.getCantidad())));
+            } else {
+                throw new RuntimeException("⚠️ La cantidad del producto " + idProducto + " no puede ser nula o cero.");
             }
         });
 
-        // 🟢 Guardar el pedido completo
+        // 🟢 Guardar el pedido completo con sus detalles
         PedidoCliente guardado = pedidoRepo.save(pedido);
 
         // 🟢 Devolver el ID del pedido guardado
