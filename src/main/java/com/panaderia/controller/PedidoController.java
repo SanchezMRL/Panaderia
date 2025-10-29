@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -30,13 +31,27 @@ public class PedidoController {
     public Map<String, Object> registrarPedido(@RequestBody PedidoCliente pedido) {
         pedido.setFecha(LocalDate.now());
 
-        // 🟢 Vincular detalles al pedido y cargar productos existentes
+        // 🟢 Vincular detalles al pedido y calcular precios
         pedido.getDetalles().forEach(det -> {
             det.setPedidoCliente(pedido);
+
             if (det.getProducto() != null && det.getProducto().getId_producto() != null) {
-                // Cambiado a Long (coherente con las entidades)
                 Long idProducto = det.getProducto().getId_producto();
-                det.setProducto(productoRepo.findById(idProducto).orElse(null));
+
+                Producto producto = productoRepo.findById(idProducto).orElse(null);
+                det.setProducto(producto);
+
+                if (producto != null) {
+                    // ✅ Asignar el precio unitario desde el producto
+                    det.setPrecioUnitario(producto.getPrecio());
+
+                    // ✅ Calcular el subtotal = cantidad * precio
+                    if (det.getCantidad() != null) {
+                        BigDecimal subtotal = producto.getPrecio()
+                                .multiply(BigDecimal.valueOf(det.getCantidad()));
+                        det.setSubtotal(subtotal);
+                    }
+                }
             }
         });
 
