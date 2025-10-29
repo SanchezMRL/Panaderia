@@ -1,6 +1,9 @@
 # Panaderia Web (Maven WAR) - FIXED
 https://panaderia-stgh.onrender.com
 
+ana.fernandez@panaderia.com
+passAna123
+
 
 PRESENTACION:
 
