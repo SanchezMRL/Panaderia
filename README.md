@@ -5,11 +5,6 @@ ana.fernandez@panaderia.com
 passAna123
 
 
-PRESENTACION:
-
-
-https://www.canva.com/design/DAGx4AxrhXE/Eg8qckpIuy26I_vdhQHIYg/edit
-
 ## Ejecutar localmente
 
 1. Asegúrate de tener Java 11+ y Maven instalados.
