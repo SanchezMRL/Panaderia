@@ -14,16 +14,16 @@ import java.util.Map;
 @RequestMapping("/api/pedido")
 public class PedidoController {
 
-    @Autowired 
+    @Autowired
     private PedidoClienteRepository pedidoRepo;
 
-    @Autowired 
+    @Autowired
     private ClienteRepository clienteRepo;
 
-    @Autowired 
+    @Autowired
     private EmpleadoRepository empleadoRepo;
 
-    @Autowired 
+    @Autowired
     private ProductoRepository productoRepo;
 
     @PostMapping
@@ -35,19 +35,19 @@ public class PedidoController {
         pedido.getDetalles().forEach(det -> {
             det.setPedidoCliente(pedido);
 
-            if (det.getProducto() != null && det.getProducto().getId_producto() != null) {
-                Long idProducto = det.getProducto().getId_producto();
+            if (det.getProducto() != null && det.getProducto().getIdProducto() != null) {
+                Long idProducto = det.getProducto().getIdProducto();
 
                 Producto producto = productoRepo.findById(idProducto).orElse(null);
                 det.setProducto(producto);
 
-                if (producto != null) {
+                if (producto != null && producto.getPrecioUnitario() != null) {
                     // ✅ Asignar el precio unitario desde el producto
-                    det.setPrecioUnitario(producto.getPrecio());
+                    det.setPrecioUnitario(producto.getPrecioUnitario());
 
                     // ✅ Calcular el subtotal = cantidad * precio
                     if (det.getCantidad() != null) {
-                        BigDecimal subtotal = producto.getPrecio()
+                        BigDecimal subtotal = producto.getPrecioUnitario()
                                 .multiply(BigDecimal.valueOf(det.getCantidad()));
                         det.setSubtotal(subtotal);
                     }
