@@ -22,14 +22,13 @@ public class OpinionService {
         return opinionRepository.findAll();
     }
 
-    // ✅ Buscar opiniones por cliente
-    public List<OpinionPedido> buscarPorCliente(Integer idCliente) {
+    // ✅ Buscar opiniones por cliente (cambiado Integer → Long)
+    public List<OpinionPedido> buscarPorCliente(Long idCliente) {
         return opinionRepository.findByCliente_IdCliente(idCliente);
     }
 
-    // ✅ Buscar opiniones por pedido
-    public List<OpinionPedido> buscarPorPedido(Integer idPedidoCliente) {
+    // ✅ Buscar opiniones por pedido (cambiado Integer → Long)
+    public List<OpinionPedido> buscarPorPedido(Long idPedidoCliente) {
         return opinionRepository.findByPedidoCliente_IdPedidoCliente(idPedidoCliente);
     }
 }
-
