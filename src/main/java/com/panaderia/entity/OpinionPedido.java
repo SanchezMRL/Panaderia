@@ -9,7 +9,7 @@ public class OpinionPedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idOpinion;
+    private Long idOpinion;
 
     private String comentario;
     private Integer calificacion;
@@ -26,7 +26,7 @@ public class OpinionPedido {
 
     // ✅ Getters y Setters correctos
 
-    public Integer getIdOpinion() {
+    public Long getIdOpinion() {
         return idOpinion;
     }
 
