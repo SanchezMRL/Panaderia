@@ -23,9 +23,10 @@ public class OpinionController {
 
     @PostMapping
     public Map<String, Object> registrarOpinion(@RequestBody Map<String, Object> datos) {
-        // 🟢 IDs como Integer (coincide con las entidades)
-        Integer idPedido = Integer.valueOf(datos.get("id_pedido_cliente").toString());
-        Integer idCliente = Integer.valueOf(datos.get("id_cliente").toString());
+
+        // 🟢 IDs como Long (coincide con tus entidades)
+        Long idPedido = Long.valueOf(datos.get("id_pedido_cliente").toString());
+        Long idCliente = Long.valueOf(datos.get("id_cliente").toString());
 
         OpinionPedido op = new OpinionPedido();
         op.setPedidoCliente(pedidoRepo.findById(idPedido).orElse(null));
@@ -33,11 +34,11 @@ public class OpinionController {
         op.setComentario((String) datos.get("comentario"));
         op.setCalificacion(Integer.valueOf(datos.get("calificacion").toString()));
         op.setSatisfaccion(Integer.valueOf(datos.get("satisfaccion").toString()));
-        op.setFecha(LocalDateTime.now()); // ✅ se guarda correctamente
+        op.setFecha(LocalDateTime.now());
 
         opinionRepo.save(op);
 
-        // 🟢 Asegúrate que en OpinionPedido el campo sea “idOpinion”
+        // 🟢 Asegúrate de que OpinionPedido tenga idOpinion tipo Long
         return Map.of("id_opinion", op.getIdOpinion());
     }
 }
