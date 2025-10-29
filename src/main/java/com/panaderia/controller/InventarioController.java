@@ -3,6 +3,7 @@ package com.panaderia.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;   // ✅ Este es el que faltaba
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -30,9 +31,9 @@ public class InventarioController {
             ORDER BY p.id_producto;
         """;
 
-        // 🔧 Solución: cast explícito para eliminar la incompatibilidad
         @SuppressWarnings("unchecked")
-        List<Map<String, Object>> inventario = (List<Map<String, Object>>) (List<?>) jdbcTemplate.queryForList(sql);
+        List<Map<String, Object>> inventario =
+                (List<Map<String, Object>>) (List<?>) jdbcTemplate.queryForList(sql);
 
         return inventario;
     }
