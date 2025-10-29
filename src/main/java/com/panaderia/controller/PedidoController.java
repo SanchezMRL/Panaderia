@@ -29,56 +29,49 @@ public class PedidoController {
     @PostMapping
     @Transactional
     public Map<String, Object> registrarPedido(@RequestBody PedidoCliente pedido) {
+
         pedido.setFecha(LocalDate.now());
 
-        // 🔁 Recorremos los detalles con un bucle clásico (no lambda)
+        // 🔁 Recorremos los detalles con bucle clásico
         for (DetallePedidoCliente det : pedido.getDetalles()) {
+
             det.setPedidoCliente(pedido);
 
-            Long idProducto = null;
-
-            // ✅ Obtener el ID del producto
-            if (det.getProducto() != null && det.getProducto().getIdProducto() != null) {
-                idProducto = det.getProducto().getIdProducto();
-            } else {
-                try {
-                    // Si el JSON vino con "id_producto" plano
-                    var field = det.getClass().getDeclaredField("id_producto");
-                    field.setAccessible(true);
-                    Object valor = field.get(det);
-                    if (valor != null) idProducto = Long.valueOf(valor.toString());
-                } catch (Exception ignored) {}
+            // 🔹 Validar producto y obtener ID
+            if (det.getProducto() == null || det.getProducto().getIdProducto() == null) {
+                throw new IllegalArgumentException("Debe especificarse un producto válido en cada detalle.");
             }
 
-            if (idProducto == null) {
-                throw new RuntimeException("⚠️ No se envió un id_producto válido en el detalle.");
-            }
+            Long idProducto = det.getProducto().getIdProducto();
 
-            // 🔹 Buscar el producto en la base de datos
+            // 🔹 Buscar producto en base de datos
             Producto producto = productoRepo.findById(idProducto)
-                    .orElseThrow(() -> new RuntimeException("❌ Producto con ID " + idProducto + " no encontrado."));
+                    .orElseThrow(() -> new IllegalArgumentException("Producto con ID " + idProducto + " no encontrado."));
 
             det.setProducto(producto);
 
-            // 🔹 Asignar precio unitario y subtotal
+            // 🔹 Validar precio
             BigDecimal precio = producto.getPrecioUnitario();
             if (precio == null) {
-                throw new RuntimeException("⚠️ El producto con ID " + idProducto + " no tiene precio definido.");
+                throw new IllegalArgumentException("El producto con ID " + idProducto + " no tiene precio definido.");
             }
 
             det.setPrecioUnitario(precio);
 
+            // 🔹 Validar cantidad
             if (det.getCantidad() == null || det.getCantidad() <= 0) {
-                throw new RuntimeException("⚠️ La cantidad del producto " + idProducto + " no puede ser nula o cero.");
+                throw new IllegalArgumentException("La cantidad del producto " + idProducto + " no puede ser nula o cero.");
             }
 
-            det.setSubtotal(precio.multiply(BigDecimal.valueOf(det.getCantidad())));
+            // 🔹 Calcular subtotal
+            BigDecimal subtotal = precio.multiply(BigDecimal.valueOf(det.getCantidad()));
+            det.setSubtotal(subtotal);
         }
 
-        // 🟢 Guardar el pedido completo con sus detalles
+        // 🟢 Guardar pedido y detalles
         PedidoCliente guardado = pedidoRepo.save(pedido);
 
-        // 🟢 Devolver el ID del pedido guardado
+        // 🟢 Retornar ID del pedido guardado
         return Map.of("id_pedido_cliente", guardado.getIdPedidoCliente());
     }
 }
