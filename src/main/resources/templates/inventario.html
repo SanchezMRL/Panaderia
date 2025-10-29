@@ -2,6 +2,7 @@
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inventario de Productos - Panadería</title>
   <style>
     :root {
@@ -132,30 +133,28 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Mostrar mensaje si el inventario está vacío -->
-        <tr th:if="${#lists.isEmpty(inventario)}">
+        <!-- Si no hay datos -->
+        <tr th:if="${inventario == null or #lists.isEmpty(inventario)}">
           <td colspan="6" class="mensaje">❌ No hay productos en el inventario</td>
         </tr>
 
-        <!-- Mostrar los productos -->
+        <!-- Si hay datos -->
         <tr th:each="item : ${inventario}">
-          <td th:text="${item.id_producto}"></td>
-          <td th:text="${item.nombre}"></td>
-          <td th:text="${item.categoria}"></td>
-          <td th:text="${item.cantidad}"></td>
-          <td th:text="${item.unidad_medida}"></td>
-          <td th:text="${#dates.format(item.ultima_actualizacion, 'dd/MM/yyyy')}"></td>
+          <td th:text="${item.id_producto}">1</td>
+          <td th:text="${item.nombre}">Pan francés</td>
+          <td th:text="${item.categoria}">Panadería</td>
+          <td th:text="${item.cantidad}">50</td>
+          <td th:text="${item.unidad_medida}">Unidades</td>
+          <td th:text="${#dates.format(item.ultima_actualizacion, 'dd/MM/yyyy')}">28/10/2025</td>
         </tr>
       </tbody>
     </table>
 
-    <!-- Botón de actualización -->
     <form th:action="@{/inventario}" method="get">
       <button type="submit">🔄 Actualizar Inventario</button>
     </form>
 
-    <!-- Enlace para volver al inicio -->
-    <a href="/" class="volver">🏠 Volver al inicio</a>
+    <a th:href="@{/}" class="volver">🏠 Volver al inicio</a>
   </main>
 </body>
 </html>
