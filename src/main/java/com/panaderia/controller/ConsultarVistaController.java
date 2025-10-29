@@ -1,17 +1,15 @@
 package com.panaderia.controller;
 
 import com.panaderia.entity.PedidoCliente;
-import com.panaderia.entity.DetallePedidoCliente;
 import com.panaderia.entity.OpinionPedido;
 import com.panaderia.repository.PedidoClienteRepository;
-import com.panaderia.repository.OpinionRepository;
-
+import com.panaderia.service.OpinionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.*;
+import java.util.Optional;
 
 @Controller
 public class ConsultarVistaController {
@@ -20,7 +18,7 @@ public class ConsultarVistaController {
     private PedidoClienteRepository pedidoClienteRepo;
 
     @Autowired
-    private OpinionRepository opinionRepo;
+    private OpinionService opinionService; // ✅ usar el service, no el repo
 
     @GetMapping("/consultar")
     public String mostrarFormulario() {
@@ -35,6 +33,7 @@ public class ConsultarVistaController {
 
         if (tipo.equalsIgnoreCase("cliente")) {
             Optional<PedidoCliente> pedidoOpt = pedidoClienteRepo.findById(id);
+
             if (pedidoOpt.isEmpty()) {
                 model.addAttribute("mensaje", "Pedido no encontrado");
                 return "consultar";
@@ -43,9 +42,9 @@ public class ConsultarVistaController {
             PedidoCliente pedido = pedidoOpt.get();
             model.addAttribute("pedido", pedido);
 
-            // buscar opinión asociada
-            Optional<OpinionPedido> opinion = opinionRepo.findByPedidoCliente_IdPedidoCliente(id);
-            opinion.ifPresent(o -> model.addAttribute("opinion", o));
+            // ✅ buscar UNA opinión (usa Optional)
+            Optional<OpinionPedido> opinionOpt = opinionService.buscarPorPedido(id);
+            opinionOpt.ifPresent(o -> model.addAttribute("opinion", o));
 
             model.addAttribute("tipo", "cliente");
             return "consultar";
