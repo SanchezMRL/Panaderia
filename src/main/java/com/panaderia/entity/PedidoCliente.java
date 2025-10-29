@@ -10,7 +10,7 @@ public class PedidoCliente {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idPedidoCliente;
+    private Long idPedidoCliente;
 
     private LocalDate fecha;
     private String estado;
@@ -27,8 +27,8 @@ public class PedidoCliente {
     private List<DetallePedidoCliente> detalles;
 
     // Getters y setters
-    public Integer getIdPedidoCliente() { return idPedidoCliente; }
-    public void setIdPedidoCliente(Integer idPedidoCliente) { this.idPedidoCliente = idPedidoCliente; }
+    public Long getIdPedidoCliente() { return idPedidoCliente; }
+    public void setIdPedidoCliente(Long idPedidoCliente) { this.idPedidoCliente = idPedidoCliente; }
 
     public LocalDate getFecha() { return fecha; }
     public void setFecha(LocalDate fecha) { this.fecha = fecha; }
