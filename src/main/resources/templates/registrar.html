@@ -17,90 +17,191 @@
   <header><h1>🍞 Registrar Pedido - Panadería</h1></header>
   <div class="card">
     <form id="formPedido">
-      <input id="id_cliente" placeholder="ID Cliente" type="number" required>
-      <input id="id_empleado" placeholder="ID Empleado" type="number" required>
+      <label>Tipo de pedido:</label>
+      <select id="tipoPedido" required>
+        <option value="cliente">Cliente</option>
+        <option value="proveedor">Proveedor</option>
+      </select>
+
+      <div id="datosGenerales">
+        <input id="id_persona" placeholder="ID Cliente o Proveedor" required type="number">
+        <input id="id_empleado" placeholder="ID Empleado" required type="number">
+        <input id="fecha" required type="date">
+        <input id="estado" placeholder="Estado" required>
+        <div id="observacionesCampo" style="display:none">
+          <textarea id="observaciones" placeholder="Observaciones del pedido (solo proveedor)"></textarea>
+        </div>
+      </div>
 
       <h4>Agregar Producto</h4>
-      <div>
-        <input id="id_producto" placeholder="ID Producto" type="number">
-        <input id="nombre_producto" placeholder="Nombre Producto" readonly>
+      <div class="producto-row">
+        <div>
+          <input id="id_producto" placeholder="ID Producto" type="number">
+          <input id="nombre_producto" placeholder="Nombre Producto" readonly>
+        </div>
+        <input id="cantidad" placeholder="Cantidad" type="number" min="1">
+        <input id="precio_unitario" placeholder="Precio o Coste Unitario" step="0.01" type="number">
       </div>
-      <input id="cantidad" placeholder="Cantidad" type="number" min="1">
 
       <button type="button" onclick="agregar()">Agregar Detalle</button>
       <ul id="listaDetalles"></ul>
 
-      <h4>Pago</h4>
-      <select id="id_metodo_pago" required>
-        <option value="1">Efectivo</option>
-        <option value="2">Tarjeta</option>
-        <option value="3">Transferencia</option>
-      </select>
+      <div id="pagoCampos" style="display:none">
+        <h4>Datos de Pago (solo clientes)</h4>
+        <label>Método de pago:</label>
+        <select id="metodo_pago">
+          <option value="Efectivo">Efectivo</option>
+          <option value="Tarjeta">Tarjeta</option>
+          <option value="Transferencia">Transferencia</option>
+          <option value="Cheque">Cheque</option>
+        </select>
+        <label>Monto total:</label>
+        <input id="monto_total" type="number" step="0.01" readonly>
+      </div>
 
-      <select id="id_estado_pago" required>
-        <option value="1">Pendiente</option>
-        <option value="2">Pagado</option>
-      </select>
+      <div id="opinionCampos" style="display:none">
+        <h4>Opinión del cliente</h4>
+        <textarea id="comentario" placeholder="Comentario"></textarea>
+        <input id="calificacion" placeholder="Calificación (1-5)" min="1" max="5" type="number">
+        <input id="satisfaccion" placeholder="Satisfacción (1-5)" min="1" max="5" type="number">
+      </div>
 
-      <input id="monto_total" placeholder="Monto total" type="number" step="0.01" readonly>
-
-      <button type="submit">Registrar Pedido</button>
+      <button type="submit">Registrar</button>
       <p id="mensaje"></p>
     </form>
   </div>
 
   <script>
-    let detalles = [];
-    let total = 0;
+  let detalles = [];
+  let totalPedido = 0;
+  let precioBaseActual = 0;
 
-    document.getElementById('id_producto').addEventListener('change', async function() {
-      const idProducto = this.value;
-      if (!idProducto) return;
-      try {
-        const res = await fetch(`/api/producto/${idProducto}`);
-        const prod = await res.json();
-        if (prod.error) { alert(prod.error); return; }
-        document.getElementById('nombre_producto').value = prod.nombre;
-      } catch (e) { alert('Error al obtener producto'); }
-    });
+  function actualizarSecciones() {
+    const tipo = document.getElementById('tipoPedido').value;
+    document.getElementById('opinionCampos').style.display = tipo === 'cliente' ? 'block' : 'none';
+    document.getElementById('pagoCampos').style.display = tipo === 'cliente' ? 'block' : 'none';
+    document.getElementById('observacionesCampo').style.display = tipo === 'proveedor' ? 'block' : 'none';
+  }
 
-    function agregar() {
-      const id_producto = parseInt(document.getElementById('id_producto').value);
-      const cantidad = parseInt(document.getElementById('cantidad').value);
-      if (!id_producto || !cantidad) { alert("Completa todos los campos"); return; }
+  document.addEventListener('DOMContentLoaded', function () {
+    actualizarSecciones();
+    document.getElementById('tipoPedido').addEventListener('change', actualizarSecciones);
+  });
 
-      detalles.push({ producto: { idProducto: id_producto }, cantidad });
-      const item = document.createElement('li');
-      item.textContent = `Producto ${id_producto}: Cantidad ${cantidad}`;
-      document.getElementById('listaDetalles').appendChild(item);
+  // ✅ Corregido: comillas en fetch
+  document.getElementById('id_producto').addEventListener('change', async function () {
+    const idProducto = this.value;
+    if (!idProducto) return;
+    try {
+      const response = await fetch(`/api/producto/${idProducto}`);
+      const producto = await response.json();
+      if (producto.error) { alert(producto.error); return; }
 
-      document.getElementById('id_producto').value = '';
-      document.getElementById('cantidad').value = '';
+      document.getElementById('nombre_producto').value = producto.nombre;
+      precioBaseActual = producto.precio_base;
+
+      const tipo = document.getElementById('tipoPedido').value;
+      const precioUnitario = document.getElementById('precio_unitario');
+
+      if (tipo === 'cliente') {
+        precioUnitario.value = precioBaseActual.toFixed(2);
+      } else {
+        precioUnitario.value = (precioBaseActual * 0.8).toFixed(2);
+      }
+
+    } catch (error) {
+      console.error('Error al cargar producto:', error);
+      alert('Error al cargar producto');
+    }
+  });
+
+  function agregar() {
+    const tipo = document.getElementById('tipoPedido').value;
+    const id_producto = parseInt(document.getElementById('id_producto').value);
+    const cantidad = parseInt(document.getElementById('cantidad').value);
+    const precio_unitario = parseFloat(document.getElementById('precio_unitario').value);
+
+    if (!id_producto || !cantidad || cantidad <= 0 || isNaN(precio_unitario)) {
+      alert("Debe completar todos los campos del producto con valores válidos");
+      return;
     }
 
-    document.getElementById('formPedido').addEventListener('submit', async e => {
-      e.preventDefault();
-      const id_cliente = parseInt(document.getElementById('id_cliente').value);
-      const id_empleado = parseInt(document.getElementById('id_empleado').value);
-      if (detalles.length === 0) { alert("Agrega al menos un producto"); return; }
+    // ✅ Adaptado al backend
+    const detalle = {
+      producto: { idProducto: id_producto },
+      cantidad: cantidad
+    };
 
-      const pedido = { cliente: { idCliente: id_cliente }, empleado: { idEmpleado: id_empleado }, detalles };
+    if (tipo === 'cliente') {
+      detalle.precio_unitario = precio_unitario;
+      totalPedido += cantidad * precio_unitario;
+    } else {
+      detalle.coste_unitario = precio_unitario;
+    }
 
-      try {
-        // 🟢 Registrar pedido
-        const resPedido = await fetch('/api/pedido', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(pedido)
-        });
-        const dataPedido = await resPedido.json();
+    detalles.push(detalle);
 
-        // 🟢 Registrar pago
+    const item = document.createElement('li');
+    item.textContent = `Producto ${id_producto} (${document.getElementById('nombre_producto').value}): ${cantidad} x S/.${precio_unitario.toFixed(2)}`;
+    document.getElementById('listaDetalles').appendChild(item);
+
+    if (tipo === 'cliente') {
+      document.getElementById('monto_total').value = totalPedido.toFixed(2);
+    }
+
+    document.getElementById('id_producto').value = '';
+    document.getElementById('cantidad').value = '';
+    document.getElementById('precio_unitario').value = '';
+  }
+
+  document.getElementById('formPedido').addEventListener('submit', async e => {
+    e.preventDefault();
+
+    const tipo = document.getElementById('tipoPedido').value;
+    const id_persona = parseInt(document.getElementById('id_persona').value);
+    const id_empleado = parseInt(document.getElementById('id_empleado').value);
+    const fecha = document.getElementById('fecha').value;
+    const estado = document.getElementById('estado').value;
+    const observaciones = document.getElementById('observaciones').value;
+
+    if (detalles.length === 0) {
+      alert("Agrega al menos un producto");
+      return;
+    }
+
+    // ✅ Estructura correcta para PedidoController
+    const pedido = {
+      empleado: { idEmpleado: id_empleado },
+      fecha,
+      estado,
+      detalles
+    };
+
+    if (tipo === 'cliente') {
+      pedido.cliente = { idCliente: id_persona };
+    } else {
+      pedido.proveedor = { idProveedor: id_persona };
+      pedido.observaciones = observaciones;
+    }
+
+    try {
+      const resPedido = await fetch('/api/pedido', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(pedido)
+      });
+
+      const dataPedido = await resPedido.json();
+
+      // 🟢 Solo registrar pago si es cliente
+      if (tipo === 'cliente') {
         const pago = {
           id_pedido_cliente: dataPedido.id_pedido_cliente,
-          id_metodo_pago: parseInt(document.getElementById('id_metodo_pago').value),
-          id_estado_pago: parseInt(document.getElementById('id_estado_pago').value),
-          monto: parseFloat(document.getElementById('monto_total').value || 0)
+          id_metodo_pago: document.getElementById('metodo_pago').value === 'Efectivo' ? 1 :
+                          document.getElementById('metodo_pago').value === 'Tarjeta' ? 2 :
+                          document.getElementById('metodo_pago').value === 'transferencia' ? 3 : 4,
+          id_estado_pago: 1, // pendiente por defecto
+          monto: totalPedido
         };
 
         await fetch('/api/pago', {
@@ -109,16 +210,37 @@
           body: JSON.stringify(pago)
         });
 
-        document.getElementById('mensaje').textContent = '✅ Pedido y pago registrados correctamente';
-        document.getElementById('formPedido').reset();
-        document.getElementById('listaDetalles').innerHTML = '';
-        detalles = [];
+        // Opinión opcional
+        const opinion = {
+          id_pedido_cliente: dataPedido.id_pedido_cliente,
+          comentario: document.getElementById('comentario').value,
+          calificacion: parseInt(document.getElementById('calificacion').value),
+          satisfaccion: parseInt(document.getElementById('satisfaccion').value),
+          fecha: new Date().toISOString()
+        };
 
-      } catch (err) {
-        console.error(err);
-        document.getElementById('mensaje').textContent = '❌ Error al registrar el pedido';
+        if (opinion.comentario || !isNaN(opinion.calificacion) || !isNaN(opinion.satisfaccion)) {
+          await fetch('/api/opinion', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(opinion)
+          });
+        }
       }
-    });
-  </script>
+
+      // 🟢 Reset
+      document.getElementById('formPedido').reset();
+      document.getElementById('listaDetalles').innerHTML = '';
+      detalles = [];
+      totalPedido = 0;
+      precioBaseActual = 0;
+      document.getElementById('mensaje').textContent = '✅ Pedido registrado correctamente';
+
+    } catch (err) {
+      console.error(err);
+      document.getElementById('mensaje').textContent = '❌ Error al registrar el pedido';
+    }
+  });
+</script>
 </body>
 </html>
