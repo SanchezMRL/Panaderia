@@ -74,28 +74,33 @@
     </form>
 
     <div id="resultado">
-      <p th:if="${mensaje}" th:text="${mensaje}"></p>
+      <!-- Mensaje de error o información -->
+      <p th:if="${mensaje != null}" th:text="${mensaje}"></p>
 
-      <div th:if="${pedido}">
+      <!-- Pedido encontrado -->
+      <div th:if="${pedido != null}">
         <h3>Pedido [[${pedido.idPedidoCliente}]]</h3>
         <ul>
           <li><strong>Fecha:</strong> [[${pedido.fecha}]]</li>
           <li><strong>Estado:</strong> [[${pedido.estado}]]</li>
+
           <li th:if="${pedido.empleado != null}">
             <strong>Empleado:</strong> [[${pedido.empleado.nombre}]]
           </li>
+
           <li th:if="${pedido.cliente != null}">
             <strong>Cliente:</strong> [[${pedido.cliente.nombre}]]
           </li>
+
           <li><strong>Detalles:</strong></li>
           <ul th:if="${pedido.detalles != null}">
             <li th:each="det : ${pedido.detalles}">
-              [[${det.producto.nombre}]] - Cant: [[${det.cantidad}]], Precio: S/. [[${det.precioUnitario}]]
+              [[${det.producto.nombre}]] - Cant: [[${det.cantidad}]], Subtotal: S/. [[${det.subtotal}]]
             </li>
           </ul>
         </ul>
 
-        <div th:if="${opinion}">
+        <div th:if="${opinion != null}">
           <h4>Opinión del Cliente</h4>
           <ul>
             <li><strong>Comentario:</strong> [[${opinion.comentario}]]</li>
