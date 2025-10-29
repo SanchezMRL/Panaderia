@@ -11,39 +11,80 @@ public class DetallePedidoCliente {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long idDetalle;
 
-    @ManyToOne
-    @JoinColumn(name = "id_pedido_cliente")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_pedido_cliente", nullable = false)
     private PedidoCliente pedidoCliente;
 
-    @ManyToOne
-    @JoinColumn(name = "id_producto")
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id_producto", nullable = false)
     private Producto producto;
 
+    @Column(nullable = false)
     private Integer cantidad;
 
-    // 💰 Nuevo campo para el precio unitario del producto
-    @Column(name = "precio_unitario", precision = 10, scale = 2)
+    // 💰 Campo de precio unitario (NO puede ser nulo)
+    @Column(name = "precio_unitario", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioUnitario;
 
+    // 🧮 Subtotal calculado (cantidad × precio)
+    @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal subtotal;
 
     // ===== Getters y Setters =====
-    public Long getIdDetalle() { return idDetalle; }
-    public void setIdDetalle(Long idDetalle) { this.idDetalle = idDetalle; }
+    public Long getIdDetalle() {
+        return idDetalle;
+    }
 
-    public PedidoCliente getPedidoCliente() { return pedidoCliente; }
-    public void setPedidoCliente(PedidoCliente pedidoCliente) { this.pedidoCliente = pedidoCliente; }
+    public void setIdDetalle(Long idDetalle) {
+        this.idDetalle = idDetalle;
+    }
 
-    public Producto getProducto() { return producto; }
-    public void setProducto(Producto producto) { this.producto = producto; }
+    public PedidoCliente getPedidoCliente() {
+        return pedidoCliente;
+    }
 
-    public Integer getCantidad() { return cantidad; }
-    public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
+    public void setPedidoCliente(PedidoCliente pedidoCliente) {
+        this.pedidoCliente = pedidoCliente;
+    }
 
-    public BigDecimal getPrecioUnitario() { return precioUnitario; }
-    public void setPrecioUnitario(BigDecimal precioUnitario) { this.precioUnitario = precioUnitario; }
+    public Producto getProducto() {
+        return producto;
+    }
 
-    public BigDecimal getSubtotal() { return subtotal; }
-    public void setSubtotal(BigDecimal subtotal) { this.subtotal = subtotal; }
+    public void setProducto(Producto producto) {
+        this.producto = producto;
+    }
+
+    public Integer getCantidad() {
+        return cantidad;
+    }
+
+    public void setCantidad(Integer cantidad) {
+        this.cantidad = cantidad;
+        // Si ya tenemos precio, recalculamos subtotal
+        if (this.precioUnitario != null) {
+            this.subtotal = this.precioUnitario.multiply(BigDecimal.valueOf(cantidad));
+        }
+    }
+
+    public BigDecimal getPrecioUnitario() {
+        return precioUnitario;
+    }
+
+    public void setPrecioUnitario(BigDecimal precioUnitario) {
+        this.precioUnitario = precioUnitario;
+        // Si ya tenemos cantidad, recalculamos subtotal
+        if (this.cantidad != null) {
+            this.subtotal = precioUnitario.multiply(BigDecimal.valueOf(this.cantidad));
+        }
+    }
+
+    public BigDecimal getSubtotal() {
+        return subtotal;
+    }
+
+    public void setSubtotal(BigDecimal subtotal) {
+        this.subtotal = subtotal;
+    }
 }
 
