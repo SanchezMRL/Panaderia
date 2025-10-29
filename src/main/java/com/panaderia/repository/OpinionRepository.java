@@ -6,11 +6,11 @@ import com.panaderia.entity.OpinionPedido;
 import java.util.List;
 
 @Repository
-public interface OpinionRepository extends JpaRepository<OpinionPedido, Integer> {
+public interface OpinionRepository extends JpaRepository<OpinionPedido, Long> {
 
     // 🔍 Buscar opiniones por pedido
-    List<OpinionPedido> findByPedidoCliente_IdPedidoCliente(Integer idPedidoCliente);
+    List<OpinionPedido> findByPedidoCliente_IdPedidoCliente(Long idPedidoCliente);
 
     // 🔍 Buscar opiniones por cliente
-    List<OpinionPedido> findByCliente_IdCliente(Integer idCliente);
+    List<OpinionPedido> findByCliente_IdCliente(Long idCliente);
 }
