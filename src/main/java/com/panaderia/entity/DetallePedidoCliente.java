@@ -20,9 +20,14 @@ public class DetallePedidoCliente {
     private Producto producto;
 
     private Integer cantidad;
+
+    // 💰 Nuevo campo para el precio unitario del producto
+    @Column(name = "precio_unitario", precision = 10, scale = 2)
+    private BigDecimal precioUnitario;
+
     private BigDecimal subtotal;
 
-    // Getters y setters
+    // ===== Getters y Setters =====
     public Long getIdDetalle() { return idDetalle; }
     public void setIdDetalle(Long idDetalle) { this.idDetalle = idDetalle; }
 
@@ -35,6 +40,10 @@ public class DetallePedidoCliente {
     public Integer getCantidad() { return cantidad; }
     public void setCantidad(Integer cantidad) { this.cantidad = cantidad; }
 
+    public BigDecimal getPrecioUnitario() { return precioUnitario; }
+    public void setPrecioUnitario(BigDecimal precioUnitario) { this.precioUnitario = precioUnitario; }
+
     public BigDecimal getSubtotal() { return subtotal; }
     public void setSubtotal(BigDecimal subtotal) { this.subtotal = subtotal; }
 }
+
