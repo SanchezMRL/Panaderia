@@ -13,24 +13,32 @@ import java.util.Map;
 @RequestMapping("/api/pago")
 public class PagoController {
 
-    @Autowired private PagoRepository pagoRepo;
-    @Autowired private PedidoClienteRepository pedidoRepo;
-    @Autowired private MetodoPagoRepository metodoRepo;
-    @Autowired private EstadoPagoRepository estadoRepo;
+    @Autowired 
+    private PagoRepository pagoRepo;
+
+    @Autowired 
+    private PedidoClienteRepository pedidoRepo;
+
+    @Autowired 
+    private MetodoPagoRepository metodoRepo;
+
+    @Autowired 
+    private EstadoPagoRepository estadoRepo;
 
     @PostMapping
     public Map<String, Object> registrarPago(@RequestBody Map<String, Object> datos) {
-        // ✅ Convertimos todos los IDs a Integer (coherente con tus entidades)
-        Integer idPedido = Integer.valueOf(datos.get("id_pedido_cliente").toString());
-        Integer idMetodo = Integer.valueOf(datos.get("id_metodo_pago").toString());
-        Integer idEstado = Integer.valueOf(datos.get("id_estado_pago").toString());
 
-        // ✅ Buscar entidades relacionadas
+        // 🟢 Convertimos todos los IDs a Long (coherente con tus entidades)
+        Long idPedido = Long.valueOf(datos.get("id_pedido_cliente").toString());
+        Long idMetodo = Long.valueOf(datos.get("id_metodo_pago").toString());
+        Long idEstado = Long.valueOf(datos.get("id_estado_pago").toString());
+
+        // 🟢 Buscar entidades relacionadas
         PedidoCliente pedido = pedidoRepo.findById(idPedido).orElse(null);
         MetodoPago metodo = metodoRepo.findById(idMetodo).orElse(null);
         EstadoPago estado = estadoRepo.findById(idEstado).orElse(null);
 
-        // ✅ Crear y guardar el pago
+        // 🟢 Crear y guardar el pago
         Pago pago = new Pago();
         pago.setPedidoCliente(pedido);
         pago.setMetodoPago(metodo);
@@ -40,7 +48,7 @@ public class PagoController {
 
         pagoRepo.save(pago);
 
-        // ✅ Retornar ID coherente
+        // 🟢 Retornar el ID coherente
         return Map.of("id_pago", pago.getIdPago());
     }
 }
