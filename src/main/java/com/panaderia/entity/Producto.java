@@ -1,6 +1,7 @@
 package com.panaderia.entity;
 
 import jakarta.persistence.*;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.math.BigDecimal;
 
 @Entity
@@ -15,6 +16,7 @@ public class Producto {
 
     // 🔁 Cambio de tipo Double → BigDecimal (más preciso para dinero)
     @Column(name = "precio_base", precision = 10, scale = 2, nullable = false)
+    @JsonProperty("precio_base")  // 👈 Así el JSON devolverá "precio_base"
     private BigDecimal precioUnitario;
 
     // ===== Getters y Setters =====
@@ -42,4 +44,3 @@ public class Producto {
         this.precioUnitario = precioUnitario;
     }
 }
-
