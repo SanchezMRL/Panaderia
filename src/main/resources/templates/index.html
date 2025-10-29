@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Panadería - Sistema de Gestión</title>
@@ -30,6 +30,23 @@
     header h1 {
       font-size: 42px;
       margin: 0;
+    }
+
+    nav button {
+      background-color: var(--color-amarillo);
+      border: none;
+      color: var(--color-azul);
+      font-weight: bold;
+      padding: 10px 20px;
+      margin: 10px;
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    nav button:hover {
+      background-color: var(--color-hover);
+      transform: scale(1.05);
     }
 
     .opciones {
@@ -65,22 +82,23 @@
 </head>
 <body>
   <header>
-  <h1>🍞 Bienvenido al Sistema de Gestión de la Panadería</h1>
-  <nav>
-    <button onclick="location.href='index2.jsp'">Versión 2</button>
-    <button onclick="location.href='index3.jsp'">Versión 3</button>
-  </nav>
-</header>
+    <h1>🍞 Bienvenido al Sistema de Gestión de la Panadería</h1>
+    <nav>
+      <button onclick="location.href='index2.jsp'">Versión 2</button>
+      <button onclick="location.href='index3.jsp'">Versión 3</button>
+    </nav>
+  </header>
 
   <div class="opciones">
-    <div class="opcion" onclick="location.href='registrar.html'">Registrar Pedido</div>
-    <div class="opcion" onclick="location.href='consultar.html'">Consultar Pedido</div>
-    <div class="opcion" onclick="location.href='opiniones.html'">Opiniones</div>
-    <div class="opcion" onclick="location.href='inventario.html'">Inventario</div>
-    <div class="opcion" onclick="location.href='reportes.html'">Reportes</div>
-    <div class="opcion" onclick="location.href='entregas.html'">Entregas</div>
-    <div class="opcion" onclick="location.href='agregar.html'">Agregar</div>
-    <div class="opcion" onclick="location.href='observar.html'">Registros</div>
+    <!-- ✅ Cambiado para Thymeleaf -->
+    <div class="opcion" th:onclick="'location.href=\'/registrar\''">Registrar Pedido</div>
+    <div class="opcion" th:onclick="'location.href=\'/consultar\''">Consultar Pedido</div>
+    <div class="opcion" th:onclick="'location.href=\'/opiniones\''">Opiniones</div>
+    <div class="opcion" th:onclick="'location.href=\'/inventario\''">Inventario</div>
+    <div class="opcion" th:onclick="'location.href=\'/reportes\''">Reportes</div>
+    <div class="opcion" th:onclick="'location.href=\'/entregas\''">Entregas</div>
+    <div class="opcion" th:onclick="'location.href=\'/agregar\''">Agregar</div>
+    <div class="opcion" th:onclick="'location.href=\'/observar\''">Registros</div>
   </div>
 </body>
 </html>
