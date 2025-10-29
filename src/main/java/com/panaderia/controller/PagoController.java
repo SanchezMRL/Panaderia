@@ -20,12 +20,12 @@ public class PagoController {
 
     @PostMapping
     public Map<String, Object> registrarPago(@RequestBody Map<String, Object> datos) {
-        // ✅ Conversiones seguras
+        // ✅ Conversión segura de IDs
         Integer idPedido = Integer.valueOf(datos.get("id_pedido_cliente").toString());
-        Integer idMetodo = Integer.valueOf(datos.get("id_metodo_pago").toString());
-        Integer idEstado = Integer.valueOf(datos.get("id_estado_pago").toString());
+        Long idMetodo = Long.valueOf(datos.get("id_metodo_pago").toString());
+        Long idEstado = Long.valueOf(datos.get("id_estado_pago").toString());
 
-        // ✅ Búsqueda de entidades
+        // ✅ Buscar entidades relacionadas
         PedidoCliente pedido = pedidoRepo.findById(idPedido).orElse(null);
         MetodoPago metodo = metodoRepo.findById(idMetodo).orElse(null);
         EstadoPago estado = estadoRepo.findById(idEstado).orElse(null);
@@ -40,7 +40,7 @@ public class PagoController {
 
         pagoRepo.save(pago);
 
-        // ✅ Retornar el ID correcto según tu entidad
+        // ✅ Devolver ID correcto
         return Map.of("id_pago", pago.getIdPago());
     }
 }
