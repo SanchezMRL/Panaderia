@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <title>Agregar Cliente/Proveedor - Panadería</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Registro de Empleado - Panadería</title>
   <style>
     :root {
       --color-amarillo: #F9D923;
@@ -16,197 +17,166 @@
       background: linear-gradient(to right, var(--color-azul-claro), #fff);
       margin: 0;
       padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       color: var(--color-azul);
     }
 
-    header {
-      background-color: var(--color-azul);
-      color: white;
-      padding: 30px 20px;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
-
-    h1 {
-      margin: 0;
-      font-size: 28px;
-    }
-
-    .card {
+    .registro-container {
       background-color: white;
-      max-width: 600px;
-      margin: 40px auto;
-      padding: 30px;
+      padding: 40px 30px;
       border-radius: 15px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+      width: 100%;
+      max-width: 420px;
       border: 3px solid var(--color-amarillo);
     }
 
-    label {
-      display: block;
-      margin-top: 15px;
-      font-weight: bold;
+    h2 {
+      text-align: center;
+      margin-bottom: 1.5rem;
+      font-size: 28px;
       color: var(--color-azul);
-      font-size: 16px;
     }
 
-    input, textarea, select, button {
+    label {
+      font-weight: bold;
+      display: block;
+      margin-bottom: 0.4rem;
+      color: var(--color-azul);
+    }
+
+    input {
       width: 100%;
-      padding: 12px;
-      margin-top: 8px;
+      padding: 0.7rem;
+      margin-bottom: 1.2rem;
+      border: 2px solid var(--color-azul-claro);
       border-radius: 8px;
-      border: 1px solid #ccc;
       font-size: 16px;
-      box-sizing: border-box;
     }
 
-    select:focus, input:focus, textarea:focus {
+    input:focus {
       outline: none;
-      border-color: var(--color-azul);
-      box-shadow: 0 0 5px rgba(10, 47, 102, 0.3);
+      border-color: var(--color-amarillo);
+      box-shadow: 0 0 6px var(--color-amarillo);
     }
 
     button {
-      background-color: var(--color-azul);
-      color: white;
-      font-weight: bold;
+      width: 100%;
+      padding: 0.9rem;
+      background-color: var(--color-amarillo);
       border: none;
-      cursor: pointer;
-      margin-top: 25px;
-      transition: all 0.3s ease;
-      padding: 14px;
+      color: var(--color-azul);
       font-size: 18px;
+      font-weight: bold;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
     }
 
     button:hover {
       background-color: var(--color-hover);
-      color: var(--color-azul);
-      transform: translateY(-2px);
+      transform: translateY(-3px);
     }
 
-    #mensaje {
-      margin-top: 25px;
-      font-weight: bold;
-      color: #2e7d32;
+    .success {
+      color: green;
       text-align: center;
-      font-size: 16px;
-    }
-
-    .volver {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: var(--color-azul);
-      color: white;
-      text-decoration: none;
-      border-radius: 8px;
+      margin-bottom: 1rem;
       font-weight: bold;
-      transition: all 0.3s ease;
     }
 
-    .volver:hover {
-      background-color: var(--color-hover);
+    .error {
+      color: red;
+      text-align: center;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+
+    .register-link {
+      text-align: center;
+      margin-top: 10px;
+    }
+
+    .register-link a {
       color: var(--color-azul);
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .register-link a:hover {
+      color: var(--color-amarillo);
     }
   </style>
 </head>
 <body>
-  <header>
-    <h1>🍞 Agregar Cliente o Proveedor - Panadería</h1>
-  </header>
-  
-  <div class="card">
-    <form id="formAgregar">
-      <label>Tipo de registro:</label>
-      <select id="tipoRegistro" required>
-        <option value="">Seleccione...</option>
-        <option value="cliente">Cliente</option>
-        <option value="proveedor">Proveedor</option>
-      </select>
-      
 
-      <div id="camposComunes">
-        <label>Nombre completo:</label>
-        <input id="nombre" placeholder="Nombre completo" required>
+  <div class="registro-container">
+    <h2>Registro de Empleado</h2>
 
-        <label>Dirección:</label>
-        <input id="direccion" placeholder="Dirección completa">
+    <div id="mensaje" class="success"></div>
 
-        <label>Teléfono:</label>
-        <input id="telefono" placeholder="Número de teléfono" type="tel">
+    <form id="registroForm">
+      <label for="nombre">Nombre completo:</label>
+      <input type="text" id="nombre" placeholder="Ej. Ana Fernández" required>
 
-        <label>Correo electrónico:</label>
-        <input id="email" placeholder="correo@ejemplo.com" type="email">
-      </div>
+      <label for="cargo">Cargo:</label>
+      <input type="text" id="cargo" placeholder="Ej. Administrador, Panadero..." required>
 
-      <button type="submit">Registrar</button>
-      <p id="mensaje"></p>
+      <label for="email">Email:</label>
+      <input type="email" id="email" placeholder="ejemplo@correo.com" required>
+
+      <label for="password">Contraseña:</label>
+      <input type="password" id="password" placeholder="Cree una contraseña" required>
+
+      <button type="submit">Registrar Empleado</button>
     </form>
 
-    <a href="inicio.html" class="volver">← Volver al Inicio</a>
+    <div class="register-link">
+      <p><a href="/inicio">← Volver al inicio</a></p>
+    </div>
   </div>
 
   <script>
-    document.getElementById('formAgregar').addEventListener('submit', async function(e) {
+    const form = document.getElementById('registroForm');
+    const mensaje = document.getElementById('mensaje');
+
+    form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      
-      const tipo = document.getElementById('tipoRegistro').value;
-      const nombre = document.getElementById('nombre').value;
-      const direccion = document.getElementById('direccion').value;
-      const telefono = document.getElementById('telefono').value;
-      const email = document.getElementById('email').value;
+      mensaje.textContent = '';
 
-      if (!tipo) {
-        alert("Seleccione el tipo de registro");
-        return;
-      }
-
-      const datos = {
-        nombre,
-        direccion,
-        telefono,
-        email
+      const empleado = {
+        nombre: document.getElementById('nombre').value,
+        cargo: document.getElementById('cargo').value,
+        email: document.getElementById('email').value,
+        password: document.getElementById('password').value
       };
 
       try {
-        let endpoint;
-        if (tipo === 'cliente') {
-          endpoint = '/cliente';
-        } else {
-          endpoint = '/proveedor';
-        }
-
-        const response = await fetch(endpoint, {
+        const res = await fetch('/registroEmpleado', {
           method: 'POST',
-          headers: {
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(datos)
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(empleado)
         });
 
-        const resultado = await response.json();
-
-        if (response.ok) {
-          document.getElementById('mensaje').textContent = tipo === 'cliente' 
-            ? '✅ Cliente registrado correctamente' 
-            : '✅ Proveedor registrado correctamente';
-          
-          // Limpiar formulario
-          document.getElementById('formAgregar').reset();
-          
-          // Mostrar ID generado
-          setTimeout(() => {
-            const idGenerado = tipo === 'cliente' ? resultado.id_cliente : resultado.id_proveedor;
-            document.getElementById('mensaje').textContent += ` | ID Generado: ${idGenerado}`;
-          }, 1000);
+        if (res.ok) {
+          mensaje.className = 'success';
+          mensaje.textContent = '✅ Empleado registrado correctamente';
+          form.reset();
         } else {
-          throw new Error(resultado.error || 'Error en el registro');
+          const error = await res.text();
+          mensaje.className = 'error';
+          mensaje.textContent = '❌ Error al registrar: ' + error;
         }
-      } catch (error) {
-        console.error('Error:', error);
-        document.getElementById('mensaje').textContent = '❌ Error al registrar: ' + error.message;
+      } catch (err) {
+        mensaje.className = 'error';
+        mensaje.textContent = '❌ Error de conexión con el servidor';
+        console.error(err);
       }
     });
   </script>
+
 </body>
 </html>
