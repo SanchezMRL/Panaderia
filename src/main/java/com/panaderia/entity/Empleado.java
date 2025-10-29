@@ -8,12 +8,12 @@ public class Empleado {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id_empleado;
+    private Long idEmpleado;
 
     @Column(nullable = false)
     private String nombre;
 
-    @Column(nullable = false, unique = true)   // ✅ Nuevo campo para login por email
+    @Column(nullable = false, unique = true) // ✅ Login por email
     private String email;
 
     private String cargo;
@@ -23,12 +23,12 @@ public class Empleado {
 
     // --- Getters y Setters ---
 
-    public Integer getId_empleado() {
-        return id_empleado;
+    public Long getIdEmpleado() {
+        return idEmpleado;
     }
 
-    public void setId_empleado(Integer id_empleado) {
-        this.id_empleado = id_empleado;
+    public void setIdEmpleado(Long idEmpleado) {
+        this.idEmpleado = idEmpleado;
     }
 
     public String getNombre() {
