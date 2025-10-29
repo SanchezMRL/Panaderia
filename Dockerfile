@@ -1,36 +1,40 @@
 # ============================
-# 🧱 Etapa 1: Build con Maven + caché de dependencias
+# 🧱 Etapa 1: Construcción con Maven (usa cache de dependencias)
 # ============================
 FROM maven:3.9.6-eclipse-temurin-17 AS build
 WORKDIR /app
 
-# ⚡ Copiamos solo el pom.xml primero para aprovechar la caché
+# ✅ Copiamos solo el pom.xml primero para aprovechar la caché de Maven
 COPY pom.xml .
+
+# 🔥 Descarga dependencias sin compilar el proyecto
 RUN mvn dependency:go-offline -B
 
-# 📦 Luego copiamos el resto del código
+# ✅ Ahora copiamos el código fuente
 COPY src ./src
 
-# 🚀 Construcción del JAR (sin tests)
+# ⚙️ Compila el JAR (sin ejecutar tests)
 RUN mvn clean package -DskipTests
 
 # ============================
-# ☁️ Etapa 2: Imagen ligera para ejecución
+# ☁️ Etapa 2: Imagen final ligera para ejecución
 # ============================
 FROM eclipse-temurin:17-jdk-alpine
+
+# ✅ Imagen "alpine" = mucho más rápida y liviana (~200MB menos)
 WORKDIR /app
 
-# 🔥 Copiamos solo el JAR compilado
+# ✅ Copiamos el JAR desde la etapa anterior
 COPY --from=build /app/target/*.jar app.jar
 
-# Variables que Render sobreescribirá
+# Variables de entorno (Render las puede sobreescribir)
 ENV DB_URL=""
 ENV DB_USER=""
 ENV DB_PASS=""
-ENV PORT=8080
 
-# Exponemos el puerto (Render lo usará)
+# Exponemos el puerto que Render usa por defecto
 EXPOSE 8080
 
-# 💡 Usa JAVA_OPTS para ajustar memoria si es necesario
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
+# ✅ Ejecuta el JAR
+ENTRYPOINT ["java", "-jar", "app.jar"]
+
