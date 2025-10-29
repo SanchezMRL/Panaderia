@@ -46,4 +46,3 @@ public class Producto {
         this.precioUnitario = precioUnitario;
     }
 }
-
