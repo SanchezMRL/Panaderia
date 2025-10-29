@@ -10,31 +10,25 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/api/inventario")
 public class InventarioController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    @GetMapping
+    @GetMapping("/inventario")
     public List<Map<String, Object>> obtenerInventario() {
         String sql = """
-            SELECT 
+            SELECT
                 p.id_producto,
                 p.nombre,
-                c.nombre AS categoria,
+                p.categoria,
                 p.cantidad,
                 p.unidad_medida,
                 p.ultima_actualizacion
             FROM producto p
-            LEFT JOIN categoria c ON p.id_categoria = c.id_categoria
             ORDER BY p.id_producto;
         """;
 
-        @SuppressWarnings("unchecked")
-        List<Map<String, Object>> inventario =
-                (List<Map<String, Object>>) (List<?>) jdbcTemplate.queryForList(sql);
-
-        return inventario;
+        return jdbcTemplate.queryForList(sql);
     }
 }
