@@ -9,40 +9,77 @@ public class OpinionPedido {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long idOpinion;
-
-    @ManyToOne
-    @JoinColumn(name = "id_pedido_cliente")
-    private PedidoCliente pedidoCliente;
-
-    @ManyToOne
-    @JoinColumn(name = "id_cliente")
-    private Cliente cliente;
+    private Integer idOpinion;
 
     private String comentario;
     private Integer calificacion;
     private Integer satisfaccion;
     private LocalDateTime fecha;
 
-    // Getters y setters
-    public Long getIdOpinion() { return idOpinion; }
-    public void setIdOpinion(Long idOpinion) { this.idOpinion = idOpinion; }
+    @ManyToOne
+    @JoinColumn(name = "id_cliente")
+    private Cliente cliente;
 
-    public PedidoCliente getPedidoCliente() { return pedidoCliente; }
-    public void setPedidoCliente(PedidoCliente pedidoCliente) { this.pedidoCliente = pedidoCliente; }
+    @ManyToOne
+    @JoinColumn(name = "id_pedido_cliente")
+    private PedidoCliente pedidoCliente;
 
-    public Cliente getCliente() { return cliente; }
-    public void setCliente(Cliente cliente) { this.cliente = cliente; }
+    // ✅ Getters y Setters correctos
 
-    public String getComentario() { return comentario; }
-    public void setComentario(String comentario) { this.comentario = comentario; }
+    public Integer getIdOpinion() {
+        return idOpinion;
+    }
 
-    public Integer getCalificacion() { return calificacion; }
-    public void setCalificacion(Integer calificacion) { this.calificacion = calificacion; }
+    public void setIdOpinion(Integer idOpinion) {
+        this.idOpinion = idOpinion;
+    }
 
-    public Integer getSatisfaccion() { return satisfaccion; }
-    public void setSatisfaccion(Integer satisfaccion) { this.satisfaccion = satisfaccion; }
+    public String getComentario() {
+        return comentario;
+    }
 
-    public LocalDateTime getFecha() { return fecha; }
-    public void setFecha(LocalDateTime fecha) { this.fecha = fecha; }
+    public void setComentario(String comentario) {
+        this.comentario = comentario;
+    }
+
+    public Integer getCalificacion() {
+        return calificacion;
+    }
+
+    public void setCalificacion(Integer calificacion) {
+        this.calificacion = calificacion;
+    }
+
+    public Integer getSatisfaccion() {
+        return satisfaccion;
+    }
+
+    public void setSatisfaccion(Integer satisfaccion) {
+        this.satisfaccion = satisfaccion;
+    }
+
+    public LocalDateTime getFecha() {
+        return fecha;
+    }
+
+    public void setFecha(LocalDateTime fecha) {
+        this.fecha = fecha;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public PedidoCliente getPedidoCliente() {
+        return pedidoCliente;
+    }
+
+    public void setPedidoCliente(PedidoCliente pedidoCliente) {
+        this.pedidoCliente = pedidoCliente;
+    }
 }
+
