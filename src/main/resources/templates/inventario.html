@@ -95,6 +95,23 @@
       padding: 20px;
       font-size: 16px;
     }
+
+    .volver {
+      display: inline-block;
+      margin-top: 20px;
+      text-decoration: none;
+      color: var(--color-azul);
+      background-color: var(--color-amarillo);
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .volver:hover {
+      background-color: var(--color-hover);
+      transform: scale(1.05);
+    }
   </style>
 </head>
 <body>
@@ -115,12 +132,12 @@
         </tr>
       </thead>
       <tbody>
-        <!-- Si no hay productos -->
+        <!-- Mostrar mensaje si el inventario está vacío -->
         <tr th:if="${#lists.isEmpty(inventario)}">
           <td colspan="6" class="mensaje">❌ No hay productos en el inventario</td>
         </tr>
 
-        <!-- Mostrar productos -->
+        <!-- Mostrar los productos -->
         <tr th:each="item : ${inventario}">
           <td th:text="${item.id_producto}"></td>
           <td th:text="${item.nombre}"></td>
@@ -132,9 +149,13 @@
       </tbody>
     </table>
 
+    <!-- Botón de actualización -->
     <form th:action="@{/inventario}" method="get">
       <button type="submit">🔄 Actualizar Inventario</button>
     </form>
+
+    <!-- Enlace para volver al inicio -->
+    <a href="/" class="volver">🏠 Volver al inicio</a>
   </main>
 </body>
 </html>
