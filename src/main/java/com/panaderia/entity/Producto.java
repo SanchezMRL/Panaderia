@@ -1,24 +1,29 @@
 package com.panaderia.entity;
 
 import jakarta.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "producto")
 public class Producto {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id_producto;
+    private Long idProducto;
 
     private String nombre;
-    private Double precio_base;
 
-    // ✅ Getters y Setters
-    public Long getId_producto() {
-        return id_producto;
+    // 🔁 Cambio de tipo Double → BigDecimal (más preciso para dinero)
+    @Column(name = "precio_base", precision = 10, scale = 2, nullable = false)
+    private BigDecimal precioUnitario;
+
+    // ===== Getters y Setters =====
+    public Long getIdProducto() {
+        return idProducto;
     }
 
-    public void setId_producto(Long id_producto) {
-        this.id_producto = id_producto;
+    public void setIdProducto(Long idProducto) {
+        this.idProducto = idProducto;
     }
 
     public String getNombre() {
@@ -29,11 +34,12 @@ public class Producto {
         this.nombre = nombre;
     }
 
-    public Double getPrecio_base() {
-        return precio_base;
+    public BigDecimal getPrecioUnitario() {
+        return precioUnitario;
     }
 
-    public void setPrecio_base(Double precio_base) {
-        this.precio_base = precio_base;
+    public void setPrecioUnitario(BigDecimal precioUnitario) {
+        this.precioUnitario = precioUnitario;
     }
 }
+
