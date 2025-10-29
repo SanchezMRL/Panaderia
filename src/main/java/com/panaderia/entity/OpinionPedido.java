@@ -30,7 +30,7 @@ public class OpinionPedido {
         return idOpinion;
     }
 
-    public void setIdOpinion(Integer idOpinion) {
+    public void setIdOpinion(Long idOpinion) {
         this.idOpinion = idOpinion;
     }
 
