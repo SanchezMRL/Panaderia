@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class InventarioController {
+public class InventarioVistaController {
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
@@ -29,8 +29,14 @@ public class InventarioController {
             ORDER BY p.id_producto;
         """;
 
+        // Ejecuta la consulta y obtiene los resultados
         List<Map<String, Object>> inventario = jdbcTemplate.queryForList(sql);
+
+        // Pasa los datos al modelo para Thymeleaf
         model.addAttribute("inventario", inventario);
-        return "inventario"; // renderiza templates/inventario.html
+
+        // Retorna la plantilla inventario.html (ubicada en src/main/resources/templates)
+        return "inventario";
     }
 }
+
