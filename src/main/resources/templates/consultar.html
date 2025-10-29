@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Consultar Pedido - Panadería</title>
@@ -10,7 +10,6 @@
       --color-azul-claro: #E8F1FA;
       --color-hover: #FFD43B;
     }
-
     body {
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       background: linear-gradient(to right, var(--color-azul-claro), #fff);
@@ -18,7 +17,6 @@
       padding: 0;
       color: var(--color-azul);
     }
-
     header {
       background-color: var(--color-azul);
       color: white;
@@ -26,12 +24,7 @@
       text-align: center;
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
-
-    h1 {
-      margin: 0;
-      font-size: 32px;
-    }
-
+    h1 { margin: 0; font-size: 32px; }
     .contenedor {
       max-width: 600px;
       margin: 40px auto;
@@ -41,69 +34,24 @@
       box-shadow: 0 4px 12px rgba(0,0,0,0.1);
       border: 3px solid var(--color-amarillo);
     }
-
-    label {
-      display: block;
-      margin-top: 20px;
-      font-weight: bold;
-      color: var(--color-azul);
-      font-size: 16px;
-    }
-
+    label { display: block; margin-top: 20px; font-weight: bold; color: var(--color-azul); font-size: 16px; }
     select, input[type="number"], button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      font-size: 16px;
-      box-sizing: border-box;
+      width: 100%; padding: 12px; margin-top: 10px;
+      border-radius: 8px; border: 1px solid #ccc; font-size: 16px;
     }
-
     button {
-      background-color: var(--color-azul);
-      color: white;
-      border: none;
-      cursor: pointer;
-      margin-top: 25px;
-      font-weight: bold;
-      transition: all 0.3s ease;
-      padding: 14px;
+      background-color: var(--color-azul); color: white; border: none;
+      cursor: pointer; margin-top: 25px; font-weight: bold;
+      transition: all 0.3s ease; padding: 14px;
     }
-
-    button:hover {
-      background-color: var(--color-hover);
-      color: var(--color-azul);
-      transform: translateY(-2px);
-    }
-
-    #resultado {
-      margin-top: 30px;
-      background-color: var(--color-azul-claro);
-      border: 2px solid var(--color-amarillo);
-      border-radius: 10px;
-      padding: 20px;
-    }
-
-    ul {
-      padding-left: 20px;
-    }
-
-    li {
-      margin-bottom: 8px;
-      font-size: 15px;
-    }
-
-    strong {
-      color: var(--color-azul);
-    }
-
-    h3 {
-      color: var(--color-azul);
-      border-bottom: 2px solid var(--color-amarillo);
-      padding-bottom: 8px;
-      margin-top: 0;
-    }
+    button:hover { background-color: var(--color-hover); color: var(--color-azul); transform: translateY(-2px); }
+    #resultado { margin-top: 30px; background-color: var(--color-azul-claro);
+      border: 2px solid var(--color-amarillo); border-radius: 10px; padding: 20px; }
+    ul { padding-left: 20px; }
+    li { margin-bottom: 8px; font-size: 15px; }
+    strong { color: var(--color-azul); }
+    h3 { color: var(--color-azul); border-bottom: 2px solid var(--color-amarillo);
+      padding-bottom: 8px; margin-top: 0; }
   </style>
 </head>
 <body>
@@ -131,12 +79,16 @@
       <div th:if="${pedido}">
         <h3>Pedido [[${pedido.idPedidoCliente}]]</h3>
         <ul>
-          <li><strong>Fecha:</strong> [[${pedido.fechaPedido}]]</li>
+          <li><strong>Fecha:</strong> [[${pedido.fecha}]]</li>
           <li><strong>Estado:</strong> [[${pedido.estado}]]</li>
-          <li><strong>Empleado:</strong> [[${pedido.empleado.nombre}]]</li>
-          <li><strong>Cliente:</strong> [[${pedido.cliente.nombre}]]</li>
+          <li th:if="${pedido.empleado != null}">
+            <strong>Empleado:</strong> [[${pedido.empleado.nombre}]]
+          </li>
+          <li th:if="${pedido.cliente != null}">
+            <strong>Cliente:</strong> [[${pedido.cliente.nombre}]]
+          </li>
           <li><strong>Detalles:</strong></li>
-          <ul>
+          <ul th:if="${pedido.detalles != null}">
             <li th:each="det : ${pedido.detalles}">
               [[${det.producto.nombre}]] - Cant: [[${det.cantidad}]], Precio: S/. [[${det.precioUnitario}]]
             </li>
@@ -149,7 +101,7 @@
             <li><strong>Comentario:</strong> [[${opinion.comentario}]]</li>
             <li><strong>Calificación:</strong> [[${opinion.calificacion}]] / 5</li>
             <li><strong>Satisfacción:</strong> [[${opinion.satisfaccion}]] / 5</li>
-            <li><strong>Fecha:</strong> [[${opinion.fechaOpinion}]]</li>
+            <li><strong>Fecha:</strong> [[${opinion.fecha}]]</li>
           </ul>
         </div>
       </div>
