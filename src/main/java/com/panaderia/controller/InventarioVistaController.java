@@ -17,26 +17,30 @@ public class InventarioVistaController {
 
     @GetMapping("/inventario")
     public String mostrarInventario(Model model) {
+        // ✅ Consulta corregida: une producto e inventario
         String sql = """
-            SELECT
+            SELECT 
                 p.id_producto,
                 p.nombre,
                 p.categoria,
-                p.cantidad,
+                i.cantidad,
                 p.unidad_medida,
-                p.ultima_actualizacion
-            FROM producto p
+                i.ultima_actualizacion
+            FROM inventario i
+            INNER JOIN producto p ON i.id_producto = p.id_producto
             ORDER BY p.id_producto;
         """;
 
-        // Ejecuta la consulta y obtiene los resultados
-        List<Map<String, Object>> inventario = jdbcTemplate.queryForList(sql);
+        try {
+            List<Map<String, Object>> inventario = jdbcTemplate.queryForList(sql);
+            model.addAttribute("inventario", inventario);
+        } catch (Exception e) {
+            // Si hay un error (por ejemplo, la tabla no existe), agrega mensaje vacío
+            model.addAttribute("inventario", List.of());
+            System.err.println("⚠️ Error al cargar inventario: " + e.getMessage());
+        }
 
-        // Pasa los datos al modelo para Thymeleaf
-        model.addAttribute("inventario", inventario);
-
-        // Retorna la plantilla inventario.html (ubicada en src/main/resources/templates)
+        // Retorna la plantilla inventario.html
         return "inventario";
     }
 }
-
