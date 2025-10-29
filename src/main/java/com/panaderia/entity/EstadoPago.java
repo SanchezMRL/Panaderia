@@ -8,13 +8,13 @@ public class EstadoPago {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idEstadoPago;
+    private Long idEstadoPago;
 
     private String descripcion;
 
     // Getters y Setters
-    public Integer getIdEstadoPago() { return idEstadoPago; }
-    public void setIdEstadoPago(Integer idEstadoPago) { this.idEstadoPago = idEstadoPago; }
+    public Long getIdEstadoPago() { return idEstadoPago; }
+    public void setIdEstadoPago(Long idEstadoPago) { this.idEstadoPago = idEstadoPago; }
 
     public String getDescripcion() { return descripcion; }
     public void setDescripcion(String descripcion) { this.descripcion = descripcion; }
