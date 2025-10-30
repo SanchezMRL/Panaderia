@@ -21,38 +21,38 @@ public class LoginController {
     @Autowired
     private EmpleadoRepository empleadoRepository;
 
-    // 🔹 Redirige raíz "/" a "/login"
+    // Redirige raíz "/" a "/login"
     @GetMapping("/")
     public String inicio() {
         return "redirect:/login";
     }
 
-    // 🔹 Muestra el formulario de login
+    // Muestra el formulario de login
     @GetMapping("/login")
     public String mostrarLogin() {
         return "login"; // templates/login.html
     }
 
-    // 🔹 Procesa el formulario de login
+    // Procesa el formulario de login
     @PostMapping("/login")
     public String procesarLogin(
-            @RequestParam(required = false) String email,     // ✅ ahora usamos email
+            @RequestParam(required = false) String email,     
             @RequestParam(required = false) String password,
             @RequestParam(required = false) String tipoUsuario,
             Model model) {
 
-        // 🔸 Validar campos vacíos o faltantes
+        // Validar campos vacíos o faltantes
         if (email == null || password == null || tipoUsuario == null ||
             email.isBlank() || password.isBlank() || tipoUsuario.isBlank()) {
             model.addAttribute("error", "Debe completar todos los campos antes de continuar.");
             return "login";
         }
 
-        // 🔸 Si es cliente
+        // Si es cliente
         if ("cliente".equalsIgnoreCase(tipoUsuario)) {
             Cliente cliente = clienteRepository.findByEmailAndPassword(email, password);
             if (cliente != null) {
-                model.addAttribute("cliente", cliente); // ✅ se pasa el objeto completo al modelo
+                model.addAttribute("cliente", cliente); 
                 return "clienteMenu"; // Página para clientes
             } else {
                 model.addAttribute("error", "Credenciales de cliente incorrectas.");
@@ -60,11 +60,11 @@ public class LoginController {
             }
         }
 
-        // 🔸 Si es administrador / empleado
+        // Si es administrador / empleado
         if ("admin".equalsIgnoreCase(tipoUsuario)) {
-            Empleado admin = empleadoRepository.findByEmailAndPassword(email, password); // ✅ cambio aquí
+            Empleado admin = empleadoRepository.findByEmailAndPassword(email, password); 
             if (admin != null) {
-                model.addAttribute("empleado", admin); // ✅ también se pasa el objeto
+                model.addAttribute("empleado", admin); 
                 return "index"; // Página principal del administrador
             } else {
                 model.addAttribute("error", "Credenciales de administrador incorrectas.");
@@ -72,7 +72,7 @@ public class LoginController {
             }
         }
 
-        // 🔸 Si no seleccionó tipo de usuario válido
+        // Si no seleccionó tipo de usuario válido
         model.addAttribute("error", "Debe seleccionar un tipo de usuario válido.");
         return "login";
     }
