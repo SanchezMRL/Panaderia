@@ -18,7 +18,7 @@ public class ConsultarVistaController {
     private PedidoClienteRepository pedidoClienteRepo;
 
     @Autowired
-    private OpinionService opinionService; // ✅ usar el service, no el repo
+    private OpinionService opinionService; // usar el service
 
     @GetMapping("/consultar")
     public String mostrarFormulario() {
