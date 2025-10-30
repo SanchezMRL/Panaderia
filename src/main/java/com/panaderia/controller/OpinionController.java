@@ -24,7 +24,7 @@ public class OpinionController {
     @PostMapping
     public Map<String, Object> registrarOpinion(@RequestBody Map<String, Object> datos) {
 
-        // 🟢 IDs como Long (coincide con tus entidades)
+        // IDs como Long 
         Long idPedido = Long.valueOf(datos.get("id_pedido_cliente").toString());
         Long idCliente = Long.valueOf(datos.get("id_cliente").toString());
 
@@ -38,7 +38,6 @@ public class OpinionController {
 
         opinionRepo.save(op);
 
-        // 🟢 Asegúrate de que OpinionPedido tenga idOpinion tipo Long
         return Map.of("id_opinion", op.getIdOpinion());
     }
 }
