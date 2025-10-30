@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <title>Actualizar Perfil - Panadería</title>
@@ -128,26 +128,30 @@
   <main>
     <div class="formulario">
       <h2>Editar mis datos</h2>
-      <form action="/cliente/actualizar" method="post">
+
+      <!-- ✅ Formulario con datos precargados desde el modelo -->
+      <form th:action="@{/actualizarCliente}" method="post" th:object="${cliente}">
+        <input type="hidden" th:field="*{idCliente}">
+
         <label for="nombre">Nombre completo:</label>
-        <input type="text" id="nombre" name="nombre" placeholder="Ej. José Luis García" required>
+        <input type="text" id="nombre" th:field="*{nombre}" required>
 
         <label for="email">Correo electrónico:</label>
-        <input type="email" id="email" name="email" placeholder="Ej. jose@gmail.com" required>
+        <input type="email" id="email" th:field="*{email}" required>
 
         <label for="telefono">Teléfono:</label>
-        <input type="tel" id="telefono" name="telefono" placeholder="Ej. 987654321" required>
+        <input type="tel" id="telefono" th:field="*{telefono}" required>
 
         <label for="direccion">Dirección:</label>
-        <input type="text" id="direccion" name="direccion" placeholder="Ej. Av. Los Pinos 456" required>
+        <input type="text" id="direccion" th:field="*{direccion}" required>
 
         <label for="password">Contraseña:</label>
-        <input type="password" id="password" name="password" placeholder="********" required>
+        <input type="password" id="password" th:field="*{password}" placeholder="********" required>
 
         <button type="submit">Guardar Cambios</button>
       </form>
 
-      <a href="clienteMenu.html" class="volver">⬅ Volver al menú</a>
+      <a th:href="@{/clienteMenu}" class="volver">⬅ Volver al menú</a>
     </div>
   </main>
 
