@@ -52,7 +52,7 @@ public class LoginController {
         if ("cliente".equalsIgnoreCase(tipoUsuario)) {
             Cliente cliente = clienteRepository.findByEmailAndPassword(email, password);
             if (cliente != null) {
-                model.addAttribute("nombre", cliente.getNombre());
+                model.addAttribute("cliente", cliente); // ✅ se pasa el objeto completo al modelo
                 return "clienteMenu"; // Página para clientes
             } else {
                 model.addAttribute("error", "Credenciales de cliente incorrectas.");
@@ -64,7 +64,7 @@ public class LoginController {
         if ("admin".equalsIgnoreCase(tipoUsuario)) {
             Empleado admin = empleadoRepository.findByEmailAndPassword(email, password); // ✅ cambio aquí
             if (admin != null) {
-                model.addAttribute("nombre", admin.getNombre());
+                model.addAttribute("empleado", admin); // ✅ también se pasa el objeto
                 return "index"; // Página principal del administrador
             } else {
                 model.addAttribute("error", "Credenciales de administrador incorrectas.");
