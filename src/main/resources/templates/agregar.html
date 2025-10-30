@@ -155,7 +155,7 @@
       };
 
       try {
-        const res = await fetch('/registroEmpleado', {
+        const res = await fetch('/api/empleado/registro', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(empleado)
