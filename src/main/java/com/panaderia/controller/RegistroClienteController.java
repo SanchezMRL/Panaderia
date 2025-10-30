@@ -52,27 +52,24 @@ public String mostrarActualizarCliente(@RequestParam Long id, Model model) {
 }
 
 
-    // 🟡 Procesar actualización
-    @PostMapping("/cliente/actualizar")
-    public String actualizarCliente(@ModelAttribute Cliente cliente, Model model) {
-        // Verifica si el cliente existe
-        Cliente existente = clienteRepository.findByEmail(cliente.getEmail());
-        if (existente == null) {
-            model.addAttribute("error", "Cliente no encontrado. Regístrese primero.");
-            return "actualizar";
-        }
+    @PostMapping("/actualizarCliente")
+public String actualizarCliente(Cliente cliente, Model model) {
+    Cliente existente = clienteRepository.findById(cliente.getIdCliente()).orElse(null);
 
-        // Actualiza los datos
-        existente.setNombre(cliente.getNombre());
-        existente.setTelefono(cliente.getTelefono());
-        existente.setDireccion(cliente.getDireccion());
-        existente.setPassword(cliente.getPassword());
-
-        clienteRepository.save(existente);
-
-        model.addAttribute("nombre", existente.getNombre());
-        model.addAttribute("mensaje", "✅ Perfil actualizado correctamente.");
-
-        return "clienteMenu";
+    if (existente == null) {
+        model.addAttribute("error", "Cliente no encontrado");
+        return "actualizar";
     }
+
+    // Actualiza los campos
+    existente.setNombre(cliente.getNombre());
+    existente.setEmail(cliente.getEmail());
+    existente.setTelefono(cliente.getTelefono());
+    existente.setDireccion(cliente.getDireccion());
+
+    clienteRepository.save(existente);
+
+    model.addAttribute("nombre", existente.getNombre());
+    model.addAttribute("mensaje", "✅ Perfil actualizado correctamente");
+    return "clienteMenu"; // redirige al panel del cliente
 }
