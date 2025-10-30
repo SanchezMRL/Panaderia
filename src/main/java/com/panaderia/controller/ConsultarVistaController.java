@@ -42,7 +42,7 @@ public class ConsultarVistaController {
             PedidoCliente pedido = pedidoOpt.get();
             model.addAttribute("pedido", pedido);
 
-            // ✅ buscar UNA opinión (usa Optional)
+            //  buscar UNA opinión (usa Optional)
             Optional<OpinionPedido> opinionOpt = opinionService.buscarPorPedido(id);
             opinionOpt.ifPresent(o -> model.addAttribute("opinion", o));
 
