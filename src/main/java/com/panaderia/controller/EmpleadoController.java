@@ -8,13 +8,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/empleado")
-@CrossOrigin(origins = "*") // 🔓 Permite peticiones desde cualquier origen (útil para desarrollo)
+@CrossOrigin(origins = "*") // Permite peticiones desde cualquier origen
 public class EmpleadoController {
 
     @Autowired
     private EmpleadoRepository empleadoRepo;
 
-    // 🟢 Registrar nuevo empleado
+    // Registrar nuevo empleado
     @PostMapping("/registro")
     public ResponseEntity<?> registrarEmpleado(@RequestBody Empleado empleado) {
         try {
@@ -31,7 +31,7 @@ public class EmpleadoController {
         }
     }
 
-    // (opcional) 🟡 Listar todos los empleados
+    // Listar todos los empleados
     @GetMapping
     public ResponseEntity<?> listarEmpleados() {
         return ResponseEntity.ok(empleadoRepo.findAll());
