@@ -10,13 +10,11 @@ public class Producto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "id_producto") // ✅ asegura coincidencia exacta con la BD
+    @Column(name = "id_producto") //coincidencia exacta con la BD
     private Long idProducto;
 
     private String nombre;
 
-    // ✅ Mantenemos el nombre de atributo como 'precioUnitario'
-    // pero lo mapeamos a la columna real 'precio_base'
     @Column(name = "precio_base", precision = 10, scale = 2, nullable = false)
     @JsonProperty("precio_base") // hace que al devolver JSON aparezca como "precio_base"
     private BigDecimal precioUnitario;
