@@ -17,7 +17,6 @@ public class InventarioVistaController {
 
     @GetMapping("/inventario")
     public String mostrarInventario(Model model) {
-        // ✅ Consulta corregida: une producto e inventario
         String sql = """
             SELECT 
                 p.id_producto,
