@@ -111,16 +111,16 @@
   </div>
 
   <div class="opciones">
-    <div class="opcion" onclick="location.href='consultar.html'">Mis Pedidos</div>
-    <div class="opcion" onclick="location.href='opiniones.html'">Dejar Opinión</div>
-    <div class="opcion" onclick="location.href='entregas.html'">Ver Entregas</div>
+  <div class="opcion" onclick="location.href='consultar.html'">Mis Pedidos</div>
+  <div class="opcion" onclick="location.href='opiniones.html'">Dejar Opinión</div>
+  <div class="opcion" onclick="location.href='entregas.html'">Ver Entregas</div>
 
-    <!-- 🔹 Corregido: redirección funcional con Thymeleaf -->
-    <div class="opcion"
-         th:onclick="'location.href=\'/actualizarCliente?id=' + ${cliente.idCliente}">
-      Actualizar Perfil
-    </div>
-  </div>
+  <!-- ✅ Enlace Thymeleaf correcto -->
+  <a th:href="@{/actualizarCliente(id=${cliente.idCliente})}" class="opcion">
+    Actualizar Perfil
+  </a>
+</div>
+
 
   <div style="text-align:center;">
     <form action="/login" method="get">
