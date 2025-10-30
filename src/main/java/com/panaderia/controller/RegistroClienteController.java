@@ -37,14 +37,18 @@ public class RegistroClienteController {
         return "clienteMenu"; // ✅ Redirige directamente al menú del cliente
     }
 
-    // 🟡 Mostrar formulario de actualización con datos actuales
-@GetMapping("/actualizarCliente")
-public String mostrarActualizarCliente(@RequestParam Long id, Model model) {
-    Cliente cliente = clienteRepository.findById(id).orElse(null);
+    @GetMapping("/actualizarCliente")
+public String mostrarActualizarCliente(@RequestParam(required = false) Long id, Model model) {
+    Cliente cliente = null;
+
+    // Si llega un ID, busca al cliente
+    if (id != null) {
+        cliente = clienteRepository.findById(id).orElse(null);
+    }
 
     if (cliente == null) {
-        model.addAttribute("error", "Cliente no encontrado");
-        return "clienteMenu";
+        // Evita error de modelo vacío
+        cliente = new Cliente();
     }
 
     model.addAttribute("cliente", cliente);
