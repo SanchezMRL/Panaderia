@@ -73,3 +73,4 @@ public String actualizarCliente(Cliente cliente, Model model) {
     model.addAttribute("mensaje", "✅ Perfil actualizado correctamente");
     return "clienteMenu"; // redirige al panel del cliente
 }
+}
