@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inventario de Productos - Panadería</title>
+
   <style>
     :root {
       --color-amarillo: #F9D923;
@@ -28,10 +29,7 @@
       box-shadow: 0 4px 10px rgba(0,0,0,0.2);
     }
 
-    header h1 {
-      font-size: 36px;
-      margin: 0;
-    }
+    header h1 { font-size: 36px; margin: 0; }
 
     main {
       padding: 40px;
@@ -62,16 +60,12 @@
       font-size: 16px;
     }
 
-    tr:nth-child(even) {
-      background-color: var(--color-azul-claro);
-    }
+    tr:nth-child(even) { background-color: var(--color-azul-claro); }
 
-    tr:hover {
-      background-color: var(--color-hover);
-    }
+    tr:hover { background-color: var(--color-hover); }
 
-    button {
-      padding: 14px 28px;
+    button, .btn {
+      padding: 12px 20px;
       background-color: var(--color-azul);
       color: white;
       font-weight: bold;
@@ -79,22 +73,31 @@
       border-radius: 8px;
       cursor: pointer;
       font-size: 16px;
-      transition: all 0.3s ease;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+      transition: 0.3s;
     }
 
-    button:hover {
+    button:hover, .btn:hover {
       background-color: var(--color-hover);
       color: var(--color-azul);
       transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
-    .mensaje {
-      font-style: italic;
-      color: var(--color-azul);
-      padding: 20px;
-      font-size: 16px;
+    .btn-danger {
+      background-color: #c62828;
+    }
+
+    .btn-danger:hover {
+      background-color: #ff5252;
+      color: white;
+    }
+
+    .btn-warning {
+      background-color: #ff9800;
+    }
+
+    .btn-warning:hover {
+      background-color: #ffc107;
+      color: black;
     }
 
     .volver {
@@ -106,55 +109,142 @@
       padding: 10px 20px;
       border-radius: 8px;
       font-weight: bold;
-      transition: all 0.3s ease;
+      transition: 0.3s;
     }
 
-    .volver:hover {
-      background-color: var(--color-hover);
-      transform: scale(1.05);
+    .volver:hover { background-color: var(--color-hover); transform: scale(1.05); }
+
+    /*  Modal simple en puro CSS */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(0,0,0,0.5);
+      justify-content: center;
+      align-items: center;
+    }
+
+    .modal-content {
+      background: white;
+      padding: 25px;
+      width: 400px;
+      border-radius: 10px;
+    }
+
+    .close {
+      float: right;
+      cursor: pointer;
+      color: red;
+      font-size: 20px;
     }
   </style>
+
+  <script>
+    function abrirModal(id) { document.getElementById(id).style.display = "flex"; }
+    function cerrarModal(id) { document.getElementById(id).style.display = "none"; }
+  </script>
 </head>
 <body>
-  <header>
-    <h1>🍞 Inventario de Productos - Panadería</h1>
-  </header>
 
-  <main>
-    <table>
-      <thead>
-        <tr>
-          <th>ID Producto</th>
-          <th>Nombre</th>
-          <th>Categoría</th>
-          <th>Cantidad</th>
-          <th>Unidad</th>
-          <th>Última Actualización</th>
-        </tr>
-      </thead>
-      <tbody>
-        <!-- Si no hay datos -->
-        <tr th:if="${inventario == null or #lists.isEmpty(inventario)}">
-          <td colspan="6" class="mensaje">❌ No hay productos en el inventario</td>
-        </tr>
+<header>
+  <h1>🍞 Inventario de Productos - Panadería</h1>
+</header>
 
-        <!-- Si hay datos -->
-        <tr th:each="item : ${inventario}">
-          <td th:text="${item.id_producto}">1</td>
-          <td th:text="${item.nombre}">Pan francés</td>
-          <td th:text="${item.categoria}">Panadería</td>
-          <td th:text="${item.cantidad}">50</td>
-          <td th:text="${item.unidad_medida}">Unidades</td>
-          <td th:text="${#dates.format(item.ultima_actualizacion, 'dd/MM/yyyy')}">28/10/2025</td>
-        </tr>
-      </tbody>
-    </table>
+<main>
 
-    <form th:action="@{/inventario}" method="get">
-      <button type="submit">🔄 Actualizar Inventario</button>
+  <!-- Botón para abrir modal crear -->
+  <button onclick="abrirModal('modalCrear')">➕ Agregar Producto</button>
+
+  <table>
+    <thead>
+      <tr>
+        <th>ID Producto</th>
+        <th>Nombre</th>
+        <th>Categoría</th>
+        <th>Cantidad</th>
+        <th>Unidad</th>
+        <th>Última Actualización</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+
+    <tbody>
+
+      <tr th:if="${inventario == null or #lists.isEmpty(inventario)}">
+        <td colspan="7" class="mensaje">❌ No hay productos en el inventario</td>
+      </tr>
+
+      <tr th:each="item : ${inventario}">
+        <td th:text="${item.id_producto}"></td>
+        <td th:text="${item.nombre}"></td>
+        <td th:text="${item.categoria}"></td>
+        <td th:text="${item.cantidad}"></td>
+        <td th:text="${item.unidad_medida}"></td>
+        <td th:text="${#dates.format(item.ultima_actualizacion, 'dd/MM/yyyy')}"></td>
+
+        <td>
+          <!-- Botón editar -->
+          <button class="btn-warning"
+                  th:onclick="'abrirModal(\'modalEditar' + ${item.id_producto} + '\')'">✏ Editar</button>
+
+          <!-- Botón eliminar -->
+          <a th:href="@{/inventario/eliminar/{id}(id=${item.id_producto})}"
+             class="btn btn-danger">🗑 Eliminar</a>
+        </td>
+      </tr>
+
+    </tbody>
+  </table>
+
+  <a th:href="@{/}" class="volver">🏠 Volver al inicio</a>
+</main>
+
+<!-- MODAL CREAR -->
+<div id="modalCrear" class="modal">
+  <div class="modal-content">
+    <span class="close" onclick="cerrarModal('modalCrear')">&times;</span>
+    <h3>Agregar Producto</h3>
+
+    <form th:action="@{/inventario/guardar}" method="post">
+      <input name="nombre" class="form-control" placeholder="Nombre" required><br>
+      <input name="categoria" class="form-control" placeholder="Categoría" required><br>
+      <input name="cantidad" type="number" min="0" class="form-control" placeholder="Cantidad" required><br>
+      <input name="unidad_medida" class="form-control" placeholder="Unidad" required><br>
+
+      <button type="submit">Guardar</button>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL EDITAR (uno por cada producto) -->
+<div th:each="item : ${inventario}"
+     th:id="'modalEditar' + ${item.id_producto}"
+     class="modal">
+
+  <div class="modal-content">
+
+    <span class="close"
+          th:onclick="'cerrarModal(\'modalEditar' + ${item.id_producto} + '\')'">&times;</span>
+
+    <h3>Editar Producto</h3>
+
+    <form th:action="@{/inventario/actualizar}" method="post">
+
+      <input type="hidden" name="id_producto" th:value="${item.id_producto}">
+
+      <input name="nombre" class="form-control" th:value="${item.nombre}"><br>
+      <input name="categoria" class="form-control" th:value="${item.categoria}"><br>
+      <input name="cantidad" type="number" min="0" class="form-control" th:value="${item.cantidad}"><br>
+      <input name="unidad_medida" class="form-control" th:value="${item.unidad_medida}"><br>
+
+      <button type="submit">💾 Actualizar</button>
     </form>
 
-    <a th:href="@{/}" class="volver">🏠 Volver al inicio</a>
-  </main>
-</body>
+  </div>
+</div>
+
+<a th:href="@{/}" class="volver">🏠 Volver al inicio</a> 
+</main> 
+</body> 
 </html>
