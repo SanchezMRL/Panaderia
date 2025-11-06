@@ -1,250 +1,369 @@
 <!DOCTYPE html>
 <html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Inventario de Productos - Panadería</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inventario de Productos - Panadería</title>
 
-  <style>
-    :root {
-      --color-amarillo: #F9D923;
-      --color-azul: #0A2F66;
-      --color-azul-claro: #E8F1FA;
-      --color-hover: #FFD43B;
-    }
+    <style>
+        :root {
+            --color-amarillo: #F9D923;
+            --color-azul: #0A2F66;
+            --color-azul-claro: #E8F1FA;
+            --color-hover: #FFD43B;
+        }
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, var(--color-azul-claro), #fff);
-      margin: 0;
-      padding: 0;
-      color: var(--color-azul);
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(to right, var(--color-azul-claro), #fff);
+            margin: 0;
+            padding: 0;
+            color: var(--color-azul);
+        }
 
-    header {
-      background-color: var(--color-azul);
-      color: white;
-      padding: 30px 20px;
-      text-align: center;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
+        header {
+            background-color: var(--color-azul);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
 
-    header h1 { font-size: 36px; margin: 0; }
+        header h1 {
+            font-size: 36px;
+            margin: 0;
+        }
 
-    main {
-      padding: 40px;
-      text-align: center;
-      max-width: 1200px;
-      margin: 0 auto;
-    }
+        main {
+            padding: 40px;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background-color: white;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-      margin-bottom: 30px;
-      border: 2px solid var(--color-amarillo);
-      border-radius: 10px;
-      overflow: hidden;
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 2px solid var(--color-amarillo);
+            border-radius: 10px;
+            overflow: hidden;
+        }
 
-    th, td {
-      padding: 14px 16px;
-      text-align: center;
-    }
+        th,
+        td {
+            padding: 14px 16px;
+            text-align: center;
+        }
 
-    th {
-      background-color: var(--color-azul);
-      color: white;
-      font-size: 16px;
-    }
+        th {
+            background-color: var(--color-azul);
+            color: white;
+            font-size: 16px;
+        }
 
-    tr:nth-child(even) { background-color: var(--color-azul-claro); }
+        tr:nth-child(even) {
+            background-color: var(--color-azul-claro);
+        }
 
-    tr:hover { background-color: var(--color-hover); }
+        tr:hover {
+            background-color: var(--color-hover);
+        }
 
-    button, .btn {
-      padding: 12px 20px;
-      background-color: var(--color-azul);
-      color: white;
-      font-weight: bold;
-      border: none;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 16px;
-      transition: 0.3s;
-    }
+        button,
+        .btn {
+            padding: 12px 20px;
+            background-color: var(--color-azul);
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
 
-    button:hover, .btn:hover {
-      background-color: var(--color-hover);
-      color: var(--color-azul);
-      transform: translateY(-2px);
-    }
+        button:hover,
+        .btn:hover {
+            background-color: var(--color-hover);
+            color: var(--color-azul);
+            transform: translateY(-2px);
+        }
 
-    .btn-danger {
-      background-color: #c62828;
-    }
+        .btn-danger {
+            background-color: #c62828;
+        }
 
-    .btn-danger:hover {
-      background-color: #ff5252;
-      color: white;
-    }
+        .btn-danger:hover {
+            background-color: #ff5252;
+        }
 
-    .btn-warning {
-      background-color: #ff9800;
-    }
+        .btn-warning {
+            background-color: #ff9800;
+        }
 
-    .btn-warning:hover {
-      background-color: #ffc107;
-      color: black;
-    }
+        .btn-warning:hover {
+            background-color: #ffc107;
+            color: black;
+        }
 
-    .volver {
-      display: inline-block;
-      margin-top: 20px;
-      text-decoration: none;
-      color: var(--color-azul);
-      background-color: var(--color-amarillo);
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: bold;
-      transition: 0.3s;
-    }
+        .volver {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: var(--color-azul);
+            background-color: var(--color-amarillo);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
 
-    .volver:hover { background-color: var(--color-hover); transform: scale(1.05); }
+        .volver:hover {
+            background-color: var(--color-hover);
+            transform: scale(1.05);
+        }
 
-    /*  Modal simple en puro CSS */
-    .modal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      background: rgba(0,0,0,0.5);
-      justify-content: center;
-      align-items: center;
-    }
 
-    .modal-content {
-      background: white;
-      padding: 25px;
-      width: 400px;
-      border-radius: 10px;
-    }
+        /* MODALES */
 
-    .close {
-      float: right;
-      cursor: pointer;
-      color: red;
-      font-size: 20px;
-    }
-  </style>
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(2px);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.2s ease-out;
+        }
 
-  <script>
-    function abrirModal(id) { document.getElementById(id).style.display = "flex"; }
-    function cerrarModal(id) { document.getElementById(id).style.display = "none"; }
-  </script>
+        .modal-content {
+            background: white;
+            padding: 35px;
+            width: 450px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+            border-top: 8px solid var(--color-amarillo);
+            animation: slideIn 0.25s ease-out;
+        }
+
+        .close {
+            float: right;
+            cursor: pointer;
+            color: #444;
+            font-size: 22px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .close:hover {
+            color: red;
+        }
+
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: 2px solid var(--color-azul);
+            border-radius: 8px;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .modal-content input:focus {
+            outline: none;
+            border-color: var(--color-amarillo);
+            box-shadow: 0 0 6px rgba(249, 217, 35, 0.7);
+        }
+
+        .modal-content button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 18px;
+            background-color: var(--color-azul);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.25s;
+        }
+
+        .modal-content button:hover {
+            background-color: var(--color-hover);
+            color: var(--color-azul);
+            transform: translateY(-2px);
+        }
+
+        /* Modal de eliminación */
+        .modal-danger .modal-content {
+            border-top-color: #c62828;
+        }
+
+        .modal-danger button {
+            background-color: #c62828 !important;
+        }
+
+        .modal-danger button:hover {
+            background-color: #ff5252 !important;
+            color: white !important;
+        }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+    </style>
+
+    <script>
+        function abrirModal(id) { document.getElementById(id).style.display = "flex"; }
+        function cerrarModal(id) { document.getElementById(id).style.display = "none"; }
+    </script>
 </head>
+
 <body>
 
 <header>
-  <h1>🍞 Inventario de Productos - Panadería</h1>
+    <h1>🍞 Inventario de Productos - Panadería</h1>
 </header>
 
 <main>
 
-  <!-- Botón para abrir modal crear -->
-  <button onclick="abrirModal('modalCrear')">➕ Agregar Producto</button>
+    <button onclick="abrirModal('modalCrear')">➕ Agregar Producto</button>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID Producto</th>
-        <th>Nombre</th>
-        <th>Categoría</th>
-        <th>Cantidad</th>
-        <th>Unidad</th>
-        <th>Última Actualización</th>
-        <th>Acciones</th>
-      </tr>
-    </thead>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Categoría</th>
+            <th>Cantidad</th>
+            <th>Unidad</th>
+            <th>Última Actualización</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
 
-    <tbody>
+        <tbody>
 
-      <tr th:if="${inventario == null or #lists.isEmpty(inventario)}">
-        <td colspan="7" class="mensaje">❌ No hay productos en el inventario</td>
-      </tr>
+        <tr th:if="${inventario == null or #lists.isEmpty(inventario)}">
+            <td colspan="7">❌ No hay productos en el inventario</td>
+        </tr>
 
-      <tr th:each="item : ${inventario}">
-        <td th:text="${item.id_producto}"></td>
-        <td th:text="${item.nombre}"></td>
-        <td th:text="${item.categoria}"></td>
-        <td th:text="${item.cantidad}"></td>
-        <td th:text="${item.unidad_medida}"></td>
-        <td th:text="${#dates.format(item.ultima_actualizacion, 'dd/MM/yyyy')}"></td>
+        <tr th:each="item : ${inventario}">
+            <td th:text="${item.id_producto}"></td>
+            <td th:text="${item.nombre}"></td>
+            <td th:text="${item.categoria}"></td>
+            <td th:text="${item.cantidad}"></td>
+            <td th:text="${item.unidad_medida}"></td>
+            <td th:text="${#dates.format(item.ultima_actualizacion, 'dd/MM/yyyy')}"></td>
 
-        <td>
-          <!-- Botón editar -->
-          <button class="btn-warning"
-                  th:onclick="'abrirModal(\'modalEditar' + ${item.id_producto} + '\')'">✏ Editar</button>
+            <td>
+                <button class="btn-warning"
+                        th:onclick="'abrirModal(\'modalEditar' + ${item.id_producto} + '\')'">
+                    ✏ Editar
+                </button>
 
-          <!-- Botón eliminar -->
-          <a th:href="@{/inventario/eliminar/{id}(id=${item.id_producto})}"
-             class="btn btn-danger">🗑 Eliminar</a>
-        </td>
-      </tr>
+                <button class="btn-danger"
+                        th:onclick="'abrirModal(\'modalEliminar' + ${item.id_producto} + '\')'">
+                    🗑 Eliminar
+                </button>
+            </td>
+        </tr>
 
-    </tbody>
-  </table>
+        </tbody>
+    </table>
 
-  <a th:href="@{/}" class="volver">🏠 Volver al inicio</a>
+    <a th:href="@{/}" class="volver">🏠 Volver al inicio</a>
 </main>
+
 
 <!-- MODAL CREAR -->
 <div id="modalCrear" class="modal">
-  <div class="modal-content">
-    <span class="close" onclick="cerrarModal('modalCrear')">&times;</span>
-    <h3>Agregar Producto</h3>
+    <div class="modal-content">
+        <span class="close" onclick="cerrarModal('modalCrear')">&times;</span>
+        <h3>➕ Agregar Producto</h3>
 
-    <form th:action="@{/inventario/guardar}" method="post">
-      <input name="nombre" class="form-control" placeholder="Nombre" required><br>
-      <input name="categoria" class="form-control" placeholder="Categoría" required><br>
-      <input name="cantidad" type="number" min="0" class="form-control" placeholder="Cantidad" required><br>
-      <input name="unidad_medida" class="form-control" placeholder="Unidad" required><br>
+        <form th:action="@{/inventario/guardar}" method="post">
+            <input name="nombre" placeholder="Nombre" required>
+            <input name="categoria" placeholder="Categoría" required>
+            <input name="cantidad" type="number" min="0" placeholder="Cantidad" required>
+            <input name="unidad_medida" placeholder="Unidad" required>
 
-      <button type="submit">Guardar</button>
-    </form>
-  </div>
+            <button type="submit">Guardar</button>
+        </form>
+    </div>
 </div>
 
-<!-- MODAL EDITAR (uno por cada producto) -->
-<div th:each="item : ${inventario}"
-     th:id="'modalEditar' + ${item.id_producto}"
-     class="modal">
 
-  <div class="modal-content">
+<!-- MODAL EDITAR + ELIMINAR -->
+<div th:each="item : ${inventario}">
 
-    <span class="close"
-          th:onclick="'cerrarModal(\'modalEditar' + ${item.id_producto} + '\')'">&times;</span>
+    <!-- MODAL EDITAR -->
+    <div th:id="'modalEditar' + ${item.id_producto}" class="modal">
+        <div class="modal-content">
+            <span class="close"
+                  th:onclick="'cerrarModal(\'modalEditar' + ${item.id_producto} + '\')'">&times;</span>
 
-    <h3>Editar Producto</h3>
+            <h3>✏ Editar Producto</h3>
 
-    <form th:action="@{/inventario/actualizar}" method="post">
+            <form th:action="@{/inventario/actualizar}" method="post">
+                <input type="hidden" name="id_producto" th:value="${item.id_producto}">
 
-      <input type="hidden" name="id_producto" th:value="${item.id_producto}">
+                <input name="nombre" th:value="${item.nombre}">
+                <input name="categoria" th:value="${item.categoria}">
+                <input name="cantidad" type="number" min="0" th:value="${item.cantidad}">
+                <input name="unidad_medida" th:value="${item.unidad_medida}">
 
-      <input name="nombre" class="form-control" th:value="${item.nombre}"><br>
-      <input name="categoria" class="form-control" th:value="${item.categoria}"><br>
-      <input name="cantidad" type="number" min="0" class="form-control" th:value="${item.cantidad}"><br>
-      <input name="unidad_medida" class="form-control" th:value="${item.unidad_medida}"><br>
+                <button type="submit">Actualizar</button>
+            </form>
+        </div>
+    </div>
 
-      <button type="submit">💾 Actualizar</button>
-    </form>
 
-  </div>
+    <!-- MODAL ELIMINAR -->
+    <div th:id="'modalEliminar' + ${item.id_producto}" class="modal modal-danger">
+        <div class="modal-content">
+            <span class="close"
+                  th:onclick="'cerrarModal(\'modalEliminar' + ${item.id_producto} + '\')'">&times;</span>
+
+            <h3>⚠ Confirmar Eliminación</h3>
+            <p>¿Seguro que deseas eliminar<br>
+                <strong th:text="${item.nombre}"></strong>?</p>
+
+            <a th:href="@{/inventario/eliminar/{id}(id=${item.id_producto})}">
+                <button style="margin-top: 10px;">Eliminar Definitivamente</button>
+            </a>
+        </div>
+    </div>
+
 </div>
 
-<a th:href="@{/}" class="volver">🏠 Volver al inicio</a> 
-</main> 
-</body> 
+</body>
 </html>
