@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping("/empleados")
+@RequestMapping("/agregar")
 public class ControladorVistaEmpleados {
 
     @Autowired
@@ -17,6 +17,6 @@ public class ControladorVistaEmpleados {
     @GetMapping
     public String mostrarEmpleados(Model model) {
         model.addAttribute("empleados", empleadoRepo.findAll());
-        return "empleados";  // Nombre del HTML
+        return "agregar";  
     }
 }
