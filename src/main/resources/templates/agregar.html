@@ -72,7 +72,7 @@
             background-color: var(--color-hover);
         }
 
-        button, .btn {
+        button {
             padding: 12px 20px;
             background-color: var(--color-azul);
             color: white;
@@ -84,7 +84,7 @@
             transition: 0.3s;
         }
 
-        button:hover, .btn:hover {
+        button:hover {
             background-color: var(--color-hover);
             color: var(--color-azul);
             transform: translateY(-2px);
@@ -125,7 +125,6 @@
             backdrop-filter: blur(2px);
             justify-content: center;
             align-items: center;
-            animation: fadeIn 0.2s ease-out;
         }
 
         .modal-content {
@@ -133,9 +132,7 @@
             padding: 35px;
             width: 450px;
             border-radius: 16px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
             border-top: 8px solid var(--color-amarillo);
-            animation: slideIn 0.25s ease-out;
         }
 
         .close {
@@ -144,54 +141,11 @@
             color: #444;
             font-size: 22px;
             font-weight: bold;
-            transition: 0.2s;
         }
 
         .close:hover { color: red; }
 
-        .modal-content input {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            border: 2px solid var(--color-azul);
-            border-radius: 8px;
-            font-size: 15px;
-            transition: 0.3s;
-        }
-
-        .modal-content input:focus {
-            outline: none;
-            border-color: var(--color-amarillo);
-            box-shadow: 0 0 6px rgba(249, 217, 35, 0.7);
-        }
-
-        .modal-content button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 18px;
-            background-color: var(--color-azul);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 16px;
-            transition: 0.25s;
-        }
-
-        .modal-content button:hover {
-            background-color: var(--color-hover);
-            color: var(--color-azul);
-            transform: translateY(-2px);
-        }
-
         .modal-danger .modal-content { border-top-color: #c62828; }
-        .modal-danger button { background-color: #c62828 !important; }
-        .modal-danger button:hover { background-color: #ff5252 !important; }
-        
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; }
-                             to { transform: translateY(0); opacity: 1; } }
     </style>
 
     <script>
@@ -228,19 +182,19 @@
         </tr>
 
         <tr th:each="emp : ${empleados}">
-            <td th:text="${emp.id_empleado}"></td>
+            <td th:text="${emp.idEmpleado}"></td>
             <td th:text="${emp.nombre}"></td>
             <td th:text="${emp.cargo}"></td>
             <td th:text="${emp.email}"></td>
 
             <td>
                 <button class="btn-warning"
-                        th:onclick="'abrirModal(\'modalEditar' + ${emp.id_empleado} + '\')'">
+                        th:onclick="'abrirModal(\'modalEditar' + ${emp.idEmpleado} + '\')'">
                     ✏ Editar
                 </button>
 
                 <button class="btn-danger"
-                        th:onclick="'abrirModal(\'modalEliminar' + ${emp.id_empleado} + '\')'">
+                        th:onclick="'abrirModal(\'modalEliminar' + ${emp.idEmpleado} + '\')'">
                     🗑 Eliminar
                 </button>
             </td>
@@ -273,14 +227,14 @@
 <div th:each="emp : ${empleados}">
 
     <!-- EDITAR -->
-    <div th:id="'modalEditar' + ${emp.id_empleado}" class="modal">
+    <div th:id="'modalEditar' + ${emp.idEmpleado}" class="modal">
         <div class="modal-content">
-            <span class="close" th:onclick="'cerrarModal(\'modalEditar' + ${emp.id_empleado} + '\')'">&times;</span>
+            <span class="close" th:onclick="'cerrarModal(\'modalEditar' + ${emp.idEmpleado} + '\')'">&times;</span>
 
             <h3>✏ Editar Empleado</h3>
 
             <form th:action="@{/empleados/actualizar}" method="post">
-                <input type="hidden" name="id_empleado" th:value="${emp.id_empleado}">
+                <input type="hidden" name="idEmpleado" th:value="${emp.idEmpleado}">
                 <input name="nombre" th:value="${emp.nombre}">
                 <input name="cargo" th:value="${emp.cargo}">
                 <input name="email" th:value="${emp.email}">
@@ -292,14 +246,14 @@
     </div>
 
     <!-- ELIMINAR -->
-    <div th:id="'modalEliminar' + ${emp.id_empleado}" class="modal modal-danger">
+    <div th:id="'modalEliminar' + ${emp.idEmpleado}" class="modal modal-danger">
         <div class="modal-content">
-            <span class="close" th:onclick="'cerrarModal(\'modalEliminar' + ${emp.id_empleado} + '\')'">&times;</span>
+            <span class="close" th:onclick="'cerrarModal(\'modalEliminar' + ${emp.idEmpleado} + '\')'">&times;</span>
 
             <h3>⚠ Confirmar Eliminación</h3>
             <p>¿Seguro que deseas eliminar a<br><strong th:text="${emp.nombre}"></strong>?</p>
 
-            <a th:href="@{/empleados/eliminar/{id}(id=${emp.id_empleado})}">
+            <a th:href="@{/empleados/eliminar/{id}(id=${emp.idEmpleado})}">
                 <button style="margin-top: 10px;">Eliminar Definitivamente</button>
             </a>
         </div>
