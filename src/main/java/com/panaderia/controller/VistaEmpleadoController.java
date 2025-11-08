@@ -1,13 +1,9 @@
-package com.panaderia.controller;
-
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-
 @Controller
+@RequestMapping("/empleados/agregar")
 public class VistaEmpleadoController {
 
-    @GetMapping("/agregar")
+    @GetMapping
     public String mostrarFormularioEmpleado() {
-        return "agregar"; // busca agregar.html en /templates/
+        return "agregar"; // agregar.html
     }
 }
