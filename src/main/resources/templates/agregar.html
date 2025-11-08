@@ -1,182 +1,311 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro de Empleado - Panadería</title>
-  <style>
-    :root {
-      --color-amarillo: #F9D923;
-      --color-azul: #0A2F66;
-      --color-azul-claro: #E8F1FA;
-      --color-hover: #FFD43B;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Empleados - Panadería</title>
 
-    body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      background: linear-gradient(to right, var(--color-azul-claro), #fff);
-      margin: 0;
-      padding: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      color: var(--color-azul);
-    }
+    <style>
+        :root {
+            --color-amarillo: #F9D923;
+            --color-azul: #0A2F66;
+            --color-azul-claro: #E8F1FA;
+            --color-hover: #FFD43B;
+        }
 
-    .registro-container {
-      background-color: white;
-      padding: 40px 30px;
-      border-radius: 15px;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
-      width: 100%;
-      max-width: 420px;
-      border: 3px solid var(--color-amarillo);
-    }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: linear-gradient(to right, var(--color-azul-claro), #fff);
+            margin: 0;
+            padding: 0;
+            color: var(--color-azul);
+        }
 
-    h2 {
-      text-align: center;
-      margin-bottom: 1.5rem;
-      font-size: 28px;
-      color: var(--color-azul);
-    }
+        header {
+            background-color: var(--color-azul);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
 
-    label {
-      font-weight: bold;
-      display: block;
-      margin-bottom: 0.4rem;
-      color: var(--color-azul);
-    }
+        header h1 {
+            font-size: 36px;
+            margin: 0;
+        }
 
-    input {
-      width: 100%;
-      padding: 0.7rem;
-      margin-bottom: 1.2rem;
-      border: 2px solid var(--color-azul-claro);
-      border-radius: 8px;
-      font-size: 16px;
-    }
+        main {
+            padding: 40px;
+            text-align: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
 
-    input:focus {
-      outline: none;
-      border-color: var(--color-amarillo);
-      box-shadow: 0 0 6px var(--color-amarillo);
-    }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background-color: white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px;
+            border: 2px solid var(--color-amarillo);
+            border-radius: 10px;
+            overflow: hidden;
+        }
 
-    button {
-      width: 100%;
-      padding: 0.9rem;
-      background-color: var(--color-amarillo);
-      border: none;
-      color: var(--color-azul);
-      font-size: 18px;
-      font-weight: bold;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
+        th, td {
+            padding: 14px 16px;
+            text-align: center;
+        }
 
-    button:hover {
-      background-color: var(--color-hover);
-      transform: translateY(-3px);
-    }
+        th {
+            background-color: var(--color-azul);
+            color: white;
+            font-size: 16px;
+        }
 
-    .success {
-      color: green;
-      text-align: center;
-      margin-bottom: 1rem;
-      font-weight: bold;
-    }
+        tr:nth-child(even) {
+            background-color: var(--color-azul-claro);
+        }
 
-    .error {
-      color: red;
-      text-align: center;
-      margin-bottom: 1rem;
-      font-weight: bold;
-    }
+        tr:hover {
+            background-color: var(--color-hover);
+        }
 
-    .register-link {
-      text-align: center;
-      margin-top: 10px;
-    }
+        button, .btn {
+            padding: 12px 20px;
+            background-color: var(--color-azul);
+            color: white;
+            font-weight: bold;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
 
-    .register-link a {
-      color: var(--color-azul);
-      font-weight: bold;
-      text-decoration: none;
-    }
+        button:hover, .btn:hover {
+            background-color: var(--color-hover);
+            color: var(--color-azul);
+            transform: translateY(-2px);
+        }
 
-    .register-link a:hover {
-      color: var(--color-amarillo);
-    }
-  </style>
+        .btn-danger { background-color: #c62828; }
+        .btn-danger:hover { background-color: #ff5252; }
+
+        .btn-warning { background-color: #ff9800; }
+        .btn-warning:hover { background-color: #ffc107; color:black; }
+
+        .volver {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: var(--color-azul);
+            background-color: var(--color-amarillo);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: 0.3s;
+        }
+
+        .volver:hover {
+            background-color: var(--color-hover);
+            transform: scale(1.05);
+        }
+
+        /* MODALES */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.45);
+            backdrop-filter: blur(2px);
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.2s ease-out;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 35px;
+            width: 450px;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
+            border-top: 8px solid var(--color-amarillo);
+            animation: slideIn 0.25s ease-out;
+        }
+
+        .close {
+            float: right;
+            cursor: pointer;
+            color: #444;
+            font-size: 22px;
+            font-weight: bold;
+            transition: 0.2s;
+        }
+
+        .close:hover { color: red; }
+
+        .modal-content input {
+            width: 100%;
+            padding: 12px;
+            margin-top: 10px;
+            border: 2px solid var(--color-azul);
+            border-radius: 8px;
+            font-size: 15px;
+            transition: 0.3s;
+        }
+
+        .modal-content input:focus {
+            outline: none;
+            border-color: var(--color-amarillo);
+            box-shadow: 0 0 6px rgba(249, 217, 35, 0.7);
+        }
+
+        .modal-content button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 18px;
+            background-color: var(--color-azul);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.25s;
+        }
+
+        .modal-content button:hover {
+            background-color: var(--color-hover);
+            color: var(--color-azul);
+            transform: translateY(-2px);
+        }
+
+        .modal-danger .modal-content { border-top-color: #c62828; }
+        .modal-danger button { background-color: #c62828 !important; }
+        .modal-danger button:hover { background-color: #ff5252 !important; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes slideIn { from { transform: translateY(-20px); opacity: 0; }
+                             to { transform: translateY(0); opacity: 1; } }
+    </style>
+
+    <script>
+        function abrirModal(id) { document.getElementById(id).style.display = "flex"; }
+        function cerrarModal(id) { document.getElementById(id).style.display = "none"; }
+    </script>
 </head>
+
 <body>
 
-  <div class="registro-container">
-    <h2>Registro de Empleado</h2>
+<header>
+    <h1>👤 Gestión de Empleados - Panadería</h1>
+</header>
 
-    <div id="mensaje" class="success"></div>
+<main>
 
-    <form id="registroForm">
-      <label for="nombre">Nombre completo:</label>
-      <input type="text" id="nombre" placeholder="Ej. Ana Fernández" required>
+    <button onclick="abrirModal('modalCrear')">➕ Registrar Empleado</button>
 
-      <label for="cargo">Cargo:</label>
-      <input type="text" id="cargo" placeholder="Ej. Administrador, Panadero..." required>
+    <table>
+        <thead>
+        <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Cargo</th>
+            <th>Email</th>
+            <th>Acciones</th>
+        </tr>
+        </thead>
 
-      <label for="email">Email:</label>
-      <input type="email" id="email" placeholder="ejemplo@correo.com" required>
+        <tbody>
 
-      <label for="password">Contraseña:</label>
-      <input type="password" id="password" placeholder="Cree una contraseña" required>
+        <tr th:if="${empleados == null or #lists.isEmpty(empleados)}">
+            <td colspan="5">❌ No hay empleados registrados</td>
+        </tr>
 
-      <button type="submit">Registrar Empleado</button>
-    </form>
+        <tr th:each="emp : ${empleados}">
+            <td th:text="${emp.id_empleado}"></td>
+            <td th:text="${emp.nombre}"></td>
+            <td th:text="${emp.cargo}"></td>
+            <td th:text="${emp.email}"></td>
 
-    <div class="register-link">
-      <p><a href="/index">← Volver al inicio</a></p>
+            <td>
+                <button class="btn-warning"
+                        th:onclick="'abrirModal(\'modalEditar' + ${emp.id_empleado} + '\')'">
+                    ✏ Editar
+                </button>
+
+                <button class="btn-danger"
+                        th:onclick="'abrirModal(\'modalEliminar' + ${emp.id_empleado} + '\')'">
+                    🗑 Eliminar
+                </button>
+            </td>
+        </tr>
+
+        </tbody>
+    </table>
+
+    <a th:href="@{/}" class="volver">🏠 Volver al inicio</a>
+</main>
+
+<!-- MODAL CREAR -->
+<div id="modalCrear" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="cerrarModal('modalCrear')">&times;</span>
+        <h3>➕ Registrar Empleado</h3>
+
+        <form th:action="@{/empleados/guardar}" method="post">
+            <input name="nombre" placeholder="Nombre completo" required>
+            <input name="cargo" placeholder="Cargo" required>
+            <input name="email" type="email" placeholder="Correo electrónico" required>
+            <input name="password" type="password" placeholder="Contraseña" required>
+
+            <button type="submit">Guardar</button>
+        </form>
     </div>
-  </div>
+</div>
 
-  <script>
-    const form = document.getElementById('registroForm');
-    const mensaje = document.getElementById('mensaje');
+<!-- MODALES EDITAR + ELIMINAR -->
+<div th:each="emp : ${empleados}">
 
-    form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      mensaje.textContent = '';
+    <!-- EDITAR -->
+    <div th:id="'modalEditar' + ${emp.id_empleado}" class="modal">
+        <div class="modal-content">
+            <span class="close" th:onclick="'cerrarModal(\'modalEditar' + ${emp.id_empleado} + '\')'">&times;</span>
 
-      const empleado = {
-        nombre: document.getElementById('nombre').value,
-        cargo: document.getElementById('cargo').value,
-        email: document.getElementById('email').value,
-        password: document.getElementById('password').value
-      };
+            <h3>✏ Editar Empleado</h3>
 
-      try {
-        const res = await fetch('/api/empleado/registro', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(empleado)
-        });
+            <form th:action="@{/empleados/actualizar}" method="post">
+                <input type="hidden" name="id_empleado" th:value="${emp.id_empleado}">
+                <input name="nombre" th:value="${emp.nombre}">
+                <input name="cargo" th:value="${emp.cargo}">
+                <input name="email" th:value="${emp.email}">
+                <input name="password" placeholder="Nueva contraseña (opcional)" type="password">
 
-        if (res.ok) {
-          mensaje.className = 'success';
-          mensaje.textContent = '✅ Empleado registrado correctamente';
-          form.reset();
-        } else {
-          const error = await res.text();
-          mensaje.className = 'error';
-          mensaje.textContent = '❌ Error al registrar: ' + error;
-        }
-      } catch (err) {
-        mensaje.className = 'error';
-        mensaje.textContent = '❌ Error de conexión con el servidor';
-        console.error(err);
-      }
-    });
-  </script>
+                <button type="submit">Actualizar</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- ELIMINAR -->
+    <div th:id="'modalEliminar' + ${emp.id_empleado}" class="modal modal-danger">
+        <div class="modal-content">
+            <span class="close" th:onclick="'cerrarModal(\'modalEliminar' + ${emp.id_empleado} + '\')'">&times;</span>
+
+            <h3>⚠ Confirmar Eliminación</h3>
+            <p>¿Seguro que deseas eliminar a<br><strong th:text="${emp.nombre}"></strong>?</p>
+
+            <a th:href="@{/empleados/eliminar/{id}(id=${emp.id_empleado})}">
+                <button style="margin-top: 10px;">Eliminar Definitivamente</button>
+            </a>
+        </div>
+    </div>
+
+</div>
 
 </body>
 </html>
