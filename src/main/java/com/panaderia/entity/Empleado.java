@@ -1,79 +1,65 @@
-package com.panaderia.controller;
+package com.panaderia.entity;
 
-import com.panaderia.entity.Empleado;
-import com.panaderia.repository.EmpleadoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import jakarta.persistence.*;
 
-@RestController
-@RequestMapping("/api/empleado")
-@CrossOrigin(origins = "*") 
-public class EmpleadoController {
+@Entity
+@Table(name = "empleado")
+public class Empleado {
 
-    @Autowired
-    private EmpleadoRepository empleadoRepo;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long idEmpleado;
 
-    // ✅ Registrar nuevo empleado
-    @PostMapping("/registro")
-    public ResponseEntity<?> registrarEmpleado(@RequestBody Empleado empleado) {
-        try {
-            // Verificar si el email ya existe
-            if (empleadoRepo.findByEmail(empleado.getEmail()).isPresent()) {
-                return ResponseEntity.badRequest().body("El correo ya está registrado");
-            }
+    @Column(nullable = false)
+    private String nombre;
 
-            Empleado guardado = empleadoRepo.save(empleado);
-            return ResponseEntity.ok(guardado);
+    @Column(nullable = false, unique = true)
+    private String email;
 
-        } catch (Exception e) {
-            return ResponseEntity.internalServerError()
-                    .body("Error al registrar empleado: " + e.getMessage());
-        }
+    private String cargo;
+
+    @Column(nullable = false)
+    private String password;
+
+    // === Getters & Setters ===
+
+    public Long getIdEmpleado() {
+        return idEmpleado;
     }
 
-    // ✅ Listar todos los empleados
-    @GetMapping
-    public ResponseEntity<?> listarEmpleados() {
-        return ResponseEntity.ok(empleadoRepo.findAll());
+    public void setIdEmpleado(Long idEmpleado) {
+        this.idEmpleado = idEmpleado;
     }
 
-    // ✅ Obtener un empleado por ID
-    @GetMapping("/{id}")
-    public ResponseEntity<?> obtenerEmpleado(@PathVariable Long id) {
-        return empleadoRepo.findById(id)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.badRequest().body("Empleado no encontrado"));
+    public String getNombre() {
+        return nombre;
     }
 
-    // ✅ Actualizar empleado
-    @PutMapping("/actualizar/{id}")
-    public ResponseEntity<?> actualizarEmpleado(
-            @PathVariable Long id,
-            @RequestBody Empleado datos) {
-
-        return empleadoRepo.findById(id).map(empleado -> {
-
-            // ✅ Solo actualizamos lo que existe en tu ENTIDAD REAL
-            empleado.setNombre(datos.getNombre());
-            empleado.setEmail(datos.getEmail());
-            empleado.setCargo(datos.getCargo());
-            empleado.setPassword(datos.getPassword());
-
-            empleadoRepo.save(empleado);
-            return ResponseEntity.ok("Empleado actualizado correctamente");
-
-        }).orElse(ResponseEntity.badRequest().body("Empleado no encontrado"));
+    public void setNombre(String nombre) {
+        this.nombre = nombre;
     }
 
-    // ✅ Eliminar empleado
-    @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<?> eliminarEmpleado(@PathVariable Long id) {
-        if (!empleadoRepo.existsById(id)) {
-            return ResponseEntity.badRequest().body("Empleado no encontrado");
-        }
+    public String getEmail() {
+        return email;
+    }
 
-        empleadoRepo.deleteById(id);
-        return ResponseEntity.ok("Empleado eliminado correctamente");
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getCargo() {
+        return cargo;
+    }
+
+    public void setCargo(String cargo) {
+        this.cargo = cargo;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
