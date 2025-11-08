@@ -21,11 +21,12 @@ public class LoginController {
     @Autowired
     private EmpleadoRepository empleadoRepository;
 
-    // Redirige raíz "/" a "/login"
+    // Redirige raíz "/" a "/index"
     @GetMapping("/")
     public String inicio() {
-        return "redirect:/login";
+    return "index"; 
     }
+
 
     // Muestra el formulario de login
     @GetMapping("/login")
