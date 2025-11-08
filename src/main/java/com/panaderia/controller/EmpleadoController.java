@@ -20,7 +20,12 @@ public class EmpleadoController {
     @PostMapping("/registro")
     public ResponseEntity<?> registrarEmpleado(@RequestBody Empleado empleado) {
         try {
-            // como tu tabla NO TIENE email, NO se puede validar email
+
+            // ✅ Validación por email (tu BD sí lo tiene)
+            if (empleadoRepo.findByEmail(empleado.getEmail()).isPresent()) {
+                return ResponseEntity.badRequest().body("El correo ya está registrado");
+            }
+
             Empleado guardado = empleadoRepo.save(empleado);
             return ResponseEntity.ok(guardado);
 
@@ -30,13 +35,13 @@ public class EmpleadoController {
         }
     }
 
-    // ✅ LISTAR TODOS LOS EMPLEADOS
+    // ✅ LISTAR TODOS
     @GetMapping("/lista")
     public ResponseEntity<?> listarEmpleados() {
         return ResponseEntity.ok(empleadoRepo.findAll());
     }
 
-    // ✅ OBTENER EMPLEADO POR ID
+    // ✅ OBTENER POR ID
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerEmpleado(@PathVariable Long id) {
         Optional<Empleado> empleado = empleadoRepo.findById(id);
@@ -58,9 +63,11 @@ public class EmpleadoController {
 
         Empleado empleado = optional.get();
 
-        // SOLO actualizar los atributos reales de la BD
+        // ✅ Campos reales existentes
         empleado.setNombre(datos.getNombre());
         empleado.setCargo(datos.getCargo());
+        empleado.setEmail(datos.getEmail());
+        empleado.setTelefono(datos.getTelefono());
 
         empleadoRepo.save(empleado);
 
