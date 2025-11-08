@@ -27,13 +27,10 @@
             color: white;
             padding: 30px 20px;
             text-align: center;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
         }
 
-        header h1 {
-            font-size: 36px;
-            margin: 0;
-        }
+        header h1 { font-size: 36px; margin: 0; }
 
         main {
             padding: 40px;
@@ -46,17 +43,14 @@
             width: 100%;
             border-collapse: collapse;
             background-color: white;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             margin-bottom: 30px;
             border: 2px solid var(--color-amarillo);
             border-radius: 10px;
             overflow: hidden;
         }
 
-        th, td {
-            padding: 14px 16px;
-            text-align: center;
-        }
+        th, td { padding: 14px 16px; text-align: center; }
 
         th {
             background-color: var(--color-azul);
@@ -64,13 +58,8 @@
             font-size: 16px;
         }
 
-        tr:nth-child(even) {
-            background-color: var(--color-azul-claro);
-        }
-
-        tr:hover {
-            background-color: var(--color-hover);
-        }
+        tr:nth-child(even) { background-color: var(--color-azul-claro); }
+        tr:hover { background-color: var(--color-hover); }
 
         button {
             padding: 12px 20px;
@@ -113,7 +102,7 @@
             transform: scale(1.05);
         }
 
-        /* MODALES */
+        /* ✅ MODALES */
         .modal {
             display: none;
             position: fixed;
@@ -121,7 +110,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.45);
+            background: rgba(0,0,0,0.45);
             backdrop-filter: blur(2px);
             justify-content: center;
             align-items: center;
@@ -130,13 +119,16 @@
         .modal-content {
             background: white;
             padding: 35px;
-            width: 450px;
+            width: 420px;
             border-radius: 16px;
             border-top: 8px solid var(--color-amarillo);
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .close {
-            float: right;
+            align-self: flex-end;
             cursor: pointer;
             color: #444;
             font-size: 22px;
@@ -144,6 +136,14 @@
         }
 
         .close:hover { color: red; }
+
+        input {
+            padding: 12px;
+            width: 100%;
+            border-radius: 8px;
+            border: 1px solid #bbb;
+            font-size: 15px;
+        }
 
         .modal-danger .modal-content { border-top-color: #c62828; }
     </style>
@@ -206,13 +206,13 @@
     <a th:href="@{/}" class="volver">🏠 Volver al inicio</a>
 </main>
 
-<!-- ✅ MODAL CREAR EMPLEADO (ESTILO INVENTARIO) -->
+<!-- ✅ MODAL CREAR EMPLEADO (UNA SOLA COLUMNA) -->
 <div id="modalCrear" class="modal">
     <div class="modal-content">
         <span class="close" onclick="cerrarModal('modalCrear')">&times;</span>
         <h3>➕ Registrar Empleado</h3>
 
-        <form th:action="@{/empleados/guardar}" method="post">
+        <form th:action="@{/empleados/guardar}" method="post" style="display:flex; flex-direction:column; gap:12px;">
             <input name="nombre" placeholder="Nombre completo" required>
             <input name="cargo" placeholder="Cargo" required>
             <input name="email" type="email" placeholder="Correo electrónico" required>
@@ -224,10 +224,10 @@
 </div>
 
 
-<!-- ✅ MODALES EDITAR Y ELIMINAR (UNO POR EMPLEADO) -->
+<!-- ✅ MODALES EDITAR Y ELIMINAR -->
 <div th:each="emp : ${empleados}">
 
-    <!-- ✅ MODAL EDITAR -->
+    <!-- ✅ MODAL EDITAR (UNA SOLA COLUMNA) -->
     <div th:id="'modalEditar' + ${emp.idEmpleado}" class="modal">
         <div class="modal-content">
             <span class="close"
@@ -235,7 +235,8 @@
 
             <h3>✏ Editar Empleado</h3>
 
-            <form th:action="@{/empleados/actualizar}" method="post">
+            <form th:action="@{/empleados/actualizar}" method="post"
+                  style="display:flex; flex-direction:column; gap:12px;">
                 <input type="hidden" name="idEmpleado" th:value="${emp.idEmpleado}">
                 <input name="nombre" th:value="${emp.nombre}" required>
                 <input name="cargo" th:value="${emp.cargo}" required>
@@ -248,7 +249,7 @@
     </div>
 
 
-    <!-- ✅ MODAL ELIMINAR (ESTILO INVENTARIO) -->
+    <!-- ✅ MODAL ELIMINAR -->
     <div th:id="'modalEliminar' + ${emp.idEmpleado}" class="modal modal-danger">
         <div class="modal-content">
             <span class="close"
@@ -264,7 +265,6 @@
     </div>
 
 </div>
-
 
 </body>
 </html>
