@@ -23,8 +23,8 @@ public class LoginController {
 
     // Redirige raíz "/" a "/index"
     @GetMapping("/")
-    public String inicio() {
-    return "index"; 
+    public String login() {
+    return "login"; 
     }
 
 
