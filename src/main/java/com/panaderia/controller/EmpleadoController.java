@@ -16,14 +16,11 @@ public class EmpleadoController {
     @Autowired
     private EmpleadoRepository empleadoRepo;
 
-    // ✅ REGISTRAR NUEVO EMPLEADO (USADO POR fetch DEL FORMULARIO)
+    // ✅ REGISTRAR NUEVO EMPLEADO
     @PostMapping("/registro")
     public ResponseEntity<?> registrarEmpleado(@RequestBody Empleado empleado) {
         try {
-            if (empleadoRepo.findByEmail(empleado.getEmail()).isPresent()) {
-                return ResponseEntity.badRequest().body("El correo ya está registrado");
-            }
-
+            // como tu tabla NO TIENE email, NO se puede validar email
             Empleado guardado = empleadoRepo.save(empleado);
             return ResponseEntity.ok(guardado);
 
@@ -33,13 +30,13 @@ public class EmpleadoController {
         }
     }
 
-    // ✅ LISTAR TODOS LOS EMPLEADOS (PARA LA TABLA DEL HTML)
+    // ✅ LISTAR TODOS LOS EMPLEADOS
     @GetMapping("/lista")
     public ResponseEntity<?> listarEmpleados() {
         return ResponseEntity.ok(empleadoRepo.findAll());
     }
 
-    // ✅ OBTENER UN EMPLEADO POR ID (PARA CARGAR EN EL FORMULARIO DE EDICIÓN)
+    // ✅ OBTENER EMPLEADO POR ID
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerEmpleado(@PathVariable Long id) {
         Optional<Empleado> empleado = empleadoRepo.findById(id);
@@ -48,7 +45,7 @@ public class EmpleadoController {
                 : ResponseEntity.badRequest().body("Empleado no encontrado");
     }
 
-    // ✅ ACTUALIZAR EMPLEADO (USADO POR EL FORMULARIO EDITAR)
+    // ✅ ACTUALIZAR EMPLEADO
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<?> actualizarEmpleado(
             @PathVariable Long id,
@@ -60,10 +57,9 @@ public class EmpleadoController {
         }
 
         Empleado empleado = optional.get();
+
+        // SOLO actualizar los atributos reales de la BD
         empleado.setNombre(datos.getNombre());
-        empleado.setApellido(datos.getApellido());
-        empleado.setEmail(datos.getEmail());
-        empleado.setTelefono(datos.getTelefono());
         empleado.setCargo(datos.getCargo());
 
         empleadoRepo.save(empleado);
@@ -71,7 +67,7 @@ public class EmpleadoController {
         return ResponseEntity.ok("Empleado actualizado correctamente");
     }
 
-    // ✅ ELIMINAR EMPLEADO (USADO POR EL BOTÓN ELIMINAR DE LA TABLA)
+    // ✅ ELIMINAR EMPLEADO
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<?> eliminarEmpleado(@PathVariable Long id) {
         if (!empleadoRepo.existsById(id)) {
