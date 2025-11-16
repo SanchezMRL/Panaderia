@@ -24,29 +24,28 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        // Primero buscamos al empleado (contraseña sin encriptar)
+        // Buscar EMPLEADO por email
         Empleado empleado = empleadoRepository.findByEmail(email).orElse(null);
 
         if (empleado != null) {
-            return new User(
-                    empleado.getEmail(),
-                    empleado.getPassword(), // sin bcrypt
-                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"))
-            );
+            return User.builder()
+                    .username(empleado.getEmail())
+                    .password(empleado.getPassword()) // sin bcrypt
+                    .authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))
+                    .build();
         }
 
-        // Luego buscamos al cliente (contraseña encriptada)
+        // Buscar CLIENTE por email 
         Cliente cliente = clienteRepository.findByEmail(email);
 
         if (cliente != null) {
-            return new User(
-                    cliente.getEmail(),
-                    cliente.getPassword(), // encriptada
-                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_CLIENTE"))
-            );
+            return User.builder()
+                    .username(cliente.getEmail())
+                    .password(cliente.getPassword()) // bcrypt
+                    .authorities(new SimpleGrantedAuthority("ROLE_CLIENTE"))
+                    .build();
         }
 
         throw new UsernameNotFoundException("No existe usuario con email: " + email);
     }
 }
-
