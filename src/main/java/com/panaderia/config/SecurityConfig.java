@@ -41,6 +41,8 @@ public class SecurityConfig {
             )
             .formLogin(form -> form
                     .loginPage("/login")
+                    .usernameParameter("email")     // email 
+                    .passwordParameter("password")  // password 
                     .permitAll()
                     .successHandler((request, response, authentication) -> {
 
@@ -66,3 +68,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+
