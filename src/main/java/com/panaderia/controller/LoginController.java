@@ -37,19 +37,17 @@ public class LoginController {
 
     @PostMapping("/login")
     public String procesarLogin(
-            @RequestParam(required = false) String email,
-            @RequestParam(required = false) String password,
-            @RequestParam(required = false) String tipoUsuario,
+            @RequestParam String email,
+            @RequestParam String password,
+            @RequestParam String tipoUsuario,
             Model model) {
 
-        if (email == null || password == null || tipoUsuario == null ||
-            email.isBlank() || password.isBlank() || tipoUsuario.isBlank()) {
-
+        if (email.isBlank() || password.isBlank() || tipoUsuario.isBlank()) {
             model.addAttribute("error", "Debe completar todos los campos antes de continuar.");
             return "login";
         }
 
-        // Login de cliente
+        // Login cliente (contraseña encriptada)
         if ("cliente".equalsIgnoreCase(tipoUsuario)) {
 
             Cliente cliente = clienteRepository.findByEmail(email);
@@ -63,12 +61,12 @@ public class LoginController {
             return "login";
         }
 
-        // Login de administrador
+        // Login admin/empleado (contraseña normal sin hash)
         if ("admin".equalsIgnoreCase(tipoUsuario)) {
 
-            Empleado admin = empleadoRepository.findByEmail(email);
+            Empleado admin = empleadoRepository.findByEmailAndPassword(email, password);
 
-            if (admin != null && passwordEncoder.matches(password, admin.getPassword())) {
+            if (admin != null) {
                 model.addAttribute("empleado", admin);
                 return "index";
             }
