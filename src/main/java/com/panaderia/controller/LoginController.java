@@ -1,6 +1,7 @@
 package com.panaderia.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,61 +22,62 @@ public class LoginController {
     @Autowired
     private EmpleadoRepository empleadoRepository;
 
-    // Redirige raíz "/" a "/index"
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     @GetMapping("/")
     public String login() {
-    return "login"; 
+        return "login";
     }
 
-
-    // Muestra el formulario de login
     @GetMapping("/login")
     public String mostrarLogin() {
-        return "login"; // templates/login.html
+        return "login";
     }
 
-    // Procesa el formulario de login
     @PostMapping("/login")
     public String procesarLogin(
-            @RequestParam(required = false) String email,     
+            @RequestParam(required = false) String email,
             @RequestParam(required = false) String password,
             @RequestParam(required = false) String tipoUsuario,
             Model model) {
 
-        // Validar campos vacíos o faltantes
         if (email == null || password == null || tipoUsuario == null ||
             email.isBlank() || password.isBlank() || tipoUsuario.isBlank()) {
+
             model.addAttribute("error", "Debe completar todos los campos antes de continuar.");
             return "login";
         }
 
-        // Si es cliente
+        // Login de cliente
         if ("cliente".equalsIgnoreCase(tipoUsuario)) {
-            Cliente cliente = clienteRepository.findByEmailAndPassword(email, password);
-            if (cliente != null) {
-                model.addAttribute("cliente", cliente); 
-                return "clienteMenu"; // Página para clientes
-            } else {
-                model.addAttribute("error", "Credenciales de cliente incorrectas.");
-                return "login";
+
+            Cliente cliente = clienteRepository.findByEmail(email);
+
+            if (cliente != null && passwordEncoder.matches(password, cliente.getPassword())) {
+                model.addAttribute("cliente", cliente);
+                return "clienteMenu";
             }
+
+            model.addAttribute("error", "Credenciales de cliente incorrectas.");
+            return "login";
         }
 
-        // Si es administrador / empleado
+        // Login de administrador
         if ("admin".equalsIgnoreCase(tipoUsuario)) {
-            Empleado admin = empleadoRepository.findByEmailAndPassword(email, password); 
-            if (admin != null) {
-                model.addAttribute("empleado", admin); 
-                return "index"; // Página principal del administrador
-            } else {
-                model.addAttribute("error", "Credenciales de administrador incorrectas.");
-                return "login";
+
+            Empleado admin = empleadoRepository.findByEmail(email);
+
+            if (admin != null && passwordEncoder.matches(password, admin.getPassword())) {
+                model.addAttribute("empleado", admin);
+                return "index";
             }
+
+            model.addAttribute("error", "Credenciales de administrador incorrectas.");
+            return "login";
         }
 
-        // Si no seleccionó tipo de usuario válido
         model.addAttribute("error", "Debe seleccionar un tipo de usuario válido.");
         return "login";
     }
-
 }
