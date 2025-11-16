@@ -1,12 +1,3 @@
-package com.panaderia.service;
-
-import com.panaderia.entity.Cliente;
-import com.panaderia.entity.Empleado;
-import com.panaderia.repository.ClienteRepository;
-import com.panaderia.repository.EmpleadoRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-
 @Service
 public class LoginService {
 
@@ -16,18 +7,25 @@ public class LoginService {
     @Autowired
     private EmpleadoRepository empleadoRepository;
 
-    /**
-     * Autenticación general de usuarios.
-     */
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
     public Object autenticar(String usuario, String password, String tipo) {
 
         if ("cliente".equalsIgnoreCase(tipo)) {
-            // Los clientes ya se autentican con su email
-            return clienteRepository.findByEmailAndPassword(usuario, password);
+
+            Cliente cliente = clienteRepository.findByEmail(usuario);
+
+            if (cliente != null && passwordEncoder.matches(password, cliente.getPassword())) {
+                return cliente;
+            }
+
+            return null;
 
         } else if ("admin".equalsIgnoreCase(tipo)) {
-            // Cambiado a login con email
+
             return empleadoRepository.findByEmailAndPassword(usuario, password);
+
         }
 
         return null;
