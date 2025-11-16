@@ -1,17 +1,35 @@
 package com.panaderia.config;
 
+import com.panaderia.service.CustomUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+
+import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 public class SecurityConfig {
 
+    @Autowired
+    private CustomUserDetailsService customUserDetailsService;
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+
+        provider.setUserDetailsService(customUserDetailsService);
+        provider.setPasswordEncoder(passwordEncoder());
+
+        return provider;
     }
 
     @Bean
@@ -20,12 +38,14 @@ public class SecurityConfig {
         http
             .csrf(csrf -> csrf.disable())
 
+            // AQUÍ SE AGREGA EL PROVIDER
+            .authenticationProvider(authenticationProvider())
+
             .authorizeHttpRequests(auth -> auth
-                // 🔹 Rutas públicas
                 .requestMatchers("/", "/login", "/registroCliente",
                                  "/css/**", "/js/**", "/images/**").permitAll()
 
-                // 🔹 Rutas de ADMIN
+                // ADMIN
                 .requestMatchers(
                         "/index",
                         "/registrar",
@@ -38,7 +58,7 @@ public class SecurityConfig {
                         "/observar"
                 ).hasRole("ADMIN")
 
-                // 🔹 Rutas de CLIENTE
+                // 🔹 CLIENTE
                 .requestMatchers(
                         "/clienteMenu",
                         "/cliente/pedidos",
@@ -52,6 +72,7 @@ public class SecurityConfig {
 
             .formLogin(form -> form
                 .loginPage("/login")
+                .defaultSuccessUrl("/clienteMenu", true)  // 🔹 Por defecto cliente
                 .permitAll()
             )
 
