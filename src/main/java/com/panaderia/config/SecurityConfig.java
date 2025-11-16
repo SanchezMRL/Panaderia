@@ -21,11 +21,11 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
 
             .authorizeHttpRequests(auth -> auth
-                // Rutas públicas
+                // 🔹 Rutas públicas
                 .requestMatchers("/", "/login", "/registroCliente",
                                  "/css/**", "/js/**", "/images/**").permitAll()
 
-                // Rutas de ADMIN
+                // 🔹 Rutas de ADMIN
                 .requestMatchers(
                         "/index",
                         "/registrar",
@@ -38,8 +38,14 @@ public class SecurityConfig {
                         "/observar"
                 ).hasRole("ADMIN")
 
-                // Rutas de CLIENTE
-                .requestMatchers("/clienteMenu").hasRole("CLIENTE")
+                // 🔹 Rutas de CLIENTE
+                .requestMatchers(
+                        "/clienteMenu",
+                        "/cliente/pedidos",
+                        "/cliente/opinion/nueva",
+                        "/cliente/entregas",
+                        "/actualizarCliente"
+                ).hasRole("CLIENTE")
 
                 .anyRequest().authenticated()
             )
