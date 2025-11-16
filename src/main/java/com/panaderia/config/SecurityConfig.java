@@ -25,24 +25,34 @@ public class SecurityConfig {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+
         provider.setUserDetailsService(customUserDetailsService);
+
         provider.setPasswordEncoder(passwordEncoder());
+
+        provider.setHideUserNotFoundExceptions(false);
+
         return provider;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+
         http
             .authenticationProvider(authenticationProvider())
             .csrf(csrf -> csrf.disable())
             .authorizeHttpRequests(auth -> auth
-                    .requestMatchers("/login", "/registroCliente", "/css/**", "/js/**", "/images/**").permitAll()
+                    .requestMatchers(
+                        "/login",
+                        "/registroCliente",
+                        "/css/**",
+                        "/js/**",
+                        "/images/**"
+                    ).permitAll()
                     .anyRequest().authenticated()
             )
             .formLogin(form -> form
                     .loginPage("/login")
-                    .usernameParameter("email")     // email 
-                    .passwordParameter("password")  // password 
                     .permitAll()
                     .successHandler((request, response, authentication) -> {
 
@@ -58,6 +68,7 @@ public class SecurityConfig {
                             response.sendRedirect("/clienteMenu");
                         }
                     })
+                    .failureUrl("/login?error=true") 
             )
             .logout(logout -> logout
                     .logoutUrl("/logout")
