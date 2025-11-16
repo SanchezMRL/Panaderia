@@ -21,16 +21,33 @@ public class SecurityConfig {
             .csrf(csrf -> csrf.disable())
 
             .authorizeHttpRequests(auth -> auth
-                // Rutas permitidas
+                // Rutas públicas
                 .requestMatchers("/", "/login", "/registroCliente",
                                  "/css/**", "/js/**", "/images/**").permitAll()
 
-                .requestMatchers("/index", "/clienteMenu").permitAll()
+                // Rutas de ADMIN
+                .requestMatchers(
+                        "/index",
+                        "/registrar",
+                        "/consultar",
+                        "/opiniones",
+                        "/inventario",
+                        "/reportes",
+                        "/entregas",
+                        "/agregar",
+                        "/observar"
+                ).hasRole("ADMIN")
+
+                // Rutas de CLIENTE
+                .requestMatchers("/clienteMenu").hasRole("CLIENTE")
 
                 .anyRequest().authenticated()
             )
 
-            .formLogin(form -> form.disable())
+            .formLogin(form -> form
+                .loginPage("/login")
+                .permitAll()
+            )
 
             .logout(logout -> logout
                 .logoutUrl("/logout")
