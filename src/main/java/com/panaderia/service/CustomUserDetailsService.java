@@ -17,13 +17,15 @@ public class CustomUserDetailsService implements UserDetailsService {
     private ClienteRepository clienteRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String correo) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        Cliente cliente = clienteRepository.findByCorreo(correo)
-                .orElseThrow(() -> new UsernameNotFoundException("No existe el usuario: " + correo));
+        Cliente cliente = clienteRepository.findByEmail(email);
+        if (cliente == null) {
+            throw new UsernameNotFoundException("No existe el cliente: " + email);
+        }
 
-        return new org.springframework.security.core.userdetails.User(
-                cliente.getCorreo(),
+        return new User(
+                cliente.getEmail(),
                 cliente.getPassword(),
                 Collections.singletonList(new SimpleGrantedAuthority("ROLE_USER"))
         );
