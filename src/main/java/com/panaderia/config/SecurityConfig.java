@@ -40,11 +40,9 @@ public class SecurityConfig {
             .authorizeHttpRequests(auth -> auth
 
                 // 🔓 RUTAS PÚBLICAS (solo estas)
-                .requestMatchers("/login",
-                                 "/registroCliente",
-                                 "/css/**",
-                                 "/js/**",
-                                 "/images/**").permitAll()
+                .requestMatchers("/", "/login", "/registroCliente",
+                 "/css/**", "/js/**", "/images/**").permitAll()
+
 
                 // 🔐 ADMIN
                 .requestMatchers(
