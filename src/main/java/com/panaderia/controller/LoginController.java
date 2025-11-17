@@ -11,9 +11,4 @@ public class LoginController {
     public String mostrarLogin() {
         return "login"; // Thymeleaf renderiza login.html
     }
-
-    @GetMapping("/registroCliente")
-    public String registroCliente() {
-        return "registroCliente"; // Tu página de registro
-    }
 }
