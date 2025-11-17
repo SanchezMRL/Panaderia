@@ -5,46 +5,48 @@ import com.panaderia.entity.Empleado;
 import com.panaderia.repository.ClienteRepository;
 import com.panaderia.repository.EmpleadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private EmpleadoRepository empleadoRepository;
-
-    @Autowired
     private ClienteRepository clienteRepository;
 
+    @Autowired
+    private EmpleadoRepository empleadoRepository;
+
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        // 🔹 Buscar empleado
-        Empleado empleado = empleadoRepository.findByEmail(email).orElse(null);
-
+        // 1️⃣ Buscar EMPLEADO primero
+        Empleado empleado = empleadoRepository.findByEmail(username);
         if (empleado != null) {
-            return User.builder()
-                    .username(empleado.getEmail())
-                    .password(empleado.getPassword()) // ❗ NO ENCRIPTADO (ESTÁ BIEN)
-                    .roles("ADMIN")
-                    .build();
+            return new User(
+                    empleado.getEmail(),
+                    empleado.getPassword(),   // SIN BCRYPT — Y NO CAUSA ERROR
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"))
+            );
         }
 
-        // 🔹 Buscar cliente
-        Cliente cliente = clienteRepository.findByEmail(email).orElse(null);
-
+        // 2️⃣ Buscar CLIENTE
+        Cliente cliente = clienteRepository.findByEmail(username);
         if (cliente != null) {
-            return User.builder()
-                    .username(cliente.getEmail())
-                    .password(cliente.getPassword()) // 🔐 ENCRIPTADO (BCrypt)
-                    .roles("CLIENTE")
-                    .build();
+            return new User(
+                    cliente.getEmail(),
+                    cliente.getPassword(),   // AQUÍ SÍ VA BCRYPT
+                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_CLIENTE"))
+            );
         }
 
-        throw new UsernameNotFoundException("No se encontró usuario con email: " + email);
+        // 3️⃣ Si no existe
+        throw new UsernameNotFoundException("Usuario no encontrado: " + username);
     }
 }
