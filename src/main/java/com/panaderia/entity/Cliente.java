@@ -82,8 +82,3 @@ public class Cliente {
         this.rol = rol;
     }
 }
-
-    public void setPassword(String password) {
-        this.password = password;
-    }
-}
