@@ -4,46 +4,47 @@ import com.panaderia.entity.Cliente;
 import com.panaderia.entity.Empleado;
 import com.panaderia.repository.ClienteRepository;
 import com.panaderia.repository.EmpleadoRepository;
-
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.userdetails.*;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Collections;
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    private EmpleadoRepository empleadoRepository;
 
     @Autowired
-    private EmpleadoRepository empleadoRepository;
+    private ClienteRepository clienteRepository;
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        // 1. Buscar EMPLEADO
-        Empleado empleado = empleadoRepository.findByEmail(email);
+        // 🔹 Buscar empleado
+        Empleado empleado = empleadoRepository.findByEmail(email).orElse(null);
+
         if (empleado != null) {
-            // CONTRASEÑA SIN ENCRIPTAR (empleados)
-            return User.withUsername(empleado.getEmail())
-                    .password("{noop}" + empleado.getPassword())   // <= AQUI EL TRUCO
+            return User.builder()
+                    .username(empleado.getEmail())
+                    .password(empleado.getPassword()) // ❗ NO ENCRIPTADO (ESTÁ BIEN)
                     .roles("ADMIN")
                     .build();
         }
 
-        // 2. Buscar CLIENTE
-        Cliente cliente = clienteRepository.findByEmail(email);
+        // 🔹 Buscar cliente
+        Cliente cliente = clienteRepository.findByEmail(email).orElse(null);
+
         if (cliente != null) {
-            // CONTRASEÑA ENCRIPTADA (clientes)
-            return User.withUsername(cliente.getEmail())
-                    .password(cliente.getPassword()) // BCrypt
+            return User.builder()
+                    .username(cliente.getEmail())
+                    .password(cliente.getPassword()) // 🔐 ENCRIPTADO (BCrypt)
                     .roles("CLIENTE")
                     .build();
         }
 
-        throw new UsernameNotFoundException("Usuario no encontrado: " + email);
+        throw new UsernameNotFoundException("No se encontró usuario con email: " + email);
     }
 }
