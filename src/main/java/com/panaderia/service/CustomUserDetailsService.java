@@ -24,28 +24,26 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        // EMPLEADO (contraseña sin encriptar)
-        Empleado empleado = empleadoRepository.findByEmail(email).orElse(null);
-
+        // 1. Buscar EMPLEADO
+        Empleado empleado = empleadoRepository.findByEmail(email);
         if (empleado != null) {
-            return User.builder()
-                    .username(empleado.getEmail())
-                    .password("{noop}" + empleado.getPassword())  // <-- ESTO SOLUCIONA TU PROBLEMA
-                    .authorities(new SimpleGrantedAuthority("ROLE_ADMIN"))
+            // CONTRASEÑA SIN ENCRIPTAR (empleados)
+            return User.withUsername(empleado.getEmail())
+                    .password("{noop}" + empleado.getPassword())   // <= AQUI EL TRUCO
+                    .roles("ADMIN")
                     .build();
         }
 
-        // CLIENTE (contraseña encriptada)
+        // 2. Buscar CLIENTE
         Cliente cliente = clienteRepository.findByEmail(email);
-
         if (cliente != null) {
-            return User.builder()
-                    .username(cliente.getEmail())
-                    .password(cliente.getPassword()) // bcrypt
-                    .authorities(new SimpleGrantedAuthority("ROLE_CLIENTE"))
+            // CONTRASEÑA ENCRIPTADA (clientes)
+            return User.withUsername(cliente.getEmail())
+                    .password(cliente.getPassword()) // BCrypt
+                    .roles("CLIENTE")
                     .build();
         }
 
-        throw new UsernameNotFoundException("No existe usuario con email: " + email);
+        throw new UsernameNotFoundException("Usuario no encontrado: " + email);
     }
 }
