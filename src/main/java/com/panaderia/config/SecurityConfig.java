@@ -71,10 +71,18 @@ public class SecurityConfig {
             )
 
             .formLogin(form -> form
-                .loginPage("/login")
-                .defaultSuccessUrl("/clienteMenu", true)  // 🔹 Por defecto cliente
-                .permitAll()
-            )
+    .loginPage("/login")
+    .permitAll()
+    .successHandler((request, response, authentication) -> {
+        String role = authentication.getAuthorities().iterator().next().getAuthority();
+        if (role.equals("ROLE_ADMIN")) {
+            response.sendRedirect("/index");
+        } else {
+            response.sendRedirect("/clienteMenu");
+        }
+    })
+)
+
 
             .logout(logout -> logout
                 .logoutUrl("/logout")
