@@ -23,6 +23,9 @@ public class Empleado {
     @Column(nullable = false)
     private String password;
 
+    @Column(nullable = false)
+    private String rol; // <<< NUEVO
+
     // --- Getters & Setters ---
 
     public Long getIdEmpleado() {
@@ -71,5 +74,13 @@ public class Empleado {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getRol() {        
+        return rol;
+    }
+
+    public void setRol(String rol) { 
+        this.rol = rol;
     }
 }
