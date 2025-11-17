@@ -35,6 +35,7 @@ public class SecurityConfig {
 
         http.csrf(csrf -> csrf.disable())
                 .authenticationProvider(authenticationProvider())
+
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/", "/login", "/registroCliente",
                                 "/css/**", "/js/**", "/images/**").permitAll()
@@ -51,8 +52,11 @@ public class SecurityConfig {
 
                         .anyRequest().authenticated()
                 )
+
                 .formLogin(form -> form
                         .loginPage("/login")
+                        .usernameParameter("username")   // <---- IMPORTANTE
+                        .passwordParameter("password")   // <---- IMPORTANTE
                         .successHandler((req, res, auth) -> {
 
                             String rol = auth.getAuthorities()
@@ -68,6 +72,7 @@ public class SecurityConfig {
                         })
                         .permitAll()
                 )
+
                 .logout(logout -> logout
                         .logoutUrl("/logout")
                         .logoutSuccessUrl("/login?logout")
