@@ -17,35 +17,39 @@ public class SecurityConfig {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    // ENCRIPTACIÓN
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    // AUTH PROVIDER
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-
         provider.setUserDetailsService(customUserDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
-
         return provider;
     }
 
+    // SECURITY FILTER
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
         http
             .csrf(csrf -> csrf.disable())
-
-            // 🔥 AQUÍ SE AGREGA EL PROVIDER
             .authenticationProvider(authenticationProvider())
 
             .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/registroCliente",
+
+                // 🔓 RUTAS PÚBLICAS
+                .requestMatchers("/login", "/registroCliente",
                                  "/css/**", "/js/**", "/images/**").permitAll()
 
-                // 🔹 ADMIN
+                // 👇 IMPORTANTE: quitar "/" como público
+                // Dejar "/" protegido o redirigirá mal
+
+                // 🔐 ADMIN
                 .requestMatchers(
                         "/index",
                         "/registrar",
@@ -58,7 +62,7 @@ public class SecurityConfig {
                         "/observar"
                 ).hasRole("ADMIN")
 
-                // 🔹 CLIENTE
+                // 🔐 CLIENTE
                 .requestMatchers(
                         "/clienteMenu",
                         "/cliente/pedidos",
@@ -67,22 +71,24 @@ public class SecurityConfig {
                         "/actualizarCliente"
                 ).hasRole("CLIENTE")
 
+                // RESTO PROTEGIDO
                 .anyRequest().authenticated()
             )
 
             .formLogin(form -> form
-    .loginPage("/login")
-    .permitAll()
-    .successHandler((request, response, authentication) -> {
-        String role = authentication.getAuthorities().iterator().next().getAuthority();
-        if (role.equals("ROLE_ADMIN")) {
-            response.sendRedirect("/index");
-        } else {
-            response.sendRedirect("/clienteMenu");
-        }
-    })
-)
+                .loginPage("/login")
+                .permitAll()
 
+                // REDIRECCIÓN SEGÚN ROL
+                .successHandler((request, response, authentication) -> {
+                    String role = authentication.getAuthorities().iterator().next().getAuthority();
+                    if (role.equals("ROLE_ADMIN")) {
+                        response.sendRedirect("/index");
+                    } else {
+                        response.sendRedirect("/clienteMenu");
+                    }
+                })
+            )
 
             .logout(logout -> logout
                 .logoutUrl("/logout")
@@ -93,3 +99,4 @@ public class SecurityConfig {
         return http.build();
     }
 }
+
