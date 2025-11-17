@@ -33,6 +33,9 @@ public class RegistroClienteController {
             return "registroCliente";
         }
 
+        // 🔥 ASIGNAR ROL CLIENTE
+        cliente.setRol("CLIENTE");
+
         // Encriptar la contraseña antes de guardar
         String passwordEncriptada = passwordEncoder.encode(cliente.getPassword());
         cliente.setPassword(passwordEncriptada);
@@ -78,6 +81,9 @@ public class RegistroClienteController {
         existente.setEmail(cliente.getEmail());
         existente.setTelefono(cliente.getTelefono());
         existente.setDireccion(cliente.getDireccion());
+
+        // 🔥 ROL DEBE PERMANECER
+        existente.setRol("CLIENTE");
 
         // Si el usuario ingresó una nueva contraseña → encriptar
         if (cliente.getPassword() != null && !cliente.getPassword().isBlank()) {
