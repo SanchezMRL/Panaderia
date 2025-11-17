@@ -17,13 +17,11 @@ public class SecurityConfig {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    // ENCRIPTACIÓN
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-    // AUTH PROVIDER
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
@@ -32,7 +30,6 @@ public class SecurityConfig {
         return provider;
     }
 
-    // SECURITY FILTER
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
@@ -42,12 +39,12 @@ public class SecurityConfig {
 
             .authorizeHttpRequests(auth -> auth
 
-                // 🔓 RUTAS PÚBLICAS
-                .requestMatchers("/login", "/registroCliente",
-                                 "/css/**", "/js/**", "/images/**").permitAll()
-
-                // 👇 IMPORTANTE: quitar "/" como público
-                // Dejar "/" protegido o redirigirá mal
+                // 🔓 RUTAS PÚBLICAS (solo estas)
+                .requestMatchers("/login",
+                                 "/registroCliente",
+                                 "/css/**",
+                                 "/js/**",
+                                 "/images/**").permitAll()
 
                 // 🔐 ADMIN
                 .requestMatchers(
@@ -71,7 +68,7 @@ public class SecurityConfig {
                         "/actualizarCliente"
                 ).hasRole("CLIENTE")
 
-                // RESTO PROTEGIDO
+                // 🔐 TODO LO DEMÁS -> REQUIERE LOGIN
                 .anyRequest().authenticated()
             )
 
@@ -79,9 +76,13 @@ public class SecurityConfig {
                 .loginPage("/login")
                 .permitAll()
 
-                // REDIRECCIÓN SEGÚN ROL
+                // 🔥 REDIRECCIÓN SEGÚN ROL
                 .successHandler((request, response, authentication) -> {
-                    String role = authentication.getAuthorities().iterator().next().getAuthority();
+                    String role = authentication.getAuthorities()
+                                                .iterator()
+                                                .next()
+                                                .getAuthority();
+
                     if (role.equals("ROLE_ADMIN")) {
                         response.sendRedirect("/index");
                     } else {
