@@ -5,48 +5,45 @@ import com.panaderia.entity.Empleado;
 import com.panaderia.repository.ClienteRepository;
 import com.panaderia.repository.EmpleadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    private EmpleadoRepository empleadoRepository;
 
     @Autowired
-    private EmpleadoRepository empleadoRepository;
+    private ClienteRepository clienteRepository;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        // 1️⃣ Buscar EMPLEADO primero
-        Empleado empleado = empleadoRepository.findByEmail(username);
+        // 🟡 BUSCAR EMPLEADO
+        Empleado empleado = empleadoRepository.findByEmail(username).orElse(null);
+
         if (empleado != null) {
-            return new User(
-                    empleado.getEmail(),
-                    empleado.getPassword(),   // SIN BCRYPT — Y NO CAUSA ERROR
-                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"))
-            );
+            return User.withUsername(empleado.getEmail())
+                    .password(empleado.getPassword()) // SIN ENCRIPTAR
+                    .roles("ADMIN")
+                    .build();
         }
 
-        // 2️⃣ Buscar CLIENTE
-        Cliente cliente = clienteRepository.findByEmail(username);
+        // 🟢 BUSCAR CLIENTE
+        Cliente cliente = clienteRepository.findByEmail(username).orElse(null);
+
         if (cliente != null) {
-            return new User(
-                    cliente.getEmail(),
-                    cliente.getPassword(),   // AQUÍ SÍ VA BCRYPT
-                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_CLIENTE"))
-            );
+            return User.withUsername(cliente.getEmail())
+                    .password(cliente.getPassword()) // ESTE SÍ ES BCrypt
+                    .roles("CLIENTE")
+                    .build();
         }
 
-        // 3️⃣ Si no existe
-        throw new UsernameNotFoundException("Usuario no encontrado: " + username);
+        throw new UsernameNotFoundException("Usuario no encontrado");
     }
 }
+
