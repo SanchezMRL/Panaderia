@@ -1,9 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Inicio de Sesión - Panadería</title>
+
   <style>
     :root {
       --color-amarillo: #F9D923;
@@ -32,13 +33,6 @@
       width: 100%;
       max-width: 420px;
       border: 3px solid var(--color-amarillo);
-      transition: all 0.3s ease;
-    }
-
-    /* 🔸 Eliminado el efecto hover de agrandamiento */
-    .login-container:hover {
-      transform: none;
-      box-shadow: 0 6px 15px rgba(0,0,0,0.1);
     }
 
     h2 {
@@ -55,17 +49,16 @@
       color: var(--color-azul);
     }
 
-    input, select {
+    input {
       width: 100%;
       padding: 0.7rem;
       margin-bottom: 1.2rem;
       border: 2px solid var(--color-azul-claro);
       border-radius: 8px;
       font-size: 16px;
-      transition: border-color 0.3s ease, box-shadow 0.3s ease;
     }
 
-    input:focus, select:focus {
+    input:focus {
       outline: none;
       border-color: var(--color-amarillo);
       box-shadow: 0 0 6px var(--color-amarillo);
@@ -81,7 +74,7 @@
       font-weight: bold;
       border-radius: 8px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: 0.3s;
     }
 
     button:hover {
@@ -123,7 +116,7 @@
       color: var(--color-azul);
       text-decoration: none;
       font-weight: bold;
-      transition: color 0.3s ease;
+      transition: 0.3s;
     }
 
     .register-link a:hover {
@@ -131,6 +124,7 @@
     }
   </style>
 </head>
+
 <body>
 
   <header>
@@ -140,20 +134,21 @@
   <div class="login-container">
     <h2>Iniciar Sesión</h2>
 
-    <div th:if="${error}" class="error" th:text="${error}"></div>
+    <!-- ERROR SEGURO (nunca rompe thymeleaf) -->
+    <div th:if="${param.error}" class="error">
+      Credenciales incorrectas ❌
+    </div>
 
-    <form action="/login" method="post">
+    <form th:action="@{/login}" method="post">
 
-  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}"/>
+      <label for="email">Email:</label>
+      <input type="text" id="email" name="username" placeholder="Ingrese su email" required>
 
-  <label for="email">Email:</label>
-  <input type="text" id="email" name="username" placeholder="Ingrese su email" required>
+      <label for="password">Contraseña:</label>
+      <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
 
-  <label for="password">Contraseña:</label>
-  <input type="password" id="password" name="password" placeholder="Ingrese su contraseña" required>
-
-  <button type="submit">Ingresar</button>
-</form>
+      <button type="submit">Ingresar</button>
+    </form>
 
     <div class="register-link">
       <p>¿No tienes cuenta? <a th:href="@{/registroCliente}">Regístrate aquí</a></p>
@@ -162,3 +157,4 @@
 
 </body>
 </html>
+
