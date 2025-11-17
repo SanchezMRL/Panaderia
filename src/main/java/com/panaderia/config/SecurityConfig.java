@@ -25,60 +25,66 @@ public class SecurityConfig {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+
         provider.setUserDetailsService(customUserDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
+
         return provider;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http.csrf(csrf -> csrf.disable())
-                .authenticationProvider(authenticationProvider())
+        http
+            .csrf(csrf -> csrf.disable())
 
-                .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login", "/registroCliente",
-                                "/css/**", "/js/**", "/images/**").permitAll()
+            // 🔥 AQUÍ SE AGREGA EL PROVIDER
+            .authenticationProvider(authenticationProvider())
 
-                        .requestMatchers("/index", "/registrar", "/consultar",
-                                "/opiniones", "/inventario", "/reportes",
-                                "/entregas", "/agregar", "/observar")
-                        .hasRole("ADMIN")
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers("/", "/login", "/registroCliente",
+                                 "/css/**", "/js/**", "/images/**").permitAll()
 
-                        .requestMatchers("/clienteMenu", "/cliente/pedidos",
-                                "/cliente/opinion/nueva", "/cliente/entregas",
-                                "/actualizarCliente")
-                        .hasRole("CLIENTE")
+                // 🔹 ADMIN
+                .requestMatchers(
+                        "/index",
+                        "/registrar",
+                        "/consultar",
+                        "/opiniones",
+                        "/inventario",
+                        "/reportes",
+                        "/entregas",
+                        "/agregar",
+                        "/observar"
+                ).hasRole("ADMIN")
 
-                        .anyRequest().authenticated()
-                )
+                // 🔹 CLIENTE
+                .requestMatchers(
+                        "/clienteMenu",
+                        "/cliente/pedidos",
+                        "/cliente/opinion/nueva",
+                        "/cliente/entregas",
+                        "/actualizarCliente"
+                ).hasRole("CLIENTE")
 
-                .formLogin(form -> form
-                        .loginPage("/login")
-                        .usernameParameter("username")   // <---- IMPORTANTE
-                        .passwordParameter("password")   // <---- IMPORTANTE
-                        .successHandler((req, res, auth) -> {
+                .anyRequest().authenticated()
+            )
 
-                            String rol = auth.getAuthorities()
-                                    .iterator().next().getAuthority();
+            .formLogin(form -> form
+                .loginPage("/login")
+                .defaultSuccessUrl("/clienteMenu", true)  // 🔹 Por defecto cliente
+                .permitAll()
+            )
 
-                            if (rol.equals("ROLE_ADMIN")) {
-                                res.sendRedirect("/index");
-                            } else if (rol.equals("ROLE_CLIENTE")) {
-                                res.sendRedirect("/clienteMenu");
-                            } else {
-                                res.sendRedirect("/login?error=rol");
-                            }
-                        })
-                        .permitAll()
-                )
-
-                .logout(logout -> logout
-                        .logoutUrl("/logout")
-                        .logoutSuccessUrl("/login?logout")
-                        .permitAll()
-                );
+            .logout(logout -> logout
+                .logoutUrl("/logout")
+                .logoutSuccessUrl("/login?logout")
+                .permitAll()
+            );
 
         return http.build();
+    }
+}
+  return http.build();
     }
 }
