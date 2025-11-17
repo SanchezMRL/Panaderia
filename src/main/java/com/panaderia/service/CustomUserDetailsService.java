@@ -21,29 +21,28 @@ public class CustomUserDetailsService implements UserDetailsService {
     private ClienteRepository clienteRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        // 🔹 Buscar empleado
-        Empleado empleado = empleadoRepository.findByEmail(username).orElse(null);
+        // 🔹 Buscar empleado (ADMIN, password en texto plano)
+        Empleado empleado = empleadoRepository.findByEmail(email).orElse(null);
         if (empleado != null) {
-            return new User(
-                    empleado.getEmail(),
-                    empleado.getPassword(), // SIN ENCRIPTAR si deseas
-                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN"))
-            );
+            return User.builder()
+                    .username(empleado.getEmail())
+                    .password("{noop}" + empleado.getPassword()) // texto plano permitido
+                    .authorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_ADMIN")))
+                    .build();
         }
 
-        // 🔹 Buscar cliente
-        Cliente cliente = clienteRepository.findByEmail(username); // NO Optional
+        // 🔹 Buscar cliente (CLIENTE, password en BCrypt)
+        Cliente cliente = clienteRepository.findByEmail(email);
         if (cliente != null) {
-            return new User(
-                    cliente.getEmail(),
-                    cliente.getPassword(), // ENCRIPTADO con BCrypt
-                    Collections.singletonList(new SimpleGrantedAuthority("ROLE_CLIENTE"))
-            );
+            return User.builder()
+                    .username(cliente.getEmail())
+                    .password(cliente.getPassword()) // BCrypt
+                    .authorities(Collections.singletonList(new SimpleGrantedAuthority("ROLE_CLIENTE")))
+                    .build();
         }
 
-        throw new UsernameNotFoundException("Usuario no encontrado con email: " + username);
+        throw new UsernameNotFoundException("Usuario no encontrado con email: " + email);
     }
 }
-
