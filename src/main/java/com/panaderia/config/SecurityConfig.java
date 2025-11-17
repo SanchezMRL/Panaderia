@@ -25,62 +25,54 @@ public class SecurityConfig {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-
         provider.setUserDetailsService(customUserDetailsService);
         provider.setPasswordEncoder(passwordEncoder());
-
         return provider;
     }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-        http
-            .csrf(csrf -> csrf.disable())
+        http.csrf(csrf -> csrf.disable())
+                .authenticationProvider(authenticationProvider())
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers("/", "/login", "/registroCliente",
+                                "/css/**", "/js/**", "/images/**").permitAll()
 
-            // AQUÍ SE AGREGA EL PROVIDER
-            .authenticationProvider(authenticationProvider())
+                        .requestMatchers("/index", "/registrar", "/consultar",
+                                "/opiniones", "/inventario", "/reportes",
+                                "/entregas", "/agregar", "/observar")
+                        .hasRole("ADMIN")
 
-            .authorizeHttpRequests(auth -> auth
-                .requestMatchers("/", "/login", "/registroCliente",
-                                 "/css/**", "/js/**", "/images/**").permitAll()
+                        .requestMatchers("/clienteMenu", "/cliente/pedidos",
+                                "/cliente/opinion/nueva", "/cliente/entregas",
+                                "/actualizarCliente")
+                        .hasRole("CLIENTE")
 
-                // ADMIN
-                .requestMatchers(
-                        "/index",
-                        "/registrar",
-                        "/consultar",
-                        "/opiniones",
-                        "/inventario",
-                        "/reportes",
-                        "/entregas",
-                        "/agregar",
-                        "/observar"
-                ).hasRole("ADMIN")
+                        .anyRequest().authenticated()
+                )
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .successHandler((req, res, auth) -> {
 
-                // 🔹 CLIENTE
-                .requestMatchers(
-                        "/clienteMenu",
-                        "/cliente/pedidos",
-                        "/cliente/opinion/nueva",
-                        "/cliente/entregas",
-                        "/actualizarCliente"
-                ).hasRole("CLIENTE")
+                            String rol = auth.getAuthorities()
+                                    .iterator().next().getAuthority();
 
-                .anyRequest().authenticated()
-            )
-
-            .formLogin(form -> form
-                .loginPage("/login")
-                .defaultSuccessUrl("/clienteMenu", true)  // 🔹 Por defecto cliente
-                .permitAll()
-            )
-
-            .logout(logout -> logout
-                .logoutUrl("/logout")
-                .logoutSuccessUrl("/login?logout")
-                .permitAll()
-            );
+                            if (rol.equals("ROLE_ADMIN")) {
+                                res.sendRedirect("/index");
+                            } else if (rol.equals("ROLE_CLIENTE")) {
+                                res.sendRedirect("/clienteMenu");
+                            } else {
+                                res.sendRedirect("/login?error=rol");
+                            }
+                        })
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .permitAll()
+                );
 
         return http.build();
     }
