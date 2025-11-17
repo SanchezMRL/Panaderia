@@ -20,32 +20,33 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private ClienteRepository clienteRepository;
 
-@Override
-public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+    @Override
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-    // 🔹 Buscar empleado (ADMIN)
-    Empleado empleado = empleadoRepository.findByEmail(email).orElse(null);
-    if (empleado != null) {
-        return User.builder()
-                .username(empleado.getEmail())
-                .password("{noop}" + empleado.getPassword()) // texto plano
-                .authorities(Collections.singletonList(
-                        new SimpleGrantedAuthority("ROLE_" + empleado.getRol())  
-                ))
-                .build();
+        // 🔹 Buscar empleado (ADMIN)
+        Empleado empleado = empleadoRepository.findByEmail(email).orElse(null);
+        if (empleado != null) {
+            return User.builder()
+                    .username(empleado.getEmail())
+                    .password("{noop}" + empleado.getPassword()) // texto plano
+                    .authorities(Collections.singletonList(
+                            new SimpleGrantedAuthority("ROLE_" + empleado.getRol())
+                    ))
+                    .build();
+        }
+
+        // 🔹 Buscar cliente (CLIENTE)
+        Cliente cliente = clienteRepository.findByEmail(email);
+        if (cliente != null) {
+            return User.builder()
+                    .username(cliente.getEmail())
+                    .password(cliente.getPassword()) // BCrypt
+                    .authorities(Collections.singletonList(
+                            new SimpleGrantedAuthority("ROLE_" + cliente.getRol())
+                    ))
+                    .build();
+        }
+
+        throw new UsernameNotFoundException("Usuario no encontrado con email: " + email);
     }
-
-    // 🔹 Buscar cliente (CLIENTE)
-    Cliente cliente = clienteRepository.findByEmail(email);
-    if (cliente != null) {
-        return User.builder()
-                .username(cliente.getEmail())
-                .password(cliente.getPassword()) // BCrypt
-                .authorities(Collections.singletonList(
-                        new SimpleGrantedAuthority("ROLE_" + cliente.getRol())  
-                ))
-                .build();
-    }
-
-    throw new UsernameNotFoundException("Usuario no encontrado con email: " + email);
 }
