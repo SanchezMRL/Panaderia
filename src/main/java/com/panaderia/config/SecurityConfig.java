@@ -1,19 +1,15 @@
 package com.panaderia.config;
 
-import com.panaderia.service.CustomUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
 import org.springframework.security.web.SecurityFilterChain;
+import com.panaderia.service.CustomUserDetailsService;
 
 @Configuration
 public class SecurityConfig {
-
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -21,58 +17,42 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider() {
+    public DaoAuthenticationProvider authenticationProvider(CustomUserDetailsService userDetailsService,
+                                                            BCryptPasswordEncoder encoder) {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(customUserDetailsService);
-        provider.setPasswordEncoder(passwordEncoder());
+        provider.setUserDetailsService(userDetailsService); // OK, ya no causa ciclo
+        provider.setPasswordEncoder(encoder);
         return provider;
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+    public SecurityFilterChain filterChain(HttpSecurity http,
+                                           DaoAuthenticationProvider authProvider) throws Exception {
 
         http
             .csrf(csrf -> csrf.disable())
-            .authenticationProvider(authenticationProvider())
+            .authenticationProvider(authProvider)
 
             .authorizeHttpRequests(auth -> auth
-
-                // 🔓 RUTAS PÚBLICAS (solo estas)
                 .requestMatchers("/", "/login", "/registroCliente",
-                 "/css/**", "/js/**", "/images/**").permitAll()
+                "/css/**", "/js/**", "/images/**").permitAll()
 
+                .requestMatchers("/index", "/registrar", "/consultar",
+                                 "/opiniones", "/inventario", "/reportes",
+                                 "/entregas", "/agregar", "/observar")
+                    .hasRole("ADMIN")
 
-                // 🔐 ADMIN
-                .requestMatchers(
-                        "/index",
-                        "/registrar",
-                        "/consultar",
-                        "/opiniones",
-                        "/inventario",
-                        "/reportes",
-                        "/entregas",
-                        "/agregar",
-                        "/observar"
-                ).hasRole("ADMIN")
+                .requestMatchers("/clienteMenu", "/cliente/pedidos",
+                                 "/cliente/opinion/nueva",
+                                 "/cliente/entregas", "/actualizarCliente")
+                    .hasRole("CLIENTE")
 
-                // 🔐 CLIENTE
-                .requestMatchers(
-                        "/clienteMenu",
-                        "/cliente/pedidos",
-                        "/cliente/opinion/nueva",
-                        "/cliente/entregas",
-                        "/actualizarCliente"
-                ).hasRole("CLIENTE")
-
-                // 🔐 TODO LO DEMÁS -> REQUIERE LOGIN
                 .anyRequest().authenticated()
             )
 
             .formLogin(form -> form
                 .loginPage("/login")
                 .permitAll()
-
-                // 🔥 REDIRECCIÓN SEGÚN ROL
                 .successHandler((request, response, authentication) -> {
                     String role = authentication.getAuthorities()
                                                 .iterator()
@@ -96,4 +76,3 @@ public class SecurityConfig {
         return http.build();
     }
 }
-
