@@ -1,9 +1,14 @@
 package com.panaderia.controller;
 
-import org.springframework.security.core.Authentication;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+
+import com.panaderia.entity.Cliente;
+import com.panaderia.repository.ClienteRepository;
+
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ClienteMenuController {
@@ -11,19 +16,22 @@ public class ClienteMenuController {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    @GetMapping("/clienteMenu")
-    public String clienteMenu(Model model, Authentication auth) {
+    @GetMapping("/menuCliente")
+    public String menuCliente(HttpSession session, Model model) {
+        Long idCliente = (Long) session.getAttribute("idCliente");
 
-        String email = auth.getName(); // email del usuario logueado
+        if (idCliente == null) {
+            return "redirect:/login";
+        }
 
-        Cliente cliente = clienteRepository.findByEmail(email);
+        Cliente cliente = clienteRepository.findById(idCliente).orElse(null);
 
         if (cliente == null) {
-            return "error"; // por seguridad
+            return "redirect:/login";
         }
 
         model.addAttribute("cliente", cliente);
 
-        return "clienteMenu";
+        return "menuCliente";
     }
 }
