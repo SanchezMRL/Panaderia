@@ -22,7 +22,7 @@ public class ClienteController {
         try {
 
             // ✅ Validación por email (tu BD sí lo tiene)
-            if (clienteRepo.findByEmail(cliente.getEmail()).isPresent()) {
+            if (clienteRepo.findByEmail(cliente.getEmail()) != null) {
                 return ResponseEntity.badRequest().body("El correo ya está registrado");
             }
 
