@@ -56,10 +56,14 @@ public class SecurityConfig {
                     .hasRole("ADMIN")
 
                 // Rutas solo para CLIENTE
-                .requestMatchers("/clienteMenu", "/cliente/pedidos",
-                                 "/cliente/opinion/nueva",
-                                 "/cliente/entregas", "/actualizarCliente")
-                    .hasRole("CLIENTE")
+.requestMatchers("/clienteMenu",
+                 "/cliente/pedidos",
+                 "/cliente/opinion/nueva",
+                 "/cliente/entregas",
+                 "/actualizarCliente",
+                 "/cliente/**")      // 🔥 NECESARIO PARA EVITAR REBOTES
+    .hasRole("CLIENTE")
+
 
                 .anyRequest().authenticated()
             )
