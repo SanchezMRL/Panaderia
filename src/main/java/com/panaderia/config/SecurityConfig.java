@@ -19,7 +19,7 @@ public class SecurityConfig {
     @Autowired
     private CustomSuccessHandler customSuccessHandler;
 
-    // BCrypt para clientes (empleados usan NOOP desde CustomUserDetailsService)
+    // BCrypt para los clientes (empleados usan NOOP desde CustomUserDetailsService)
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
