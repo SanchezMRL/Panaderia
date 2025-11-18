@@ -1,7 +1,7 @@
 package com.panaderia.config;
 
 import com.panaderia.service.CustomUserDetailsService;
-import org.springframework.beans.factory.annotation.Autowired;  
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -15,20 +15,18 @@ public class SecurityConfig {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-
-
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
     @Bean
-public DaoAuthenticationProvider authenticationProvider() {
-    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-    provider.setUserDetailsService(customUserDetailsService);
-    return provider; 
-}
-
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(customUserDetailsService);
+        provider.setPasswordEncoder(passwordEncoder()); // 🔥 FALTABA ESTO
+        return provider;
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
@@ -40,7 +38,7 @@ public DaoAuthenticationProvider authenticationProvider() {
 
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/registroCliente",
-                "/css/**", "/js/**", "/images/**").permitAll()
+                                 "/css/**", "/js/**", "/images/**").permitAll()
 
                 .requestMatchers("/index", "/registrar", "/consultar",
                                  "/opiniones", "/inventario", "/reportes",
@@ -59,6 +57,7 @@ public DaoAuthenticationProvider authenticationProvider() {
                 .loginPage("/login")
                 .permitAll()
                 .successHandler((request, response, authentication) -> {
+
                     String role = authentication.getAuthorities()
                                                 .iterator()
                                                 .next()
