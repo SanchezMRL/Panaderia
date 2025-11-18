@@ -7,6 +7,7 @@ import com.panaderia.repository.EmpleadoRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collections;
@@ -19,6 +20,15 @@ public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private ClienteRepository clienteRepository;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    // 🟢 Función para normalizar el rol
+    private String normalizeRole(String rol) {
+        if (rol == null) return "ROLE_CLIENTE"; // fallback
+        return rol.startsWith("ROLE_") ? rol : "ROLE_" + rol;
+    }
 
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
@@ -35,14 +45,15 @@ public class CustomUserDetailsService implements UserDetailsService {
                     .build();
         }
 
-        // 🔹 Buscar cliente (CLIENTE)
+        // 🔹 Buscar cliente
         Cliente cliente = clienteRepository.findByEmail(email);
         if (cliente != null) {
+
             return User.builder()
                     .username(cliente.getEmail())
                     .password(cliente.getPassword()) // BCrypt
                     .authorities(Collections.singletonList(
-                            new SimpleGrantedAuthority("ROLE_" + cliente.getRol())
+                            new SimpleGrantedAuthority(normalizeRole(cliente.getRol()))
                     ))
                     .build();
         }
