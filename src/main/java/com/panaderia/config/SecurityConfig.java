@@ -23,13 +23,12 @@ public class SecurityConfig {
     }
 
     @Bean
-    public DaoAuthenticationProvider authenticationProvider(CustomUserDetailsService userDetailsService,
-                                                            BCryptPasswordEncoder encoder) {
-        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
-        provider.setUserDetailsService(userDetailsService); // OK, ya no causa ciclo
-        provider.setPasswordEncoder(encoder);
-        return provider;
-    }
+public DaoAuthenticationProvider authenticationProvider() {
+    DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+    provider.setUserDetailsService(customUserDetailsService);
+    return provider; 
+}
+
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http,
