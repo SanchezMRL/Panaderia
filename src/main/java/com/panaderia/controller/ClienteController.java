@@ -16,12 +16,12 @@ public class ClienteController {
     @Autowired
     private ClienteRepository clienteRepo;
 
-    // ✅ REGISTRAR NUEVO CLIENTE
+    // REGISTRAR NUEVO CLIENTE
     @PostMapping("/registro")
     public ResponseEntity<?> registrarCliente(@RequestBody Cliente cliente) {
         try {
 
-            // ✅ Validación por email (tu BD sí lo tiene)
+            // Validación por email (tu BD sí lo tiene)
             if (clienteRepo.findByEmail(cliente.getEmail()) != null) {
                 return ResponseEntity.badRequest().body("El correo ya está registrado");
             }
