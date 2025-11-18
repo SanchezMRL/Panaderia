@@ -24,11 +24,14 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
         for (GrantedAuthority auth : authentication.getAuthorities()) {
             String role = auth.getAuthority();
 
-            if (role.equals("ROLE_ADMIN")) {
-                redirectURL = "/index";  // Empleado
+            // Normaliza cualquier versión
+            role = role.replace("ROLE_", ""); // CLIENTE o ADMIN
+
+            if (role.equals("ADMIN")) {
+                redirectURL = "/index"; 
                 break;
-            } else if (role.equals("ROLE_CLIENTE")) {
-                redirectURL = "/clienteMenu";  // Cliente
+            } else if (role.equals("CLIENTE")) {
+                redirectURL = "/clienteMenu";
                 break;
             }
         }
