@@ -18,6 +18,9 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
                                         HttpServletResponse response,
                                         Authentication authentication)
             throws IOException, ServletException {
+                System.out.println("ROLES AUTENTICADOS:");
+authentication.getAuthorities().forEach(a -> System.out.println(a.getAuthority()));
+
 
         String redirectURL = "/";
 
