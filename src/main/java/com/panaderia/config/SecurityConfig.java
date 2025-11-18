@@ -11,6 +11,10 @@ import com.panaderia.service.CustomUserDetailsService;
 @Configuration
 public class SecurityConfig {
 
+    @Autowired
+private CustomUserDetailsService customUserDetailsService;
+
+
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
