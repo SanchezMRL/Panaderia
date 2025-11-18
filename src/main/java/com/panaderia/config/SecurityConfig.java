@@ -1,5 +1,6 @@
 package com.panaderia.config;
 
+import com.panaderia.config.CustomSuccessHandler;
 import com.panaderia.service.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -15,6 +16,10 @@ public class SecurityConfig {
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
+    @Autowired
+    private CustomSuccessHandler customSuccessHandler;
+
+    // BCrypt para clientes (empleados usan NOOP desde CustomUserDetailsService)
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -24,7 +29,10 @@ public class SecurityConfig {
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(customUserDetailsService);
-        provider.setPasswordEncoder(passwordEncoder()); // 🔥 FALTABA ESTO
+
+        // NECESARIO para validar contraseñas BCRYPT de clientes
+        provider.setPasswordEncoder(passwordEncoder());
+
         return provider;
     }
 
@@ -34,17 +42,20 @@ public class SecurityConfig {
 
         http
             .csrf(csrf -> csrf.disable())
+
             .authenticationProvider(authProvider)
 
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers("/", "/login", "/registroCliente",
                                  "/css/**", "/js/**", "/images/**").permitAll()
 
+                // Rutas solo para ADMIN/empleado
                 .requestMatchers("/index", "/registrar", "/consultar",
                                  "/opiniones", "/inventario", "/reportes",
                                  "/entregas", "/agregar", "/observar")
                     .hasRole("ADMIN")
 
+                // Rutas solo para CLIENTE
                 .requestMatchers("/clienteMenu", "/cliente/pedidos",
                                  "/cliente/opinion/nueva",
                                  "/cliente/entregas", "/actualizarCliente")
@@ -55,20 +66,10 @@ public class SecurityConfig {
 
             .formLogin(form -> form
                 .loginPage("/login")
+                .loginProcessingUrl("/login")
+                .successHandler(customSuccessHandler) // 🔥 REDIRECCIÓN AUTOMÁTICA
+                .failureUrl("/login?error=true")
                 .permitAll()
-                .successHandler((request, response, authentication) -> {
-
-                    String role = authentication.getAuthorities()
-                                                .iterator()
-                                                .next()
-                                                .getAuthority();
-
-                    if (role.equals("ROLE_ADMIN")) {
-                        response.sendRedirect("/index");
-                    } else {
-                        response.sendRedirect("/clienteMenu");
-                    }
-                })
             )
 
             .logout(logout -> logout
