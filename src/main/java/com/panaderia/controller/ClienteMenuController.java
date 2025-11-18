@@ -16,8 +16,8 @@ public class ClienteMenuController {
     @Autowired
     private ClienteRepository clienteRepository;
 
-    @GetMapping("/menuCliente")
-    public String menuCliente(HttpSession session, Model model) {
+    @GetMapping("/clienteMenu")   // 🔥 CAMBIADO
+    public String clienteMenu(HttpSession session, Model model) {
         Long idCliente = (Long) session.getAttribute("idCliente");
 
         if (idCliente == null) {
@@ -32,6 +32,6 @@ public class ClienteMenuController {
 
         model.addAttribute("cliente", cliente);
 
-        return "menuCliente";
+        return "clienteMenu";   // 🔥 Asegúrate que exista clienteMenu.html
     }
 }
