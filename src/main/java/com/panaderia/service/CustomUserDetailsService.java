@@ -22,29 +22,35 @@ public class CustomUserDetailsService implements UserDetailsService {
         this.clienteRepository = clienteRepository;
     }
 
+    // Normaliza cualquier rol a formato "ROLE_X"
+    private String normalizeRole(String rol) {
+        if (rol == null) return "ROLE_CLIENTE";
+        return rol.startsWith("ROLE_") ? rol : "ROLE_" + rol;
+    }
+
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        // 🔹 Buscar empleado (contraseña sin encriptar)
+        // Buscar empleado (contraseña sin encriptar)
         Empleado empleado = empleadoRepository.findByEmail(email).orElse(null);
         if (empleado != null) {
             return User.builder()
                     .username(empleado.getEmail())
-                    .password("{noop}" + empleado.getPassword()) // TEXTO PLANO
+                    .password("{noop}" + empleado.getPassword())  // TEXTO PLANO
                     .authorities(Collections.singletonList(
-                            new SimpleGrantedAuthority(empleado.getRol()) // YA VIENE COMO ROLE_ADMIN
+                            new SimpleGrantedAuthority(normalizeRole(empleado.getRol()))
                     ))
                     .build();
         }
 
-        // 🔹 Buscar cliente (contraseña encriptada)
+        // Buscar cliente (contraseña BCrypt)
         Cliente cliente = clienteRepository.findByEmail(email);
         if (cliente != null) {
             return User.builder()
                     .username(cliente.getEmail())
-                    .password(cliente.getPassword()) // BCrypt
+                    .password(cliente.getPassword())  // BCRYPT
                     .authorities(Collections.singletonList(
-                            new SimpleGrantedAuthority(cliente.getRol()) // YA VIENE COMO ROLE_CLIENTE
+                            new SimpleGrantedAuthority(normalizeRole(cliente.getRol()))
                     ))
                     .build();
         }
