@@ -24,7 +24,7 @@ public class OpinionPedido {
     @JoinColumn(name = "id_pedido_cliente")
     private PedidoCliente pedidoCliente;
 
-    // ✅ Getters y Setters correctos
+    // Getters y Setters correctos
 
     public Long getIdOpinion() {
         return idOpinion;
