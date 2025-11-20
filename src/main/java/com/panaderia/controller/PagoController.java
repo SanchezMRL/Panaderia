@@ -28,17 +28,17 @@ public class PagoController {
     @PostMapping
     public Map<String, Object> registrarPago(@RequestBody Map<String, Object> datos) {
 
-        // 🟢 Convertimos todos los IDs a Long (coherente con tus entidades)
+        // todos los IDsLong 
         Long idPedido = Long.valueOf(datos.get("id_pedido_cliente").toString());
         Long idMetodo = Long.valueOf(datos.get("id_metodo_pago").toString());
         Long idEstado = Long.valueOf(datos.get("id_estado_pago").toString());
 
-        // 🟢 Buscar entidades relacionadas
+        // Buscar entidades relacionadas
         PedidoCliente pedido = pedidoRepo.findById(idPedido).orElse(null);
         MetodoPago metodo = metodoRepo.findById(idMetodo).orElse(null);
         EstadoPago estado = estadoRepo.findById(idEstado).orElse(null);
 
-        // 🟢 Crear y guardar el pago
+        // Crear y guardar el pago
         Pago pago = new Pago();
         pago.setPedidoCliente(pedido);
         pago.setMetodoPago(metodo);
@@ -48,7 +48,7 @@ public class PagoController {
 
         pagoRepo.save(pago);
 
-        // 🟢 Retornar el ID coherente
+        // Retornar el ID coherente
         return Map.of("id_pago", pago.getIdPago());
     }
 }
