@@ -297,7 +297,7 @@
     <a th:href="@{/}" class="volver">🏠 Volver al inicio</a>
 </main>
 
-<!-- ✅ MODAL CREAR CLIENTE -->
+<!-- MODAL CREAR CLIENTE -->
 <div id="modalCrear" class="modal">
     <div class="modal-content">
         <span class="close" onclick="cerrarModal('modalCrear')">&times;</span>
@@ -313,10 +313,10 @@
     </div>
 </div>
 
-<!-- ✅ MODALES EDITAR Y ELIMINAR -->
+<!-- MODALES EDITAR Y ELIMINAR -->
 <div th:each="cli : ${clientes}">
 
-    <!-- ✅ MODAL EDITAR CLIENTE -->
+    <!-- MODAL EDITAR CLIENTE -->
     <div th:id="'modalEditar' + ${cli.idCliente}" class="modal">
         <div class="modal-content">
             <span class="close"
