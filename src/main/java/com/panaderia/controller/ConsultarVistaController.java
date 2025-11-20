@@ -18,11 +18,11 @@ public class ConsultarVistaController {
     private PedidoClienteRepository pedidoClienteRepo;
 
     @Autowired
-    private OpinionService opinionService; // usar el service
+    private OpinionService opinionService; 
 
     @GetMapping("/consultar")
     public String mostrarFormulario() {
-        return "consultar"; // muestra el HTML con el formulario vacío
+        return "consultar"; 
     }
 
     @PostMapping("/consultar")
@@ -42,7 +42,7 @@ public class ConsultarVistaController {
             PedidoCliente pedido = pedidoOpt.get();
             model.addAttribute("pedido", pedido);
 
-            //  buscar UNA opinión (usa Optional)
+            //  buscar una opinión 
             Optional<OpinionPedido> opinionOpt = opinionService.buscarPorPedido(id);
             opinionOpt.ifPresent(o -> model.addAttribute("opinion", o));
 
