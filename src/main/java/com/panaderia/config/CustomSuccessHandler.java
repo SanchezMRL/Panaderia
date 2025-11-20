@@ -42,7 +42,7 @@ public class CustomSuccessHandler implements AuthenticationSuccessHandler {
 
             if (role.equals("CLIENTE")) {
 
-                // 🔥 GUARDAR ID DEL CLIENTE EN LA SESIÓN
+                // guarda el id de cliente
                 Cliente cliente = clienteRepository.findByEmail(email);
                 if (cliente != null) {
                     HttpSession session = request.getSession();
