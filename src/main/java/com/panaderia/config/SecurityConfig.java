@@ -19,7 +19,7 @@ public class SecurityConfig {
     @Autowired
     private CustomSuccessHandler customSuccessHandler;
 
-    // BCrypt para los clientes (empleados usan NOOP desde CustomUserDetailsService)
+    // BCrypt para los clientes 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -30,7 +30,7 @@ public class SecurityConfig {
         DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
         provider.setUserDetailsService(customUserDetailsService);
 
-        // NECESARIO para validar contraseñas BCRYPT de clientes
+        // para validar contraseñas BCRYPT de los clientes
         provider.setPasswordEncoder(passwordEncoder());
 
         return provider;
@@ -49,19 +49,19 @@ public class SecurityConfig {
                 .requestMatchers("/", "/login", "/registroCliente",
                                  "/css/**", "/js/**", "/images/**").permitAll()
 
-                // Rutas solo para ADMIN/empleado
+                // Rutas permitidas para empleado Admin
                 .requestMatchers("/index", "/registrar", "/consultar",
                                  "/opiniones", "/inventario", "/reportes",
                                  "/entregas", "/agregar", "/observar")
                     .hasRole("ADMIN")
 
-                // Rutas solo para CLIENTE
+                // Rutas permitidas paar un cliente
 .requestMatchers("/clienteMenu",
                  "/cliente/pedidos",
                  "/cliente/opinion/nueva",
                  "/cliente/entregas",
                  "/actualizarCliente",
-                 "/cliente/**")      // 🔥 NECESARIO PARA EVITAR REBOTES
+                 "/cliente/**")  
     .hasRole("CLIENTE")
 
 
@@ -71,7 +71,7 @@ public class SecurityConfig {
             .formLogin(form -> form
                 .loginPage("/login")
                 .loginProcessingUrl("/login")
-                .successHandler(customSuccessHandler) // 🔥 REDIRECCIÓN AUTOMÁTICA
+                .successHandler(customSuccessHandler)
                 .failureUrl("/login?error=true")
                 .permitAll()
             )
