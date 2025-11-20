@@ -32,25 +32,25 @@ public class PedidoController {
 
         pedido.setFecha(LocalDate.now());
 
-        // 🔁 Recorremos los detalles con bucle clásico
+        // Recorremos los detalles con bucle clásico
         for (DetallePedidoCliente det : pedido.getDetalles()) {
 
             det.setPedidoCliente(pedido);
 
-            // 🔹 Validar producto y obtener ID
+            // Validar producto y obtener ID
             if (det.getProducto() == null || det.getProducto().getIdProducto() == null) {
                 throw new IllegalArgumentException("Debe especificarse un producto válido en cada detalle.");
             }
 
             Long idProducto = det.getProducto().getIdProducto();
 
-            // 🔹 Buscar producto en base de datos
+            // Buscar producto en base de datos
             Producto producto = productoRepo.findById(idProducto)
                     .orElseThrow(() -> new IllegalArgumentException("Producto con ID " + idProducto + " no encontrado."));
 
             det.setProducto(producto);
 
-            // 🔹 Validar precio
+            // Validar precio
             BigDecimal precio = producto.getPrecioUnitario();
             if (precio == null) {
                 throw new IllegalArgumentException("El producto con ID " + idProducto + " no tiene precio definido.");
@@ -63,15 +63,15 @@ public class PedidoController {
                 throw new IllegalArgumentException("La cantidad del producto " + idProducto + " no puede ser nula o cero.");
             }
 
-            // 🔹 Calcular subtotal
+            // Calcular subtotal
             BigDecimal subtotal = precio.multiply(BigDecimal.valueOf(det.getCantidad()));
             det.setSubtotal(subtotal);
         }
 
-        // 🟢 Guardar pedido y detalles
+        // Guardar pedido y detalles
         PedidoCliente guardado = pedidoRepo.save(pedido);
 
-        // 🟢 Retornar ID del pedido guardado
+        // Retornar ID del pedido guardado
         return Map.of("id_pedido_cliente", guardado.getIdPedidoCliente());
     }
 }
