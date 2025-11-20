@@ -299,7 +299,7 @@
     <a th:href="@{/}" class="volver">🏠 Volver al inicio</a>
 </main>
 
-<!-- ✅ MODAL CREAR EMPLEADO (UNA SOLA COLUMNA) -->
+<!-- MODAL CREAR EMPLEADO -->
 <div id="modalCrear" class="modal">
     <div class="modal-content">
         <span class="close" onclick="cerrarModal('modalCrear')">&times;</span>
@@ -317,10 +317,10 @@
 </div>
 
 
-<!-- ✅ MODALES EDITAR Y ELIMINAR -->
+<!-- MODALES EDITAR Y ELIMINAR -->
 <div th:each="emp : ${empleados}">
 
-    <!-- ✅ MODAL EDITAR (UNA SOLA COLUMNA) -->
+    <!-- MODAL EDITAR -->
     <div th:id="'modalEditar' + ${emp.idEmpleado}" class="modal">
         <div class="modal-content">
             <span class="close"
