@@ -8,7 +8,7 @@ public class RegistarVistaController {
 
     @GetMapping("/registrar")
     public String mostrarRegistrarPedido() {
-        // ✅ Devuelve el nombre del archivo registrar.html
+        // Devuelve a registrar.html
         return "registrar";
     }
 }
