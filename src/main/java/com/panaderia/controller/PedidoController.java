@@ -58,7 +58,7 @@ public class PedidoController {
 
             det.setPrecioUnitario(precio);
 
-            // 🔹 Validar cantidad
+            // Validar cantidad
             if (det.getCantidad() == null || det.getCantidad() <= 0) {
                 throw new IllegalArgumentException("La cantidad del producto " + idProducto + " no puede ser nula o cero.");
             }
