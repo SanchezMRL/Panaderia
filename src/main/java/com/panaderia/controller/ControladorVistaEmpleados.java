@@ -14,14 +14,14 @@ public class ControladorVistaEmpleados {
     @Autowired
     private EmpleadoRepository empleadoRepo;
 
-    // ✅ Mostrar página
+    // Mostrar página
     @GetMapping
     public String mostrarEmpleados(Model model) {
         model.addAttribute("empleados", empleadoRepo.findAll());
         return "agregar";
     }
 
-    // ✅ Recibir formulario de Thymeleaf
+    // Recibir formulario de Thymeleaf
     @PostMapping("/guardar")
     public String guardarEmpleado(
             @RequestParam String nombre,
@@ -43,7 +43,7 @@ public class ControladorVistaEmpleados {
         return "redirect:/agregar";
     }
 
-    // ELIMINAR desde Thymeleaf
+    // eliminar desde Thymeleaf
     @GetMapping("/eliminar/{id}")
     public String eliminarEmpleado(@PathVariable Long id) {
         empleadoRepo.deleteById(id);
