@@ -28,7 +28,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
-        // === 1️⃣ BUSCAR EMPLEADO ===
+        // === BUSCAR EMPLEADO ===
         Empleado empleado = empleadoRepository.findByEmail(email).orElse(null);
 
         if (empleado != null) {
@@ -49,7 +49,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     .build();
         }
 
-        // === 2️⃣ BUSCAR CLIENTE ===
+        // === BUSCAR CLIENTE ===
         Cliente cliente = clienteRepository.findByEmail(email);
 
         if (cliente != null) {
@@ -63,7 +63,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                     .build();
         }
 
-        // === 3️⃣ NO EXISTE ===
+        // === NO EXISTE ===
         throw new UsernameNotFoundException("Usuario no encontrado: " + email);
     }
 }
