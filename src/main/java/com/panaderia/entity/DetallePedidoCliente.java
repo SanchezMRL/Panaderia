@@ -22,11 +22,11 @@ public class DetallePedidoCliente {
     @Column(nullable = false)
     private Integer cantidad;
 
-    // 💰 Campo de precio unitario (NO puede ser nulo)
+    // Campo de precio unitario
     @Column(name = "precio_unitario", nullable = false, precision = 10, scale = 2)
     private BigDecimal precioUnitario;
 
-    // 🧮 Subtotal calculado (cantidad × precio)
+    // Subtotal calculado (cantidad × precio)
     @Column(nullable = false, precision = 12, scale = 2)
     private BigDecimal subtotal;
 
