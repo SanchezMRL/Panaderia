@@ -14,14 +14,14 @@ public class ControladorVistaClientes {
     @Autowired
     private ClienteRepository clienteRepo;
 
-    // ✅ Mostrar página con lista de clientes
+    // Mostrar página con lista de clientes
     @GetMapping
     public String mostrarClientes(Model model) {
         model.addAttribute("clientes", clienteRepo.findAll());
         return "observar";  // Redirige a la vista 'observar.html'
     }
 
-    // ✅ Recibir formulario de Thymeleaf para guardar un nuevo cliente
+    // Recibir formulario para guardar un nuevo cliente
     @PostMapping("/guardar")
     public String guardarCliente(
             @RequestParam String nombre,
@@ -38,25 +38,25 @@ public class ControladorVistaClientes {
 
         clienteRepo.save(cliente);
 
-        return "redirect:/clientes";  // Redirige a la lista de clientes en observar.html
+        return "redirect:/clientes";  // Redirige a la lista de clientes 
     }
 
-    // ✅ Eliminar un cliente desde Thymeleaf
+    // Eliminar un cliente desde Thymeleaf
     @GetMapping("/eliminar/{id}")
     public String eliminarCliente(@PathVariable Long id) {
         clienteRepo.deleteById(id);
-        return "redirect:/clientes";  // Redirige a la lista de clientes en observar.html
+        return "redirect:/clientes";  // Redirige a la lista de clientes
     }
 
-    // ✅ Mostrar página para editar cliente
+    // Mostrar página para editar cliente
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEdicion(@PathVariable Long id, Model model) {
         Cliente cliente = clienteRepo.findById(id).orElse(null);
         model.addAttribute("cliente", cliente);
-        return "editar_cliente";  // Vista para editar cliente, se usa 'editar_cliente.html'
+        return "editar_cliente";  
     }
 
-    // ✅ Guardar cambios después de editar cliente
+    // Guardar cambios después de editar cliente
     @PostMapping("/editar/{id}")
     public String editarCliente(
             @PathVariable Long id,
