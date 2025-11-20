@@ -129,7 +129,6 @@
     <div class="formulario">
       <h2>Editar mis datos</h2>
 
-      <!-- ✅ Formulario con datos precargados desde el modelo -->
       <form th:action="@{/actualizarCliente}" method="post" th:object="${cliente}">
         <input type="hidden" th:field="*{idCliente}">
 
