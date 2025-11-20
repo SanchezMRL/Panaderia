@@ -8,9 +8,9 @@ import java.util.List;
 @Repository
 public interface OpinionRepository extends JpaRepository<OpinionPedido, Long> {
 
-    // 🔍 Buscar opiniones por pedido
+    // Buscar opiniones por pedido
     List<OpinionPedido> findByPedidoCliente_IdPedidoCliente(Long idPedidoCliente);
 
-    // 🔍 Buscar opiniones por cliente
+    // Buscar opiniones por cliente
     List<OpinionPedido> findByCliente_IdCliente(Long idCliente);
 }
