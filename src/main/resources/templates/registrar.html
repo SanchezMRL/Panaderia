@@ -88,7 +88,6 @@
     document.getElementById('tipoPedido').addEventListener('change', actualizarSecciones);
   });
 
-  // ✅ Corregido: comillas en fetch
   document.getElementById('id_producto').addEventListener('change', async function () {
     const idProducto = this.value;
     if (!idProducto) return;
@@ -126,7 +125,6 @@
       return;
     }
 
-    // ✅ Adaptado al backend
     const detalle = {
       producto: { idProducto: id_producto },
       cantidad: cantidad
@@ -169,7 +167,6 @@
       return;
     }
 
-    // ✅ Estructura correcta para PedidoController
     const pedido = {
       empleado: { idEmpleado: id_empleado },
       fecha,
@@ -193,7 +190,7 @@
 
       const dataPedido = await resPedido.json();
 
-      // 🟢 Solo registrar pago si es cliente
+      // Solo registrar pago si es cliente
       if (tipo === 'cliente') {
         const pago = {
           id_pedido_cliente: dataPedido.id_pedido_cliente,
@@ -228,7 +225,7 @@
         }
       }
 
-      // 🟢 Reset
+      // Reset
       document.getElementById('formPedido').reset();
       document.getElementById('listaDetalles').innerHTML = '';
       detalles = [];
