@@ -21,7 +21,7 @@ public class ClienteController {
     public ResponseEntity<?> registrarCliente(@RequestBody Cliente cliente) {
         try {
 
-            // Validación por email (tu BD sí lo tiene)
+            // Validación por email 
             if (clienteRepo.findByEmail(cliente.getEmail()) != null) {
                 return ResponseEntity.badRequest().body("El correo ya está registrado");
             }
@@ -35,13 +35,13 @@ public class ClienteController {
         }
     }
 
-    // ✅ LISTAR TODOS LOS CLIENTES
+    // LISTAR TODOS LOS CLIENTES
     @GetMapping("/lista")
     public ResponseEntity<?> listarClientes() {
         return ResponseEntity.ok(clienteRepo.findAll());
     }
 
-    // ✅ OBTENER CLIENTE POR ID
+    // OBTENER CLIENTE POR ID
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerCliente(@PathVariable Long id) {
         Optional<Cliente> cliente = clienteRepo.findById(id);
@@ -50,7 +50,7 @@ public class ClienteController {
                 : ResponseEntity.badRequest().body("Cliente no encontrado");
     }
 
-    // ✅ ACTUALIZAR CLIENTE
+    // ACTUALIZAR CLIENTE
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<?> actualizarCliente(
             @PathVariable Long id,
@@ -63,7 +63,7 @@ public class ClienteController {
 
         Cliente cliente = optional.get();
 
-        // ✅ Campos reales existentes
+        //  Campos existentes
         cliente.setNombre(datos.getNombre());
         cliente.setEmail(datos.getEmail());
         cliente.setTelefono(datos.getTelefono());
@@ -73,7 +73,7 @@ public class ClienteController {
         return ResponseEntity.ok("Cliente actualizado correctamente");
     }
 
-    // ✅ ELIMINAR CLIENTE
+    // ELIMINAR CLIENTE
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<?> eliminarCliente(@PathVariable Long id) {
         if (!clienteRepo.existsById(id)) {
