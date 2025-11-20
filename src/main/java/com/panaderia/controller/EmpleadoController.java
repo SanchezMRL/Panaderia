@@ -16,12 +16,12 @@ public class EmpleadoController {
     @Autowired
     private EmpleadoRepository empleadoRepo;
 
-    // ✅ REGISTRAR NUEVO EMPLEADO
+    // REGISTRAR NUEVO EMPLEADO
     @PostMapping("/registro")
     public ResponseEntity<?> registrarEmpleado(@RequestBody Empleado empleado) {
         try {
 
-            // ✅ Validación por email (tu BD sí lo tiene)
+            // Validación por email 
             if (empleadoRepo.findByEmail(empleado.getEmail()).isPresent()) {
                 return ResponseEntity.badRequest().body("El correo ya está registrado");
             }
@@ -35,13 +35,12 @@ public class EmpleadoController {
         }
     }
 
-    // ✅ LISTAR TODOS
     @GetMapping("/lista")
     public ResponseEntity<?> listarEmpleados() {
         return ResponseEntity.ok(empleadoRepo.findAll());
     }
 
-    // ✅ OBTENER POR ID
+    // OBTENER POR ID
     @GetMapping("/{id}")
     public ResponseEntity<?> obtenerEmpleado(@PathVariable Long id) {
         Optional<Empleado> empleado = empleadoRepo.findById(id);
@@ -50,7 +49,7 @@ public class EmpleadoController {
                 : ResponseEntity.badRequest().body("Empleado no encontrado");
     }
 
-    // ✅ ACTUALIZAR EMPLEADO
+    // ACTUALIZAR EMPLEADO
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<?> actualizarEmpleado(
             @PathVariable Long id,
@@ -63,7 +62,7 @@ public class EmpleadoController {
 
         Empleado empleado = optional.get();
 
-        // ✅ Campos reales existentes
+        // Campos existentes
         empleado.setNombre(datos.getNombre());
         empleado.setCargo(datos.getCargo());
         empleado.setEmail(datos.getEmail());
@@ -74,7 +73,7 @@ public class EmpleadoController {
         return ResponseEntity.ok("Empleado actualizado correctamente");
     }
 
-    // ✅ ELIMINAR EMPLEADO
+    // eliminr empleado
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<?> eliminarEmpleado(@PathVariable Long id) {
         if (!empleadoRepo.existsById(id)) {
