@@ -8,7 +8,7 @@ services:
     dockerfilePath: ./Dockerfile
     dockerContext: .
 
-    # Render ya inyecta PORT dinámicamente (no hace falta fijarlo a 8080)
+    # Render inyecta el PORT dinámicamente 
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: prod
