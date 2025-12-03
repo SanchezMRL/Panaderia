@@ -41,9 +41,8 @@ public class RegistroClienteController {
         cliente.setPassword(passwordEncriptada);
 
         clienteRepository.save(cliente);
-        model.addAttribute("nombre", cliente.getNombre());
 
-        return "clienteMenu";
+        return "login";
     }
 
     // Mostrar formulario de actualización

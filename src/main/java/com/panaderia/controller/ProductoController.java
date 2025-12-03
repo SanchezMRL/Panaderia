@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @RestController
@@ -24,5 +25,10 @@ public class ProductoController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body("Producto no encontrado");
         }
+    }
+
+    @GetMapping("/listar")
+    public List<Producto> listarProductos() {
+        return productoRepo.findAll();
     }
 }

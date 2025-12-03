@@ -126,9 +126,9 @@
   </div>
 
   <div class="opciones">
-    <a class="opcion" href="consultar.html">Mis Pedidos</a>
-    <a class="opcion" href="opiniones.html">Dejar Opinión</a>
-    <a class="opcion" href="entregas.html">Ver Entregas</a>
+    <a class="opcion" th:href="@{/cliente/pedidos}">Mis Pedidos</a>
+    <a class="opcion" th:href="@{/cliente/opinion/nueva}">Dejar Opinión</a>
+    <a class="opcion" th:href="@{/cliente/compra}">Comprar</a>
 
     <!-- 🔹 Redirección dinámica con Thymeleaf -->
     <a class="opcion" th:href="@{/actualizarCliente(id=${cliente.idCliente})}">
@@ -137,7 +137,7 @@
   </div>
 
   <div style="text-align:center;">
-    <form action="/login" method="get">
+    <form th:action="@{/login}" method="get">
       <button class="cerrar-sesion" type="submit">Cerrar Sesión</button>
     </form>
   </div>

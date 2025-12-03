@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
+import java.security.Principal;
 import java.time.LocalDate;
 import java.util.Map;
 
@@ -21,14 +22,11 @@ public class PedidoController {
     private ClienteRepository clienteRepo;
 
     @Autowired
-    private EmpleadoRepository empleadoRepo;
-
-    @Autowired
     private ProductoRepository productoRepo;
 
     @PostMapping
     @Transactional
-    public Map<String, Object> registrarPedido(@RequestBody PedidoCliente pedido) {
+    public Map<String, Object> registrarPedido(@RequestBody PedidoCliente pedido, Principal principal) {
 
         pedido.setFecha(LocalDate.now());
 
@@ -66,6 +64,11 @@ public class PedidoController {
             // Calcular subtotal
             BigDecimal subtotal = precio.multiply(BigDecimal.valueOf(det.getCantidad()));
             det.setSubtotal(subtotal);
+        }
+
+        if (pedido.getCliente()==null) {
+            Cliente cliente =clienteRepo.findByEmail(principal.getName());
+            pedido.setCliente(cliente);
         }
 
         // Guardar pedido y detalles

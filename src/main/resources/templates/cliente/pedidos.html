@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedidos</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    
+    <style>
+
+        body {
+            background-color: #e6f7ff; 
+        }
+        .container {
+            background-color: #ffffff; 
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .text-center {
+            color: #004d99; 
+        }
+        h1 {
+            color: #004d99 !important; 
+            margin-bottom: 20px;
+        }
+
+        .table thead th {
+            background-color: #ffc107; 
+            color: #004d99;
+            border-bottom: 2px solid #004d99;
+            border-top: none;
+        }
+
+        .table tbody tr:nth-child(even) {
+            background-color: #f0f8ff; 
+        }
+        .table tbody tr:hover {
+            background-color: #ffedb3; 
+            cursor: default;
+        }
+
+        .btn-link {
+            color: #004d99 !important; 
+            border: 1px solid #004d99;
+            border-radius: 5px;
+            padding: 8px 15px;
+            text-decoration: none;
+        }
+        .btn-link:hover {
+            background-color: #ffc107;
+            color: #004d99 !important;
+            border-color: #004d99;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1 class="text-center">tabla de pedidos</h1>
+
+        <table class="table table-striped">
+            <thead class="thead-custom"> 
+                <tr>
+                <th scope="col">Id</th>
+                <th scope="col">Fecha</th>
+                <th scope="col">Estado</th>
+                <th scope="col">Productos</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="pedido : ${listaPedidosCliente}">
+                <th scope="row" th:text="${pedido.idPedidoCliente}"></th>
+                <td th:text="${pedido.fecha}"></td>
+                <td th:text="${pedido.estado}"></td>
+                <td>
+                    <div class="dropdown"> 
+                        <button class="btn btn-sm btn-outline-info dropdown-toggle" 
+                                type="button" 
+                                data-bs-toggle="dropdown" 
+                                aria-expanded="false">
+                            Ver Productos (<span th:text="${#lists.size(pedido.detalles)}"></span>)
+                        </button>
+
+                        <ul class="dropdown-menu"> <!-- se muestran en combo los productos pedidos -->
+                            <li th:each="detalle : ${pedido.detalles}">
+                                <a class="dropdown-item" href="#">
+                                    <span th:text="${detalle.producto.nombre}"></span> 
+                                    (x<span th:text="${detalle.cantidad}"></span>)
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </td>
+            </tbody>
+        </table>
+
+        <br>
+
+        <div class="text-center mt-3">
+            <a th:href="@{/clienteMenu}" class="btn btn-link">Volver al Menú</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
+</body>
+</html>

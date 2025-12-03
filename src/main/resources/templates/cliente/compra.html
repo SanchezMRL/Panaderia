@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>POS - detalles</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <style>
+        .btn-link {
+            color: #004d99 !important; 
+            border: 1px solid #004d99;
+            border-radius: 5px;
+            padding: 8px 15px;
+            text-decoration: none;
+        }
+        .btn-link:hover {
+            background-color: #ffc107;
+            color: #004d99 !important;
+            border-color: #004d99;
+        }
+    </style>
+</head>
+<body class="bg-light">
+
+    <div class="container my-4">
+        <h2 class="text-center mb-4">Sistema de Pedido</h2>
+
+        <!-- Selección de producto -->
+        <div class="card p-4 shadow">
+            <div class="row g-3">
+                <div class="col-md-5">
+                    <label class="form-label">Producto:</label>
+                    <select id="producto" class="form-select"><!-- se rellena con el script recibido  de  api/producto/listar-->
+                        
+                    </select>
+                </div>
+
+                <div class="col-md-3">
+                    <label class="form-label">Cantidad:</label>
+                    <input type="number" id="cantidad" class="form-control" min="1" placeholder="0">
+                </div>
+
+                <div class="col-md-4 d-flex align-items-end">
+                    <button id="btnAgregar" class="btn btn-primary w-100">Agregar al Carrito</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- carrito -->
+        <div class="card mt-4 p-4 shadow">
+            <h4>Carrito de Compras</h4>
+            <table class="table table-striped mt-3" id="tabladetalles">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Cant.</th>
+                        <th>Precio</th>
+                        <th>Subtotal</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+
+            <h4 class="text-end">
+                Total: <span id="total" class="fw-bold">S/ 0.00</span>
+            </h4>
+
+            <button id="btnPagar" class="btn btn-warning text-dark w-100 mt-3" disabled>
+                Proceder al Pago
+            </button>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación -->
+    <div class="modal fade" id="modalPago" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar Pago</h5>
+                    <button class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+
+                <div class="modal-body">
+                    <div id="pagoCampos" style="display:block">
+                    <h4>Datos de Pago</h4>
+                    <label for="metodo_pago">Método de pago:</label>
+                    <select id="metodo_pago" class="form-select">
+                        <option value="Efectivo">Efectivo</option>
+                        <option value="Tarjeta">Tarjeta</option>
+                        <option value="Transferencia">Transferencia</option>
+                        <option value="Cheque">Cheque</option>
+                    </select>
+                    <p>Total a pagar: <strong id="totalModal"></strong></p>
+                    <p>¿Confirmas el pago?</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button id="btnConfirmarPago" class="btn btn-primary">Confirmar</button>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+
+    <div class="text-center mt-3">
+            <a th:href="@{/clienteMenu}" class="btn btn-link">Volver al Menú</a>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        let detalles = []; //carrito
+
+        const producto = document.getElementById("producto");
+        const cantidad = document.getElementById("cantidad");
+        const btnAgregar = document.getElementById("btnAgregar");
+        const tabladetalles = document.querySelector("#tabladetalles tbody");
+        const totalHTML = document.getElementById("total");
+        const btnPagar = document.getElementById("btnPagar");
+        const totalModal = document.getElementById("totalModal");
+        const btnConfirmarPago = document.getElementById("btnConfirmarPago");
+
+        async function cargarProductos() {
+            const resp = await fetch("/api/producto/listar");
+            const productos = await resp.json();
+
+            producto.innerHTML = `<option value="">Seleccione...</option>`;
+
+            productos.forEach(p => {
+                producto.innerHTML += `
+                        <option 
+                            value="${p.idProducto}" 
+                            data-precio="${p.precio_base}"  
+                            data-nombre="${p.nombre}"  > ${p.nombre} - S/ ${Number(p.precio_base).toFixed(2)}
+                        </option>
+                `;
+            });
+        }
+
+        //cada ves que le da a agregar se agrega el detalles(producto escogido)
+        btnAgregar.addEventListener("click", () => {
+
+            let id = producto.value;
+            let nombre = producto.options[producto.selectedIndex].dataset.nombre;
+            let precio = parseFloat(producto.options[producto.selectedIndex].dataset.precio);
+            let cant = parseInt(cantidad.value);
+            let subtotal = precio * cant;
+
+            detalles.push({ id,nombre, precio, cant, subtotal });
+
+            actualizarTabla();
+            cantidad.value = "";
+            producto.value = "";
+        });
+
+        //  ACTUALIZAR TABLA 
+        function actualizarTabla() {
+            tabladetalles.innerHTML = "";
+            let total = 0;
+
+            detalles.forEach((item, index) => {
+                total += item.subtotal;
+
+                tabladetalles.innerHTML += `
+                    <tr>
+                        <td>${item.nombre}</td>
+                        <td>${item.cant}</td>
+                        <td>S/ ${item.precio.toFixed(2)}</td>
+                        <td>S/ ${item.subtotal.toFixed(2)}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" onclick="eliminar(${index})">X</button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            totalHTML.textContent = `S/ ${total.toFixed(2)}`;
+            btnPagar.disabled = detalles.length === 0;
+        }
+
+        window.eliminar = function(index) {
+            detalles.splice(index, 1);
+            actualizarTabla();
+        }
+
+        // MOSTRAR MODAL ---
+        btnPagar.addEventListener("click", () => {
+            let total = detalles.reduce((sum, item) => sum + item.subtotal, 0);
+            totalModal.textContent = `S/ ${total.toFixed(2)}`;
+
+            let modal = new bootstrap.Modal(document.getElementById("modalPago"));
+            modal.show();
+        });
+
+        //contruccion de entidades y envios
+
+        btnConfirmarPago.addEventListener("click", async () => {
+
+            const pedido = {
+                estado:"en proceso",
+                detalles: detalles.map(item => ({
+                        producto: { idProducto: item.id },
+                        cantidad: item.cant 
+                    }))
+            };
+
+            try {
+                const resPedido = await fetch('/api/pedido', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(pedido)
+                });
+
+                const dataPedido = await resPedido.json();
+
+                const idPedido = dataPedido.id_pedido_cliente;
+
+                const pago = {
+                id_pedido_cliente: idPedido,
+                id_metodo_pago: document.getElementById('metodo_pago').value === 'Efectivo' ? 1 :
+                                document.getElementById('metodo_pago').value === 'Tarjeta' ? 2 :
+                                document.getElementById('metodo_pago').value === 'transferencia' ? 3 : 4,
+                id_estado_pago: 1,
+                monto: detalles.reduce((sum, item) => sum + item.subtotal, 0)
+                };
+
+                await fetch('/api/pago', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(pago)
+                });
+
+                alert(`Pedido #${idPedido} registrado y pago procesado.`);
+
+                bootstrap.Modal.getInstance(document.getElementById("modalPago")).hide();
+                detalles = [];
+                actualizarTabla();
+
+            }catch (err) {
+                    console.error(err);
+                    alert('Error al registrar el pedido: ' + err.message);
+            }
+        });
+
+        cargarProductos();
+
+    </script>
+</body>
+</html>
+
