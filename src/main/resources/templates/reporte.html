@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Reportes - Panadería</title>
+    <style>
+        /* --- Estilos para el Dashboard de Reportes --- */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 40px;
+        }
+
+        /* Grid para las tarjetas del dashboard */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+        }
+
+        /* Estilo de cada tarjeta */
+        .card {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.08);
+            text-align: center;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            border-top: 5px solid #007bff; /* Una línea de color superior para darle estilo */
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        .card h3 {
+            margin-top: 0;
+            color: #6c757d;
+            font-size: 1.1em;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* El número grande (la métrica principal) */
+        .card .metric {
+            font-size: 2.8em;
+            font-weight: bold;
+            color: #007bff; /* Color principal */
+            margin: 15px 0;
+            line-height: 1;
+        }
+
+        /* Estilos para la lista de métodos de pago */
+        .card ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+            text-align: left;
+        }
+
+        .card ul li {
+            background-color: #f1f3f5;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95em;
+        }
+
+        .card ul li strong {
+            color: #495057;
+        }
+
+        /* Mensaje si no hay datos */
+        .no-data {
+            color: #adb5bd;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Panel de Reportes</h1>
+
+        <div class="dashboard-grid">
+            <!-- Tarjeta 1: Total Acumulado de Ventas -->
+            <div class="card">
+                <h3>Total Acumulado de Ventas</h3>
+                <div class="metric" th:text="'$' + ${#numbers.formatDecimal(reporte.totalVentas, 1, 'COMMA', 2, 'POINT')}">$0.00</div>
+            </div>
+
+            <!-- Tarjeta 2: Total de Pedidos -->
+            <div class="card">
+                <h3>Total de Pedidos</h3>
+                <div class="metric" th:text="${#numbers.formatInteger(reporte.totalPedidos, 0, 'COMMA')}">0</div>
+            </div>
+
+            <!-- Tarjeta 3: Clientes Atendidos -->
+            <div class="card">
+                <h3>Clientes Atendidos</h3>
+                <div class="metric" th:text="${#numbers.formatInteger(reporte.clientesAtendidos, 0, 'COMMA')}">0</div>
+            </div>
+
+            <!-- Tarjeta 4: Métodos de Pago Más Usados -->
+            <div class="card">
+                <h3>Métodos de Pago Populares</h3>
+                <ul>
+                    <!-- Itera sobre la lista de métodos de pago -->
+                    <li th:each="metodo : ${reporte.metodosPagoPopulares}">
+                        <span th:text="${#strings.capitalize(metodo.metodoPago)}">Efectivo</span>
+                        <strong th:text="${metodo.cantidad} + ' usos'">10 usos</strong>
+                    </li>
+                    <!-- Muestra un mensaje si la lista está vacía -->
+                    <li th:if="${#lists.isEmpty(reporte.metodosPagoPopulares)}" class="no-data">
+                        No hay datos de métodos de pago.
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

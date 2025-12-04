@@ -51,7 +51,7 @@ public class SecurityConfig {
 
                 // Rutas permitidas para empleado Admin
                 .requestMatchers("/index", "/registrar", "/consultar",
-                                 "/opiniones", "/inventario", "/reportes",
+                                 "/opiniones", "/inventario", "/reporte",
                                  "/entregas", "/agregar", "/observar")
                     .hasRole("ADMIN")
 
