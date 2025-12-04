@@ -223,5 +223,12 @@
     cargarDashboard();
     cargarTabla();
   </script>
+  <script>
+    fetch('/dashboard/opiniones')
+        .then(response => response.text())
+        .then(html => {
+            document.getElementById('contenedor-opiniones').innerHTML = html;
+        });
+</script>
 </body>
 </html>
