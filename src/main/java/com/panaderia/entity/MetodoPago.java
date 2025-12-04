@@ -3,7 +3,7 @@ package com.panaderia.entity;
 import jakarta.persistence.*;
 
 @Entity
-@Table(name = "metodopago")
+@Table(name = "metodo_pago")
 public class MetodoPago {
 
     @Id
